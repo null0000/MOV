@@ -17,7 +17,8 @@ SOURCES += \
 
 HEADERS += \
     ErrorCore.h \
-    ecErrorDialog.h
+    ecErrorDialog.h \
+    dialogKiller.h
 
 unix:!symbian {
     maemo5 {

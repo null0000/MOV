@@ -4,4 +4,5 @@ SUBDIRS += \
     ErrorCore \
     SimulationCore \
     GraphicsCore \
-    MOVMain
+    MOVMain \
+    UnitTests

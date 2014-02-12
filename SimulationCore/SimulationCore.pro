@@ -12,12 +12,10 @@ TEMPLATE = lib
 
 DEFINES += SIMULATIONCORE_LIBRARY
 
-SOURCES += scPlayer.cpp \
-    scLevel.cpp
+SOURCES += scPlayer.cpp
 
 HEADERS += simulationcore.h\
-    scPlayer.h \
-    scLevel.h
+    scPlayer.h
 
 unix:!symbian {
     maemo5 {

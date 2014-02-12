@@ -1,3 +1,4 @@
+#include "ErrorCore.h"
 #include "ecErrorDialog.h"
 #include "ui_errordialog.h"
 
@@ -26,4 +27,11 @@ ecErrorDialog::~ecErrorDialog()
 void ecErrorDialog::on_CloseButton_clicked()
 {
     setVisible(false);
+    emit closeButtonPressed();
+}
+
+
+QPushButton *ecErrorDialog::getPushButton()
+{
+    return ui->CloseButton;
 }

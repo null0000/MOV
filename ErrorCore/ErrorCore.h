@@ -3,8 +3,11 @@
 
 #include <exception>
 #include <QString>
+#include <QDataStream>
 #include <map>
 #include <vector>
+
+class ecErrorDialog;
 
 class ecError : public std::exception
 {
@@ -18,10 +21,19 @@ public:
 
 class ecErrorRegister {
 public:
-    void showError(ecError *e);
+    static ecErrorDialog *showError(ecError *e);
 
+    static QDataStream *debugStreamRead();
+    static QDataStream *debugStreamWrite();
+
+    static int outstandingErrorCount();
 
 private:
+    static void openDebugFileRead();
+    static void openDebugFileWrite();
+
+
+    static QSet<ecErrorDialog *> errorSet;
     static const QString ErrorLogName;
 };
 
