@@ -6,6 +6,8 @@
 
 QT       += gui designer widgets
 
+CONFIG += ordered
+
 TARGET = ErrorCore
 TEMPLATE = lib
 
@@ -18,7 +20,8 @@ SOURCES += \
 HEADERS += \
     ErrorCore.h \
     ecErrorDialog.h \
-    dialogKiller.h
+    dialogKiller.h \
+    ecIOErrors.h
 
 unix:!symbian {
     maemo5 {
@@ -31,3 +34,6 @@ unix:!symbian {
 
 FORMS += \
     errordialog.ui
+
+INCLUDEPATH += $$PWD/../GlobalCore
+DEPENDPATH += $$PWD/../GlobalCore

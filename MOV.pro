@@ -1,8 +1,12 @@
 TEMPLATE = subdirs
 
+CONFIG += ordered
+
 SUBDIRS += \
     ErrorCore \
     SimulationCore \
     GraphicsCore \
     MOVMain \
-    UnitTests
+    UnitTests \
+    CommCore \
+    GlobalCore
