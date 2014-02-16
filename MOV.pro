@@ -9,4 +9,5 @@ SUBDIRS += \
     MOVMain \
     UnitTests \
     CommCore \
-    GlobalCore
+    GlobalCore \
+    IOCore
