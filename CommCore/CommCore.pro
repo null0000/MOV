@@ -6,6 +6,8 @@
 
 QT       -= gui
 
+QT       += widgets
+
 CONFIG += ordered
 
 

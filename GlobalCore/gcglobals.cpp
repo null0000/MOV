@@ -8,17 +8,19 @@
 
 #include <QTextStream>
 
-const QString gcGlobals::PROGRAM_NAME = "MOV";
-const QString gcGlobals::APP_DIR = "C:\\Users\\null\\MOV";
-const QString gcGlobals::PYTHON_DIR = "PythonCore";
-QStack<QString> gcGlobals::dirStack;
 
-QString gcGlobals::ProgramDir()
+QObject *glbGlobals::topObjectVar = NULL;
+const QString glbGlobals::PROGRAM_NAME = "MOV";
+const QString glbGlobals::APP_DIR = "C:\\Users\\null\\MOV";
+const QString glbGlobals::PYTHON_DIR = "PythonCore";
+QStack<QString> glbGlobals::dirStack;
+
+QString glbGlobals::ProgramDir()
 {
     return APP_DIR;
 }
 
-bool gcGlobals::tryCD(QString cdTarget){
+bool glbGlobals::tryCD(QString cdTarget){
     try {
         QDir::setCurrent(cdTarget);
     } catch (...) {
@@ -30,17 +32,18 @@ bool gcGlobals::tryCD(QString cdTarget){
 
 
 
-void gcGlobals::PushDir() {
+void glbGlobals::PushDir() {
     dirStack.push(QDir::currentPath());
 }
 
-void gcGlobals::RevertDir() {
+void glbGlobals::RevertDir() {
     QString newDir = dirStack.pop();
     CD(newDir);
 }
 
 
-void gcGlobals::CD(QString target) {
+void glbGlobals::CD(QString target) {
     bool success = tryCD(target);
     Q_ASSERT(success == true);
 }
+

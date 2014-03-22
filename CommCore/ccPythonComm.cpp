@@ -26,8 +26,8 @@ void ccPythonComm::ProcessError(QProcess::ProcessError) {
 
 
 void ccPythonComm::startupServer(const QString ScriptName) {
-    gcGlobals::PushDir();
-    gcGlobals::MoveToPythonDir();
+    glbGlobals::PushDir();
+    glbGlobals::MoveToPythonDir();
 
     QStringList dirs = QDir::current().entryList();
     Q_ASSERT(dirs.contains(SCRIPT_NAME));
@@ -44,7 +44,7 @@ void ccPythonComm::startupServer(const QString ScriptName) {
         argList << ScriptName;
     server.start(PYTHON_NAME, argList);
     server.waitForStarted();
-    gcGlobals::RevertDir();
+    glbGlobals::RevertDir();
 }
 
 

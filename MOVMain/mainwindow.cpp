@@ -10,6 +10,9 @@
 #include <deque>
 
 #include "../GraphicsCore/GraphicsCore.h"
+#include <GlobalCore.h>
+
+MainWindow *MainWindow::App = NULL;
 
 MainWindow::MainWindow(QWindow *parent)
     : QWindow(parent)
@@ -17,8 +20,15 @@ MainWindow::MainWindow(QWindow *parent)
     , m_animating(false)
     , m_context(0)
     , m_device(0)
+    , inputDevice(*this)
 {
     setSurfaceType(QWindow::OpenGLSurface);
+
+
+    //THERE CAN ONLY BE ONE
+    //.... despite the fact that that's generally bad programming practices. Oh well.
+    Q_ASSERT(!App);
+    App = this;
 }
 
 void MainWindow::render(QPainter *painter)

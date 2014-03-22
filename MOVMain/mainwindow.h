@@ -8,6 +8,7 @@
 #include <QOpenGLPaintDevice>
 
 #include "../GraphicsCore/GraphicsCore.h"
+#include <simulationcore.h>
 
 namespace Ui {
 class MainWindow;
@@ -17,6 +18,8 @@ class MainWindow;
 class MainWindow : public QWindow, protected QOpenGLFunctions
 {
     Q_OBJECT
+
+    static MainWindow *App;
 
 public:
     explicit MainWindow(QWindow *parent = 0);
@@ -29,6 +32,8 @@ public:
     void setAnimating(bool animating);
 
     void attachRenderable(gcRenderable *renderable);
+
+    MainWindow &AppWindow() const{Q_ASSERT(App); return *App;}
 
 public slots:
     void renderLater();
@@ -47,5 +52,6 @@ private:
     QOpenGLContext *m_context;
     QOpenGLPaintDevice *m_device;
     std::deque<gcRenderable  *> renderables;
+    scInputDevice inputDevice;
 };
 #endif // MAINWINDOW_H
