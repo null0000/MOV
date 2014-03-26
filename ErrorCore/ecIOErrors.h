@@ -6,7 +6,7 @@ private:
     QString dir;
 
 public:
-    QString message() const {return "Failed to change directories to : " + dir;}
+    QString message() const {return "Failed to change directories to: " + dir;}
     ecCdError(QString dir) : dir(dir){}
     ~ecCdError() throw(){}
 };

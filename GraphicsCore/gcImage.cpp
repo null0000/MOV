@@ -1,15 +1,43 @@
 
 #include <QFile>
 #include <QPixmap>
+#include <GlobalCore.h>
+#include <QDir>
 #include "GraphicsCore.h"
 
 #include "../ErrorCore/ErrorCore.h"
 
 
-void gcImage::Load(QString inputFile) {
-    bool loaded = map.load(inputFile);
+const QString gcImage::IMAGE_FILE_TYPE = ".gif";
+
+
+class ecImageLoadError : public ecError {
+public:
+    ecImageLoadError(QString fileName) : fileName(fileName){}
+
+    virtual QString message() const {return "Failed to load file: " + fileName + "\nIn: " + QDir::currentPath();}
+    virtual ~ecImageLoadError() throw(){}
+private:
+    QString fileName;
+
+};
+
+
+
+
+void gcImage::Load(QString ImageName) {
+    glbGlobals::PushDir();
+    QString path1 = QDir::currentPath();
+    glbGlobals::MoveToGraphicsDir();
+    bool loaded = map.load(ImageName + IMAGE_FILE_TYPE);
+
+    QString path2 = QDir::currentPath();
+    printf((path1 + "second Path: " + path2 + "\n").toStdString().c_str());
+
     if (!loaded)
-        throw false;
+        throw ecImageLoadError(ImageName + IMAGE_FILE_TYPE);
+
+    glbGlobals::RevertDir();
 }
 
 
@@ -21,24 +49,10 @@ QPixmap gcImage::ToPixmap() const {
         return map;
 }
 
-
-class ecImageLoadError : public ecError {
-public:
-    ecImageLoadError(QString fileName) : fileName(fileName){}
-
-    virtual QString message() const {return "Failed to load file: " + fileName;}
-    virtual ~ecImageLoadError() throw(){}
-private:
-    QString fileName;
-
-};
-
-gcImage::gcImage(QString InputFile) :
+gcImage::gcImage(QString ImageName) :
     map()
 {
-    bool loaded = map.load(InputFile);
-    if (!loaded)
-        throw ecImageLoadError(InputFile);
+    Load(ImageName);
 }
 
 

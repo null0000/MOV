@@ -27,6 +27,7 @@ ecErrorDialog::~ecErrorDialog()
 void ecErrorDialog::on_CloseButton_clicked()
 {
     setVisible(false);
+    close();
     emit closeButtonPressed();
 }
 

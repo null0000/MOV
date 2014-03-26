@@ -3,8 +3,6 @@
 #include <QMap>
 #include <QKeyEvent>
 
-
-
 class Key {
 
     int mappedKey;
@@ -67,7 +65,7 @@ private:
 };
 
 
-class scKeyboardControlledObj : public scControlScheme, public scSimulationObject {
+class scKeyboardControlledObj : public scControlScheme, public scSimulatable {
 
     pos_t pos;
     vec2D_t deltaScale;

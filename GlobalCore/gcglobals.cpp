@@ -11,23 +11,28 @@
 
 QObject *glbGlobals::topObjectVar = NULL;
 const QString glbGlobals::PROGRAM_NAME = "MOV";
-const QString glbGlobals::APP_DIR = "C:\\Users\\null\\MOV";
+QString glbGlobals::APP_DIR = "";
 const QString glbGlobals::PYTHON_DIR = "PythonCore";
+const QString glbGlobals::GRAPHICS_DIR = "Graphics";
 QStack<QString> glbGlobals::dirStack;
 
-QString glbGlobals::ProgramDir()
-{
-    return APP_DIR;
-}
+
 
 bool glbGlobals::tryCD(QString cdTarget){
+
+    bool success = false;
     try {
-        QDir::setCurrent(cdTarget);
+        success = QDir::setCurrent(cdTarget);
     } catch (...) {
+        success = false;
+    }
+
+    if (!success) {
         ecErrorRegister::showError(new ecCdError(cdTarget));
         return false;
     }
-    return true;
+
+    return success;
 }
 
 
@@ -43,7 +48,18 @@ void glbGlobals::RevertDir() {
 
 
 void glbGlobals::CD(QString target) {
-    bool success = tryCD(target);
-    Q_ASSERT(success == true);
+    tryCD(target);
 }
 
+
+
+void glbGlobals::LogAppDir() {
+    Q_ASSERT(APP_DIR == ""); //don't want to log it multiple times
+    APP_DIR = QDir::currentPath() + "/..";
+    CD(APP_DIR);
+}
+
+QString glbGlobals::GraphicsDir() {return GRAPHICS_DIR;}
+QString glbGlobals::PythonDir() {return PYTHON_DIR;}
+QString glbGlobals::AppDir() {return APP_DIR;}
+QString glbGlobals::ProgramDir(){return APP_DIR;}

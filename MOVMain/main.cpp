@@ -6,28 +6,28 @@
 #include <iostream>
 
 #include "mainwindow.h"
-#include "../GraphicsCore/GraphicsCore.h"
-#include "../ErrorCore/ErrorCore.h"
-#include "../ErrorCore/ecErrorDialog.h"
+#include <GraphicsCore.h>
+#include <ErrorCore.h>
+#include <ecErrorDialog.h>
+#include <GlobalCore.h>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    try{
+    glbGlobals::LogAppDir();
+    MainWindow *window = new MainWindow();
 
-        MainWindow *window = new MainWindow();
-
-        QDir::setCurrent("C:\\Users\\null\\MOV");
-
-        gcImage faceImage = gcImage(QString("faced.gif"));
-
+    try {
+        gcImage faceImage = gcImage("face");
         window->show();
         window->setAnimating(true);
         window->attachRenderable(faceImage.toRenderable());
     } catch(ecError &e){
         ecErrorDialog *errorDialog = new ecErrorDialog(0, e.message());
         errorDialog->show();
+        window->close();
     }
 
+    qApp->setQuitOnLastWindowClosed(true);
     return a.exec();
 }

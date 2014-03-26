@@ -26,7 +26,7 @@ public:
     scInputDevice(const QWindow &Parent) :
         QObject()
     {
-        connect(&Parent, SIGNAL(QWindow::keyPressEvent()), this, SIGNAL(KeyPressEvent));
+        connect(&Parent, SIGNAL(QWindow::keyPressEvent()), this, SIGNAL(KeyPressEvent()));
         connect(&Parent, SIGNAL(QWindow::keyReleaseEvent()), this, SIGNAL(KeyReleaseEvent()));
     }
 
@@ -70,18 +70,29 @@ public:
 typedef float delta_t;
 
 class scControlScheme {
+public:
     virtual pos_t position() const = 0;
     virtual void spawn(pos_t StartPos) const = 0;
+
+    virtual ~scControlScheme(){}
 };
 
 
-class scSimulationObject {
+class scSimulatable {
 
     const static float TIME_CONVERSION_DIVISOR = 1000;
 public:
     virtual void Simulate(delta_t timeDelta) = 0;
 
     static delta_t timeDeltaFromMilli(int milliseconds) {return ((float)(milliseconds))/TIME_CONVERSION_DIVISOR;}
+
+    virtual ~scSimulatable(){}
+};
+
+class scObject : public scControlScheme, scSimulatable
+{
+public:
+    virtual ~scObject(){}    
 };
 
 class scWorld {

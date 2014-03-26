@@ -24,6 +24,7 @@ ecErrorDialog *ecErrorRegister::showError(ecError *e){
     dialogKiller *killer = new dialogKiller(dialog, errorSet);
     QObject::connect(dialog, SIGNAL(closeButtonPressed()),
                      killer, SLOT(killDialog()));
+    dialog->show();
     return dialog;
 }
 

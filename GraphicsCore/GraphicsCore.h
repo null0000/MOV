@@ -7,18 +7,17 @@
 #include <QGraphicsScene>
 #include <QTransform>
 #include <QPainter>
+#include "gcImage.h"
+#include "gcImageDescription.h"
+
 
 class QRectF;
-class gcImage;
-class gcLine;
-class gcShape;
 class QPointF;
 class QPixmap;
 class QLineF;
 class fcFile;
 class QGraphicsItem;
 class QGraphicsPixmapItem;
-
 
 class gcDrawingImpl{
 public:
@@ -43,24 +42,6 @@ public:
     virtual ~gcRenderable(){}
 };
 
-
-class gcImage{
-public:
-    gcImage(QString InputFile);
-    gcImage();
-
-    void Load(QString inputFile);
-
-    QPixmap ToPixmap() const;
-    bool IsLoaded();
-
-    gcRenderable *toRenderable() const;
-
-private:
-    QPixmap map;
-
-    class gcImageRenderable;
-};
 
 
 
