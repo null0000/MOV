@@ -17,7 +17,8 @@ DEFINES += GLOBALCORE_LIBRARY
 
 SOURCES += gcglobals.cpp
 
-HEADERS += GlobalCore.h
+HEADERS += GlobalCore.h \
+    glbGeometry.h
 
 unix:!symbian {
     maemo5 {

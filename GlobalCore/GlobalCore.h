@@ -5,6 +5,10 @@
 #include <QStack>
 #include <QWidget>
 
+#include <glbGeometry.h>
+
+
+
 class glbGlobals
 {
 

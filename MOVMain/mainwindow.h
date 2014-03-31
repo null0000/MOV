@@ -21,6 +21,24 @@ class MainWindow : public QWindow, protected QOpenGLFunctions
 
     static MainWindow *App;
 
+    class renderListImpl : public gcRenderList
+    {
+
+        QVector<gcRenderable *> renderableList;
+
+    public:
+        void pushRenderable(gcRenderable *newItem) {
+            renderableList.push_back(newItem);
+        }
+
+        void render(gcDrawingImpl &renderer) {
+            for (QVector<gcRenderable *>::iterator itr = renderableList.begin(); itr != renderableList.end(); itr++)
+                (*itr)->draw(renderer);
+        }
+
+        ~renderListImpl(){}
+    };
+
 public:
     explicit MainWindow(QWindow *parent = 0);
 
@@ -46,12 +64,11 @@ protected:
     void resizeEvent(QResizeEvent *event);
 
 private:
-    bool m_update_pending;
-    bool m_animating;
-
-    QOpenGLContext *m_context;
-    QOpenGLPaintDevice *m_device;
-    std::deque<gcRenderable  *> renderables;
+    bool updatePending;
+    bool animating;
+    renderListImpl renderList;
+    QOpenGLContext *context;
+    QOpenGLPaintDevice *device;
     scInputDevice inputDevice;
 };
 #endif // MAINWINDOW_H

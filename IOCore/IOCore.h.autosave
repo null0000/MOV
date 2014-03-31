@@ -1,0 +1,12 @@
+#ifndef IOCORE_H
+#define IOCORE_H
+
+#include <QXmlStreamWriter>
+
+class icXMLObject {
+public:
+    void WriteToFile(QXmlStreamWriter &writer);
+
+};
+
+#endif // IOCORE_H

@@ -18,7 +18,10 @@ SOURCES += \
 HEADERS += \
     GraphicsCore.h \
     gcImageDescription.h \
-    gcImage.h
+    gcImage.h \
+    gcRenderTransform.h \
+    gcRenderable.h \
+    gcDrawingImpl.h
 
 unix:!symbian {
     maemo5 {
