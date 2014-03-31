@@ -9,7 +9,8 @@
 #include <QPainter>
 #include "gcImage.h"
 #include "gcImageDescription.h"
-
+#include "gcRenderable.h"
+#include "gcDrawingImpl.h"
 
 class QRectF;
 class QPointF;
@@ -19,30 +20,12 @@ class fcFile;
 class QGraphicsItem;
 class QGraphicsPixmapItem;
 
-class gcDrawingImpl{
+class gcRenderList{
 public:
-    void Draw(gcImage i);
-    void Draw(gcImage i, QRectF qrect);
-    void Draw(QLineF l);
+    virtual void pushRenderable(gcRenderable *) = 0;
+    virtual ~gcRenderList(){}
 
-    void PushTransform(QTransform mat);
-    void PopTransform();
-
-    gcDrawingImpl(QPainter &painter);
-
-private:
-    QPainter &painter;
-    std::stack<QTransform> matStack;
-    QTransform topMat;
 };
-
-class gcRenderable{
-public:
-    virtual void draw(gcDrawingImpl &impl) = 0;
-    virtual ~gcRenderable(){}
-};
-
-
 
 
 #endif // GRAPHICSCORE_H

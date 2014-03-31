@@ -4,8 +4,11 @@
 #include <QtGlobal>
 #include <utility>
 #include <QWindow>
+#include <qvector2d.h>
+#include <simulationcore.h>
+#include "scKeyboardInput.h"
 
-
+typedef float delta_t;
 
 /**
  * @brief The scInputDevice class
@@ -18,78 +21,42 @@
  *
  *
  */
-class scInputDevice : public QObject
+class scSimulatable {
+
+public:
+    virtual void Simulate(delta_t timeDelta) = 0;
+    virtual ~scSimulatable(){}
+};
+
+class scSim_d
 {
-    Q_OBJECT
-
 public:
-    scInputDevice(const QWindow &Parent) :
-        QObject()
-    {
-        connect(&Parent, SIGNAL(QWindow::keyPressEvent()), this, SIGNAL(KeyPressEvent()));
-        connect(&Parent, SIGNAL(QWindow::keyReleaseEvent()), this, SIGNAL(KeyReleaseEvent()));
-    }
+    typedef enum {KeyControlledE} controlType;
 
-signals:
-    void KeyPressEvent(QKeyEvent *KeyPress);
-    void KeyReleaseEvent(QKeyEvent *KeyRelease);
+    QSharedPointer<scSimulatable> instantiate();
 
+    scSim_d(controlType controller) :
+        startLocation(0, 0), speedScale(1, 1), controller(controller){}
+
+private:
+    QVector2D startLocation;
+    QVector2D speedScale;
+    controlType controller;
 };
-
-
-
-class vec2D_t {
-    float x, y;
-
-public:
-    float X() const {return x;}
-    float Y() const {return y;}
-
-    vec2D_t(float x, float y) : x(x), y(y){}
-
-    vec2D_t scale(float factor)const{return vec2D_t(x * factor, y * factor);}
-    vec2D_t scale(vec2D_t other)const{return vec2D_t(x * other.X(), y * other.Y());}
-
-};
-
-
-class pos_t {
-    float x;
-    float y;
-
-public:
-    float X() const {return x;}
-    float Y() const {return y;}
-    pos_t(float x, float y) : x(x), y(y){}
-
-    pos_t operator +(const vec2D_t &other){return pos_t(x + other.X(), y + other.Y());}
-    pos_t &operator +=(const vec2D_t &other){*this = *this + other; return *this;}
-
-};
-
-typedef float delta_t;
 
 class scControlScheme {
 public:
-    virtual pos_t position() const = 0;
-    virtual void spawn(pos_t StartPos) const = 0;
+    virtual QVector2D position() const = 0;
 
     virtual ~scControlScheme(){}
 };
 
 
-class scSimulatable {
+const float TIME_CONVERSION_DIVISOR = 1000;
+delta_t timeDeltaFromMilli(int milliseconds);
 
-    const static float TIME_CONVERSION_DIVISOR = 1000;
-public:
-    virtual void Simulate(delta_t timeDelta) = 0;
 
-    static delta_t timeDeltaFromMilli(int milliseconds) {return ((float)(milliseconds))/TIME_CONVERSION_DIVISOR;}
-
-    virtual ~scSimulatable(){}
-};
-
-class scObject : public scControlScheme, scSimulatable
+class scObject : public scControlScheme, public scSimulatable
 {
 public:
     virtual ~scObject(){}    
@@ -97,10 +64,18 @@ public:
 
 class scWorld {
 public:
+    typedef int t_tag;
+
+    t_tag addObject(scObject &newObj);
+    const scObject &lookup(t_tag tag) const {return *simVec[tag];}
 
 private:
-
+    void simulate(delta_t timeDelta);
+    QVector<scObject *> simVec;
 };
+
+
+scObject *scCreateKeyboardObject(scInputDevice *input, const QVector2D startOffset, QVector2D speedScale);
 
 
 #endif // SIMULATIONCORE_H

@@ -19,7 +19,6 @@ public:
     virtual ~ecImageLoadError() throw(){}
 private:
     QString fileName;
-
 };
 
 
@@ -63,8 +62,8 @@ gcImage::gcImage()  :
 class gcImage::gcImageRenderable: public gcRenderable {
 public:
    gcImageRenderable(gcImage image) : image(image){}
+   void draw(gcDrawingImpl &impl) const {impl.Draw(image);}
 
-   virtual void draw(gcDrawingImpl &impl) {impl.Draw(image);}
 
 private:
    gcImage image;

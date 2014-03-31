@@ -55,3 +55,17 @@ else:unix: LIBS += -L$$OUT_PWD/../GlobalCore/ -lGlobalCore
 
 INCLUDEPATH += $$PWD/../GlobalCore
 DEPENDPATH += $$PWD/../GlobalCore
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../CompositionCore/release/ -lCompositionCore
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../CompositionCore/debug/ -lCompositionCore
+else:unix: LIBS += -L$$OUT_PWD/../CompositionCore/ -lCompositionCore
+
+INCLUDEPATH += $$PWD/../CompositionCore
+DEPENDPATH += $$PWD/../CompositionCore
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../CompositionCore/release/ -lCompositionCore
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../CompositionCore/debug/ -lCompositionCore
+else:unix: LIBS += -L$$OUT_PWD/../CompositionCore/ -lCompositionCore
+
+INCLUDEPATH += $$PWD/../CompositionCore
+DEPENDPATH += $$PWD/../CompositionCore

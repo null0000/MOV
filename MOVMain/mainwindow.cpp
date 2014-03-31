@@ -9,18 +9,20 @@
 
 #include <deque>
 
-#include "../GraphicsCore/GraphicsCore.h"
+#include<GraphicsCore.h>
 #include <GlobalCore.h>
+#include <CompositionCore.h>
 
 MainWindow *MainWindow::App = NULL;
 
 MainWindow::MainWindow(QWindow *parent)
     : QWindow(parent)
-    , m_update_pending(false)
-    , m_animating(false)
-    , m_context(0)
-    , m_device(0)
-    , inputDevice(*this)
+    , updatePending(false)
+    , animating(false)
+    , renderList()
+    , context(0)
+    , device(0)
+    , inputDevice(this)
 {
     setSurfaceType(QWindow::OpenGLSurface);
 
@@ -31,35 +33,32 @@ MainWindow::MainWindow(QWindow *parent)
     App = this;
 }
 
-void MainWindow::render(QPainter *painter)
-{
-    gcDrawingImpl drawDevice(*painter);
+void MainWindow::render(QPainter *painter){gcDrawingImpl drawDevice(*painter);}
 
-    for (std::deque<gcRenderable *>::iterator itr = renderables.begin(); itr != renderables.end(); itr++)
-        (*itr)->draw(drawDevice);
-}
+void MainWindow::initialize(){
 
-void MainWindow::initialize()
-{
+    scWorld *world = new scWorld();
+    ccBootUp(*world, renderList, inputDevice);
+
 }
 
 void MainWindow::render()
 {
-    if (!m_device)
-        m_device = new QOpenGLPaintDevice;
+    if (!device)
+        device = new QOpenGLPaintDevice;
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    m_device->setSize(size());
+    device->setSize(size());
 
-    QPainter painter(m_device);
+    QPainter painter(device);
     render(&painter);
 }
 
 void MainWindow::renderLater()
 {
-    if (!m_update_pending) {
-        m_update_pending = true;
+    if (!updatePending) {
+        updatePending = true;
         QCoreApplication::postEvent(this, new QEvent(QEvent::UpdateRequest));
     }
 }
@@ -97,19 +96,19 @@ void MainWindow::renderNow()
     if (!isExposed())
         return;
 
-    m_update_pending = false;
+    updatePending = false;
 
     bool needsInitialize = false;
 
-    if (!m_context) {
-        m_context = new QOpenGLContext(this);
-        m_context->setFormat(requestedFormat());
-        m_context->create();
+    if (!context) {
+        context = new QOpenGLContext(this);
+        context->setFormat(requestedFormat());
+        context->create();
 
         needsInitialize = true;
     }
 
-    m_context->makeCurrent(this);
+    context->makeCurrent(this);
 
     if (needsInitialize) {
         initializeOpenGLFunctions();
@@ -118,14 +117,14 @@ void MainWindow::renderNow()
 
     render();
 
-    m_context->swapBuffers(this);
-    if (m_animating)
+    context->swapBuffers(this);
+    if (animating)
         renderLater();
 }
 
 void MainWindow::setAnimating(bool animating)
 {
-    m_animating = animating;
+    animating = animating;
 
     if (animating)
         renderLater();
@@ -133,5 +132,5 @@ void MainWindow::setAnimating(bool animating)
 
 void MainWindow::attachRenderable(gcRenderable *renderable)
 {
-    renderables.push_back(renderable);
+    renderList.pushRenderable(renderable);
 }
