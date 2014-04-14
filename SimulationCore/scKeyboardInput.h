@@ -5,21 +5,16 @@
 #include <QKeyEvent>
 #include <QWindow>
 
+class KeyboardState;
+#include <iostream>
+
 class scInputDevice : public QObject
 {
     Q_OBJECT
 
-public:
-    scInputDevice(QWindow *Parent) :
-        QObject()
-    {
-        connect(Parent, SIGNAL(keyPressEvent(QKeyEvent *)), this, SLOT(KeyPressEvent(QKeyEvent *)));
-        connect(Parent, SIGNAL(keyReleaseEvent(QKeyEvent *)), this, SLOT(KeyReleaseEvent(QKeyEvent *)));
-    }
-
 signals:
-    void KeyPressEvent(QKeyEvent *KeyPress);
-    void KeyReleaseEvent(QKeyEvent *KeyRelease);
+    void keyPressSignal(QKeyEvent *KeyPress);
+    void keyReleaseSignal(QKeyEvent *KeyRelease);
 
 };
 
@@ -83,16 +78,16 @@ public:
     int keyScale(Key k) const {return downKeyMap[k] ? 1 : 0;} /*redundant, but I don't want to abuse implicit values for bools*/
 
     KeyboardState(scInputDevice *Parent) : QObject(){
-        connect(Parent, SIGNAL(KeyPressEvent(QKeyEvent *)), this, SLOT(KeyPressed(QKeyEvent *)));
-        connect(Parent, SIGNAL(KeyReleaseEvent(QKeyEvent *)), this, SLOT(KeyReleased(QKeyEvent *)));
+        connect(Parent, SIGNAL(keyPressSignal(QKeyEvent *)), this, SLOT(KeyPressed(QKeyEvent *)));
+        connect(Parent, SIGNAL(keyReleaseSignal(QKeyEvent *)), this, SLOT(KeyReleased(QKeyEvent *)));
     }
 
     KeyboardState() : QObject()
     {}
 
 public slots:
-    void KeyPressed(QKeyEvent qke) {downKeyMap[qke.key()] = true;}
-    void KeyReleased(QKeyEvent qke) {downKeyMap[qke.key()] = true;}
+    void KeyPressed(QKeyEvent *qke) {downKeyMap[qke->key()] = true;}
+    void KeyReleased(QKeyEvent *qke) {downKeyMap[qke->key()] = false; }
 };
 
 

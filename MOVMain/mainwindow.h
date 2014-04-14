@@ -21,9 +21,7 @@ class MainWindow : public QWindow, protected QOpenGLFunctions
 
     static MainWindow *App;
 
-    class renderListImpl : public gcRenderList
-    {
-
+    class renderListImpl : public gcRenderList {
         QVector<gcRenderable *> renderableList;
 
     public:
@@ -37,6 +35,16 @@ class MainWindow : public QWindow, protected QOpenGLFunctions
         }
 
         ~renderListImpl(){}
+    };
+
+    class inputImpl : public scInputDevice {
+
+    public:
+        inputImpl(MainWindow *Parent) :
+            scInputDevice() {
+            connect(Parent, SIGNAL(keyPressSignal(QKeyEvent*)), this, SIGNAL(keyPressSignal(QKeyEvent*)));
+            connect(Parent, SIGNAL(keyReleaseSignal(QKeyEvent*)), this, SIGNAL(keyReleaseSignal(QKeyEvent*)));
+        }
     };
 
 public:
@@ -62,6 +70,12 @@ protected:
 
     void exposeEvent(QExposeEvent *event);
     void resizeEvent(QResizeEvent *event);
+    virtual void keyPressEvent(QKeyEvent *e){emit keyPressSignal(e);}
+    virtual void keyReleaseEvent(QKeyEvent *e){emit keyPressSignal(e);}
+
+signals:
+    void keyPressSignal(QKeyEvent *);
+    void keyReleaseSignal(QKeyEvent *);
 
 private:
     bool updatePending;
@@ -69,6 +83,6 @@ private:
     renderListImpl renderList;
     QOpenGLContext *context;
     QOpenGLPaintDevice *device;
-    scInputDevice inputDevice;
+    inputImpl inputDevice;
 };
 #endif // MAINWINDOW_H
