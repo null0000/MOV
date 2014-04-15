@@ -68,9 +68,9 @@ public:
 
     t_tag addObject(scObject &newObj);
     const scObject &lookup(t_tag tag) const {return *simVec[tag];}
+    void simulate(delta_t timeDelta);
 
 private:
-    void simulate(delta_t timeDelta);
     QVector<scObject *> simVec;
 };
 

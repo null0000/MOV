@@ -55,8 +55,6 @@ public:
 
     virtual void initialize();
 
-    void setAnimating(bool animating);
-
     void attachRenderable(gcRenderable *renderable);
 
     MainWindow &AppWindow() const{Q_ASSERT(App); return *App;}
@@ -71,7 +69,7 @@ protected:
     void exposeEvent(QExposeEvent *event);
     void resizeEvent(QResizeEvent *event);
     virtual void keyPressEvent(QKeyEvent *e){emit keyPressSignal(e);}
-    virtual void keyReleaseEvent(QKeyEvent *e){emit keyPressSignal(e);}
+    virtual void keyReleaseEvent(QKeyEvent *e){emit keyReleaseSignal(e);}
 
 signals:
     void keyPressSignal(QKeyEvent *);
@@ -84,5 +82,6 @@ private:
     QOpenGLContext *context;
     QOpenGLPaintDevice *device;
     inputImpl inputDevice;
+    scWorld *world;
 };
 #endif // MAINWINDOW_H

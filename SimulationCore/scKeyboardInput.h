@@ -5,9 +5,18 @@
 #include <QKeyEvent>
 #include <QWindow>
 
-class KeyboardState;
+class scKeyboardState;
 #include <iostream>
 
+
+/**
+ * @brief The scInputDevice class
+ *
+ *This acts as a bridge between the outside world
+ *and the simulation core for input signals. To use
+ *this class, Implement it and connect your signals to it,
+ *then pass that instantiation to SC.
+ */
 class scInputDevice : public QObject
 {
     Q_OBJECT
@@ -19,6 +28,11 @@ signals:
 };
 
 
+/**
+ * @brief The Key class
+ *  This is a key. It allows for a more firm
+ *  representation of qt keys than just ints.
+ */
 class Key {
 
     int mappedKey;
@@ -33,17 +47,25 @@ public:
     bool operator == (const Key &Other) const {return mappedKey == Other.mappedKey;}
 };
 
+
+/**
+ * @brief The KeyMapping class
+ *
+ *  This maps between input key signals and move actions
+ *  using the keyEnum
+ *
+ */
 class KeyMapping
 {
 public:
     typedef enum {upE, downE, leftE, rightE, useE} keyEnum;
-    typedef QMap<keyEnum, Key> keyMapping_t;
+    typedef std::map<keyEnum, Key> keyMapping_t;
 
-    Key Up() const {return keyMap[upE];}
-    Key Down() const {return keyMap[downE];}
-    Key Left() const {return keyMap[leftE];}
-    Key Right() const {return keyMap[rightE];}
-    Key Use() const {return keyMap[useE];}
+    Key Up() const {return returnFind(upE);}
+    Key Down() const {return returnFind(downE);}
+    Key Left() const {return returnFind(leftE);}
+    Key Right() const {return returnFind(rightE);}
+    Key Use() const {return returnFind(useE);}
 
 
     KeyMapping(keyMapping_t map) :keyMap(map){}
@@ -61,13 +83,27 @@ public:
     }
 
 private:
-    QMap<keyEnum, Key> keyMap;
-    static QMap<keyEnum, Key> obtainDefaultMap();
+    Key returnFind(keyEnum k) const
+    {
+        keyMapping_t::const_iterator fr = keyMap.find(k);
+        if (fr != keyMap.end())
+            return keyMap.find(k)->second;
+        return Key(0);
+    }
+    keyMapping_t keyMap;
 
 };
 
 
-class KeyboardState : public QObject {
+/**
+ * @brief The KeyboardState class
+ *  Represents the current state of the player's
+ *  keyboard. Query it to see what's going on using
+ *  isDown. keyScale can be used for multiplication
+ *  purposes when dealing with velocities (i.e.
+ *  write mySpeed * ks.keyScale(keyDir);
+ */
+class scKeyboardState : public QObject {
 
     Q_OBJECT
 
@@ -77,17 +113,16 @@ public:
     bool isDown(Key k) const {return downKeyMap[k];}
     int keyScale(Key k) const {return downKeyMap[k] ? 1 : 0;} /*redundant, but I don't want to abuse implicit values for bools*/
 
-    KeyboardState(scInputDevice *Parent) : QObject(){
+    scKeyboardState(scInputDevice *Parent) : QObject(){
         connect(Parent, SIGNAL(keyPressSignal(QKeyEvent *)), this, SLOT(KeyPressed(QKeyEvent *)));
         connect(Parent, SIGNAL(keyReleaseSignal(QKeyEvent *)), this, SLOT(KeyReleased(QKeyEvent *)));
     }
 
-    KeyboardState() : QObject()
-    {}
+    scKeyboardState() : QObject() {}
 
 public slots:
     void KeyPressed(QKeyEvent *qke) {downKeyMap[qke->key()] = true;}
-    void KeyReleased(QKeyEvent *qke) {downKeyMap[qke->key()] = false; }
+    void KeyReleased(QKeyEvent *qke) {downKeyMap[qke->key()] = false;}
 };
 
 

@@ -15,19 +15,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     glbGlobals::LogAppDir();
-    MainWindow *window = new MainWindow();
-
-    try {
-        gcImage faceImage = gcImage("face");
-        window->show();
-        window->setAnimating(true);
-        window->attachRenderable(faceImage.toRenderable());
-    } catch(ecError &e){
-        ecErrorDialog *errorDialog = new ecErrorDialog(0, e.message());
-        errorDialog->show();
-        window->close();
-    }
-
+    (new MainWindow())->initialize();
     qApp->setQuitOnLastWindowClosed(true);
     return a.exec();
 }

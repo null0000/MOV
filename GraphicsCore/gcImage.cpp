@@ -59,16 +59,10 @@ gcImage::gcImage()  :
     map(){}
 
 
-class gcImage::gcImageRenderable: public gcRenderable {
-public:
-   gcImageRenderable(gcImage image) : image(image){}
-   void draw(gcDrawingImpl &impl) const {impl.Draw(image);}
+gcImageRenderable gcImage::toRenderable() const {
+    return gcImageRenderable(*this);
+}
 
-
-private:
-   gcImage image;
-};
-
-gcRenderable *gcImage::toRenderable() const {
-    return new gcImageRenderable(*this);
+void gcImageRenderable::draw(gcDrawingImpl &impl) const{
+    impl.Draw(image);
 }

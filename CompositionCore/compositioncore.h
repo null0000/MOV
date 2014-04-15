@@ -8,13 +8,13 @@
 #include <QScopedPointer>
 #include <gcRenderTransform.h>
 
-class ccObject;
+class coObject;
 
-class ccObject_d{
-   ccObject_d(scSim_d simDesc, gcImage_d imageDesc) :
+class coObject_d{
+   coObject_d(scSim_d simDesc, gcImage_d imageDesc) :
     simDesc(simDesc), imageDesc(imageDesc){}
 
-    QScopedPointer<ccObject> instantiate();
+    QScopedPointer<coObject> instantiate();
 
 
 private:
@@ -23,7 +23,7 @@ private:
  };
 
 
-class ccObject {
+class coObject {
 private:
     class renderTarget {
     private:
@@ -35,7 +35,7 @@ private:
     };
 
 public:
-    ccObject(scObject &simObj, gcRenderable &animation, scWorld &world, gcRenderList &Renderer) :
+    coObject(scObject &simObj, gcRenderable &animation, scWorld &world, gcRenderList &Renderer) :
         simObjPtr(world.addObject(simObj)),
         imageAnim(*new gcRenderOffset<renderTarget>(animation, renderTarget(world, simObjPtr)))
     {
@@ -50,10 +50,10 @@ private:
 };
 
 
-void ccBootUp(scWorld &world, gcRenderList &list, scInputDevice &inputDevice) {
-    scObject *keyboardObject = scCreateKeyboardObject(&inputDevice, QVector2D(0, 0), QVector2D(1, 1));
-    gcRenderable *image = (new gcImage("face"))->toRenderable();
-    new ccObject(*keyboardObject, *image, world, list);
+void coBootUp(scWorld &world, gcRenderList &list, scInputDevice &inputDevice) {
+    scObject *keyboardObject = scCreateKeyboardObject(&inputDevice, QVector2D(0, 0), QVector2D(.25, .25));
+    gcImageRenderable *image = new gcImageRenderable(gcImage("face").toRenderable());
+    new coObject(*keyboardObject, *image, world, list);
 
 }
 

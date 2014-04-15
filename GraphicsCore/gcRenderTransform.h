@@ -8,7 +8,7 @@
 template <typename offsetFunctor>
 class gcRenderOffset : public gcRenderable{
     const gcRenderable &renderObj;
-    const offsetFunctor &offsetFunc;
+    const offsetFunctor offsetFunc;
 public:
     gcRenderOffset(gcRenderable &renderable, offsetFunctor functor) :
         renderObj(renderable), offsetFunc(functor){}

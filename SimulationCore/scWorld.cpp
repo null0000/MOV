@@ -8,20 +8,20 @@ class scKeyboardControlledObj : public scObject {
 
     QVector2D pos;
     QVector2D deltaScale;
-    const KeyboardState &ks;
-    const KeyMapping &kMap;
+    const scKeyboardState &ks;
+    KeyMapping kMap;
 
-    float udScale() const {return (ks.keyScale(kMap.Up()) - ks.keyScale(kMap.Down())) * deltaScale.y();}
-    float lrScale() const {return (ks.keyScale(kMap.Right())) - ks.keyScale(kMap.Left()) * deltaScale.x();}
+    float udScale() const {return (ks.keyScale(kMap.Down()) - ks.keyScale(kMap.Up())) * deltaScale.y(); }
+    float lrScale() const {return (ks.keyScale(kMap.Right()) - ks.keyScale(kMap.Left())) * deltaScale.x();}
 
 
 
 public:
 
-    scKeyboardControlledObj(const KeyboardState &keyboardObj, const KeyMapping &km) : pos(0, 0), deltaScale(1, 1), ks(keyboardObj), kMap(km){}
-    scKeyboardControlledObj(const KeyboardState &keyboardObj, const KeyMapping &km, QVector2D scaleFactor) :
+    scKeyboardControlledObj(const scKeyboardState &keyboardObj, KeyMapping km) : pos(0, 0), deltaScale(1, 1), ks(keyboardObj), kMap(km){}
+    scKeyboardControlledObj(const scKeyboardState &keyboardObj, KeyMapping km, QVector2D scaleFactor) :
         pos(0, 0), deltaScale(scaleFactor), ks(keyboardObj), kMap(km){}
-    scKeyboardControlledObj(const KeyboardState &keyboardObj, const KeyMapping &km, QVector2D scaleFactor, QVector2D startPos) :
+    scKeyboardControlledObj(const scKeyboardState &keyboardObj, KeyMapping km, QVector2D scaleFactor, QVector2D startPos) :
         pos(startPos), deltaScale(scaleFactor), ks(keyboardObj), kMap(km){}
 
 
@@ -38,7 +38,7 @@ public:
 
 scWorld::t_tag scWorld::addObject(scObject &newObj) {
     simVec.push_back(&newObj);
-    return simVec.size();
+    return simVec.size() - 1;
 }
 
 void scWorld::simulate(delta_t timeDelta) {
@@ -52,7 +52,7 @@ delta_t timeDeltaFromMilli(int milliseconds) {return ((float)(milliseconds))/TIM
 
 scObject *scCreateKeyboardObject(scInputDevice *inputDevice, QVector2D startOffset, QVector2D speedScale)
 {
-    scKeyboardControlledObj *newObj = new scKeyboardControlledObj(*new KeyboardState(inputDevice), KeyMapping::stdMap(),
-                                                                  startOffset, speedScale);
+    scKeyboardControlledObj *newObj = new scKeyboardControlledObj(*new scKeyboardState(inputDevice), KeyMapping::stdMap(),
+                                                                  speedScale, startOffset);
     return newObj;
 }

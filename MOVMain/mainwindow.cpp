@@ -12,6 +12,7 @@
 #include<GraphicsCore.h>
 #include <GlobalCore.h>
 #include <CompositionCore.h>
+#include <QElapsedTimer>
 
 MainWindow *MainWindow::App = NULL;
 
@@ -23,6 +24,7 @@ MainWindow::MainWindow(QWindow *parent)
     , context(0)
     , device(0)
     , inputDevice(this)
+    , world(0)
 {
     setSurfaceType(QWindow::OpenGLSurface);
 
@@ -33,13 +35,21 @@ MainWindow::MainWindow(QWindow *parent)
     App = this;
 }
 
-void MainWindow::render(QPainter *painter){gcDrawingImpl drawDevice(*painter);}
+void MainWindow::render(QPainter *painter){
+    gcDrawingImpl drawDevice(*painter);
+    device->setSize(size());
+    renderList.render(drawDevice);
+}
 
 void MainWindow::initialize(){
 
-    scWorld *world = new scWorld();
-    ccBootUp(*world, renderList, inputDevice);
-
+    world = new scWorld();
+    coBootUp(*world, renderList, inputDevice);
+    animating = true;
+    setWidth(1600);
+    setHeight(900);
+    setPosition(0, 0);
+    setVisibility(Windowed);
 }
 
 void MainWindow::render()
@@ -48,8 +58,6 @@ void MainWindow::render()
         device = new QOpenGLPaintDevice;
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-    device->setSize(size());
 
     QPainter painter(device);
     render(&painter);
@@ -90,11 +98,13 @@ void MainWindow::resizeEvent(QResizeEvent *event)
         renderNow();
 }
 
-
+static QElapsedTimer timer = QElapsedTimer();
 void MainWindow::renderNow()
 {
+
     if (!isExposed())
         return;
+
 
     updatePending = false;
 
@@ -110,22 +120,17 @@ void MainWindow::renderNow()
 
     context->makeCurrent(this);
 
+    if (world)
+        world->simulate(timer.elapsed());
+    timer.start();
+
     if (needsInitialize) {
         initializeOpenGLFunctions();
-        initialize();
     }
 
     render();
 
     context->swapBuffers(this);
-    if (animating)
-        renderLater();
-}
-
-void MainWindow::setAnimating(bool animating)
-{
-    animating = animating;
-
     if (animating)
         renderLater();
 }
