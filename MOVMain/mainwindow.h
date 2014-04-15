@@ -82,6 +82,6 @@ private:
     QOpenGLContext *context;
     QOpenGLPaintDevice *device;
     inputImpl inputDevice;
-    scWorld *world;
+    scWorld_p world;
 };
 #endif // MAINWINDOW_H

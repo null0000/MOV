@@ -11,14 +11,14 @@
 class coObject;
 
 class coObject_d{
-   coObject_d(scSim_d simDesc, gcImage_d imageDesc) :
+   coObject_d(scObject_d simDesc, gcImage_d imageDesc) :
     simDesc(simDesc), imageDesc(imageDesc){}
 
-    QScopedPointer<coObject> instantiate();
+    coObject *instantiate();
 
 
 private:
-    scSim_d simDesc;
+    scObject_d simDesc;
     gcImage_d imageDesc;
  };
 
@@ -28,19 +28,14 @@ private:
     class renderTarget {
     private:
         scWorld::t_tag lookupTag;
-        const scWorld &world;
+        const scWorld_p world;
     public:
-        QVector2D operator()() const {return world.lookup(lookupTag).position();}
-        renderTarget(const scWorld &world, scWorld::t_tag tag) : lookupTag(tag), world(world){}
+        QVector2D operator()() const {return world->lookup(lookupTag).position();}
+        renderTarget(scWorld_p world, scWorld::t_tag tag) : lookupTag(tag), world(world){}
     };
 
 public:
-    coObject(scObject &simObj, gcRenderable &animation, scWorld &world, gcRenderList &Renderer) :
-        simObjPtr(world.addObject(simObj)),
-        imageAnim(*new gcRenderOffset<renderTarget>(animation, renderTarget(world, simObjPtr)))
-    {
-        Renderer.pushRenderable(&imageAnim);
-    }
+    coObject(scObject_d simObj, gcRenderable &animation, scWorld_p world, gcRenderList &Renderer);
 
 
 
@@ -50,10 +45,13 @@ private:
 };
 
 
-void coBootUp(scWorld &world, gcRenderList &list, scInputDevice &inputDevice) {
-    scObject *keyboardObject = scCreateKeyboardObject(&inputDevice, QVector2D(0, 0), QVector2D(.25, .25));
+void coBootUp(scWorld_p world, gcRenderList &list, scInputDevice_p inputDevice) {
+
+    scKeyboardMap_ccp km = scKeyboardMap_ccp(new scKeyboardMap(scKeyboardMap::stdMap()));
+    scKeyboardState_ccp ks (new scKeyboardState(inputDevice));
+    scObject_d objDesc = scObject_d(km, ks);
     gcImageRenderable *image = new gcImageRenderable(gcImage("face").toRenderable());
-    new coObject(*keyboardObject, *image, world, list);
+    new coObject(objDesc, *image, world, list);
 
 }
 

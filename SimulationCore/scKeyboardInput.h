@@ -4,10 +4,17 @@
 #include <QMap>
 #include <QKeyEvent>
 #include <QWindow>
-
-class scKeyboardState;
 #include <iostream>
 
+
+class scKeyboardState;
+class scKeyboardMap;
+class scInputDevice;
+typedef const QSharedPointer<const scKeyboardState> scKeyboardState_ccp;
+typedef QSharedPointer<const scKeyboardState> scKeyboardState_cp;
+typedef const QSharedPointer<const scKeyboardMap> scKeyboardMap_ccp;
+typedef QSharedPointer<const scKeyboardMap> scKeyboardMap_cp;
+typedef const scInputDevice *scInputDevice_p;
 
 /**
  * @brief The scInputDevice class
@@ -55,7 +62,7 @@ public:
  *  using the keyEnum
  *
  */
-class KeyMapping
+class scKeyboardMap
 {
 public:
     typedef enum {upE, downE, leftE, rightE, useE} keyEnum;
@@ -68,11 +75,11 @@ public:
     Key Use() const {return returnFind(useE);}
 
 
-    KeyMapping(keyMapping_t map) :keyMap(map){}
+    scKeyboardMap(keyMapping_t map) :keyMap(map){}
 
     void remap(keyEnum key, Key newKey) {keyMap[key] = newKey;}
 
-    static KeyMapping stdMap() {
+    static scKeyboardMap stdMap() {
         keyMapping_t map;
         map[upE] = Key(Qt::Key_W);
         map[downE] = Key(Qt::Key_S);
@@ -113,7 +120,7 @@ public:
     bool isDown(Key k) const {return downKeyMap[k];}
     int keyScale(Key k) const {return downKeyMap[k] ? 1 : 0;} /*redundant, but I don't want to abuse implicit values for bools*/
 
-    scKeyboardState(scInputDevice *Parent) : QObject(){
+    scKeyboardState(scInputDevice_p Parent) : QObject(){
         connect(Parent, SIGNAL(keyPressSignal(QKeyEvent *)), this, SLOT(KeyPressed(QKeyEvent *)));
         connect(Parent, SIGNAL(keyReleaseSignal(QKeyEvent *)), this, SLOT(KeyReleased(QKeyEvent *)));
     }
@@ -128,3 +135,4 @@ public slots:
 
 
 #endif // SCKEYBOARDINPUT_H
+

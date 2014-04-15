@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWindow *parent)
     , context(0)
     , device(0)
     , inputDevice(this)
-    , world(0)
+    , world(new scWorld())
 {
     setSurfaceType(QWindow::OpenGLSurface);
 
@@ -43,8 +43,7 @@ void MainWindow::render(QPainter *painter){
 
 void MainWindow::initialize(){
 
-    world = new scWorld();
-    coBootUp(*world, renderList, inputDevice);
+    coBootUp(world, renderList, scInputDevice_p(&inputDevice));
     animating = true;
     setWidth(1600);
     setHeight(900);

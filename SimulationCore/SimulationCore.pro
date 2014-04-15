@@ -13,10 +13,14 @@ TEMPLATE = lib
 DEFINES += SIMULATIONCORE_LIBRARY
 
 SOURCES += \
-    scWorld.cpp
+    scWorld.cpp \
+    scObject_d.cpp \
+    sckeyboardcontrolledobj.cpp
 
 HEADERS += simulationcore.h \
-    scKeyboardInput.h
+    scKeyboardInput.h \
+    sckeyboardcontrolledobj.h \
+    scObject.h
 
 unix:!symbian {
     maemo5 {
