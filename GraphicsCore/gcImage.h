@@ -8,7 +8,9 @@ class QPixmap;
 class gcRenderable;
 class gcDrawingImpl;
 class gcImageRenderable;
-class gcImage{
+
+
+class gcImage : gcRenderable{
 public:
     gcImage(QString InputFile);
     gcImage();
@@ -18,23 +20,12 @@ public:
     QPixmap ToPixmap() const;
     bool IsLoaded();
 
-    gcImageRenderable toRenderable() const;
+    void draw(gcDrawingImpl &impl) const;
 
 private:
     QPixmap map;
     static const QString IMAGE_FILE_TYPE;
 };
 
-
-
-class gcImageRenderable: public gcRenderable {
-public:
-   gcImageRenderable(gcImage image) : image(image){}
-   void draw(gcDrawingImpl &impl) const;
-
-
-private:
-   gcImage image;
-};
 
 #endif // GCIMAGE_H

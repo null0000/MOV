@@ -59,10 +59,6 @@ gcImage::gcImage()  :
     map(){}
 
 
-gcImageRenderable gcImage::toRenderable() const {
-    return gcImageRenderable(*this);
-}
-
-void gcImageRenderable::draw(gcDrawingImpl &impl) const{
-    impl.Draw(image);
+void gcImage::draw(gcDrawingImpl &impl) const{
+    impl.Draw(*this);
 }

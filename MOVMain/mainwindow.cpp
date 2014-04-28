@@ -35,15 +35,15 @@ MainWindow::MainWindow(QWindow *parent)
     App = this;
 }
 
-void MainWindow::render(QPainter *painter){
-    gcDrawingImpl drawDevice(*painter);
+void MainWindow::render(QPainter &painter){
+    gcDrawingImpl drawDevice(painter);
     device->setSize(size());
     renderList.render(drawDevice);
 }
 
 void MainWindow::initialize(){
 
-    coBootUp(world, renderList, scInputDevice_p(&inputDevice));
+    coBootUp(world, &renderList, scInputDevice_p(&inputDevice));
     animating = true;
     setWidth(1600);
     setHeight(900);
@@ -59,7 +59,7 @@ void MainWindow::render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     QPainter painter(device);
-    render(&painter);
+    render(painter);
 }
 
 void MainWindow::renderLater()

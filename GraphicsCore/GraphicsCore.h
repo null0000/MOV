@@ -24,8 +24,8 @@ class gcRenderList{
 public:
     virtual void pushRenderable(gcRenderable *) = 0;
     virtual ~gcRenderList(){}
-
 };
 
+typedef gcRenderList * gcRenderList_p;
 
 #endif // GRAPHICSCORE_H

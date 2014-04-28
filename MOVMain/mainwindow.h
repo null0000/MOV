@@ -50,7 +50,7 @@ class MainWindow : public QWindow, protected QOpenGLFunctions
 public:
     explicit MainWindow(QWindow *parent = 0);
 
-    virtual void render(QPainter *painter);
+    virtual void render(QPainter &painter);
     virtual void render();
 
     virtual void initialize();
