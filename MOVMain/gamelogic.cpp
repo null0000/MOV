@@ -1,7 +1,7 @@
 #include "gamelogic.h"
 #include "mainwindow.h"
 
-void gameLogic::AddSimulatable(scSimulatable &Simulatable)
+void gameLogic::AddSimulatable(scObject &Simulatable)
 {
     simulatables.push_back(&Simulatable);
 }

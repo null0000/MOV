@@ -6,6 +6,7 @@ public:
     void Draw(gcImage i);
     void Draw(gcImage i, QRectF qrect);
     void Draw(QLineF l);
+    void Draw(QString s);
 
     void PushTransform(QTransform mat);
     void PopTransform();

@@ -35,7 +35,7 @@ void coBootUp(scWorld_p world, gcRenderList_p list, scInputDevice_p inputDevice)
 
     scKeyboardMap_ccp km = scKeyboardMap_ccp(new scKeyboardMap(scKeyboardMap::stdMap()));
     scKeyboardState_ccp ks (new scKeyboardState(inputDevice));
-    scObject_d objDesc = scObject_d(km, ks);
+    scObject_d objDesc = scKeyboardObject_d(km, ks);
     gcImage image = gcImage("face");
     new coObject<gcImage>(objDesc, image, world, list);
 

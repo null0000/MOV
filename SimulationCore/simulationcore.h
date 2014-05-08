@@ -17,7 +17,7 @@ class scWorld {
 public:
     typedef int t_tag;
 
-    t_tag addObject(scObject_d newObj);
+    t_tag addObject(const scObject_d &newObj);
     const scObject &lookup(t_tag tag) const {return *simVec[tag];}
     void simulate(delta_t timeDelta);
 

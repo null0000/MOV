@@ -15,12 +15,18 @@ DEFINES += SIMULATIONCORE_LIBRARY
 SOURCES += \
     scWorld.cpp \
     scObject_d.cpp \
-    sckeyboardcontrolledobj.cpp
+    sckeyboardcontrolledobj.cpp \
+    scAIObject.c
 
 HEADERS += simulationcore.h \
     scKeyboardInput.h \
     sckeyboardcontrolledobj.h \
-    scObject.h
+    scObject.h \
+    scPlanTask.h \
+    scInstr.h \
+    scTask.h \
+    scInstrTask.h \
+    scAIObject.h
 
 unix:!symbian {
     maemo5 {

@@ -18,10 +18,7 @@ class scKeyboardControlledObj : public scObject {
     float udScale() const {return (ks->keyScale(kMap->Down()) - ks->keyScale(kMap->Up())) * deltaScale.y(); }
     float lrScale() const {return (ks->keyScale(kMap->Right()) - ks->keyScale(kMap->Left())) * deltaScale.x();}
 
-
-
 public:
-
     scKeyboardControlledObj(scKeyboardState_ccp keyboardObj, scKeyboardMap_ccp km) : pos(0, 0), deltaScale(1, 1), ks(keyboardObj), kMap(km){}
     scKeyboardControlledObj(scKeyboardState_ccp keyboardObj, scKeyboardMap_ccp km, QVector2D scaleFactor) :
         pos(0, 0), deltaScale(scaleFactor), ks(keyboardObj), kMap(km){}

@@ -5,7 +5,7 @@
 
 
 
-scWorld::t_tag scWorld::addObject(scObject_d newObj) {
+scWorld::t_tag scWorld::addObject(const scObject_d &newObj) {
     simVec.push_back(newObj.instantiate());
     return simVec.size() - 1;
 }

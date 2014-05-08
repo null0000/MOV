@@ -1,17 +1,8 @@
 
 #include "simulationcore.h"
 
-scObject *scObject_d::instantiate() const
-{
-    switch(controller)
-    {
-    case KeyControlledE:
-        return InstantiateKeyboardObj();
-    default:
-        Q_ASSERT(false);
-        return NULL;
-    }
+scObject *scKeyboardObject_d::instantiate() const {return new scKeyboardControlledObj(kstate, kmap, speedScale, startLocation);}
+
+scObject *scAIObject_d::instantiate() const {
+
 }
-
-
-scObject *scObject_d::InstantiateKeyboardObj() const {return new scKeyboardControlledObj(kstate, kmap, speedScale, startLocation);}

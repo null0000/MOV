@@ -36,3 +36,6 @@ void gcDrawingImpl::Draw(gcImage i, QRectF qrect)
 gcDrawingImpl::gcDrawingImpl(QPainter &painter) :
     painter(painter), matStack(), topMat(){}
 
+void gcDrawingImpl::Draw(QString s){
+    painter.drawText(QPoint(0, 0), s);
+}
