@@ -30,8 +30,9 @@ class MainWindow : public QWindow, protected QOpenGLFunctions
         }
 
         void render(gcDrawingImpl &renderer) {
-            for (QVector<gcRenderable *>::iterator itr = renderableList.begin(); itr != renderableList.end(); itr++)
+            for (QVector<gcRenderable *>::iterator itr = renderableList.begin(); itr != renderableList.end(); itr++) {
                 (*itr)->draw(renderer);
+            }
         }
 
         ~renderListImpl(){}

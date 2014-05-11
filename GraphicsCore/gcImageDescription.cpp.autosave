@@ -1,0 +1,22 @@
+
+
+#include "gcImageDescription.h"
+
+gcAnimation::gcAnimation(gcSymbolIndex_t imageName, gcImage image) : 
+    frames(), image(image), name(imageName) {
+    frames.push_back(QRect(QPoint(0, 0), QPoint(image.)))
+}
+
+
+class gcAnimation : gcRenderable {
+public:
+    gcAnimation (gcSymbolIndex_t imageName, gcImage image);
+    gcAnimation (gcSymbolIndex_t imageName, QVector<QRect> frames, gcImage image);
+
+private:
+    QVector<QRect> frames;
+    gcImage image;
+    gcSymbolIndex_t name;
+
+
+};

@@ -11,10 +11,12 @@ TEMPLATE = lib
 
 DEFINES += COMPOSITIONCORE_LIBRARY
 
-SOURCES += compositioncore.cpp
+SOURCES += compositioncore.cpp \
+    ccAISpawner.cpp
 
 HEADERS += \
-    CompositionCore.h
+    CompositionCore.h \
+    ccAISpawner.h
 
 unix:!symbian {
     maemo5 {

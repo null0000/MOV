@@ -3,11 +3,13 @@
 
 #include "scTask.h"
 
-class scInstrTask : scTask {
+class scInstrTask : public scTask {
+
+public:
     scInstrTask (scInstrDesc desc) :
         desc(desc){}
 
-    scInstrPair nextInstr() const {return scInstrPair(scNullTask::NullTaskS, desc);}
+    scInstrPair nextInstr() const {return scInstrPair(&scNullTask::NullTaskS, desc);}
 
 private:
     scInstrDesc desc;

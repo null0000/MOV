@@ -24,6 +24,7 @@ void gcDrawingImpl::PushTransform(QTransform mat)
 void gcDrawingImpl::PopTransform()
 {
     matStack.pop();
+    Q_ASSERT(matStack.size() > 0);
     topMat = matStack.top();
     painter.setTransform(topMat, false);
 }
@@ -34,7 +35,7 @@ void gcDrawingImpl::Draw(gcImage i, QRectF qrect)
 }
 
 gcDrawingImpl::gcDrawingImpl(QPainter &painter) :
-    painter(painter), matStack(), topMat(){}
+    painter(painter), matStack(), topMat(){matStack.push(topMat);}
 
 void gcDrawingImpl::Draw(QString s){
     painter.drawText(QPoint(0, 0), s);

@@ -77,7 +77,7 @@ bool MainWindow::event(QEvent *event)
         renderNow();
         return true;
     default:
-        return QWindow::event(event);
+            return QWindow::event(event);
     }
 }
 

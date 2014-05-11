@@ -2,27 +2,25 @@
 #define SCINSTR_H
 
 #include "scObject.h"
+#include "QVector2D"
+#include <QString>
 
 class scInstrDesc
 {
 public:
-    QVector2D movement() const {return movement;}
-    scInstrDesc registerMovement(QVector2D delta) const {return scInsrDesc(movement - delta, use);}
+    QVector2D movementRemaining() const;
+    scInstrDesc registerMovement(QVector2D delta) const;
 
-    float use() const {return useDelta;}
-    scInstrDesc registerUse(float useLength) const {return scInstrDesc(movement, use - useLength);}
+    float useRemaining() const;
+    scInstrDesc registerUse(float useLength) const;
 
-    scInstrDesc(QVector2D movement) :
-        movement(movement), use(0){}
-    scInstrDesc(float useLength) :
-        movement(0, 0), usDelta(useLength){}
-    scInstrDesc(QVector2D movement, float useLength) :
-        movement(movement), useDelta(useLength){}
-    scInstrDesc() :
-        movement(0, 0), useDelta(0){}
+    scInstrDesc(QVector2D movement);
+    scInstrDesc(float useLength);
+    scInstrDesc(QVector2D movement, float useLength);
+    scInstrDesc();
+    bool isNullInstr() const;
 
-
-    bool nullInstr() const {return movement.x() > 0 || movement.y() > 0 || useDelta > 0;}
+    void Dump() const;
 
 private:
     QVector2D movement;

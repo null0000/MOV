@@ -20,6 +20,7 @@ public:
         transform.translate(translation.x(), translation.y());
         impl.PushTransform(transform);
         renderObj.draw(impl);
+        impl.PopTransform();
     }
 
 };

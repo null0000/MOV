@@ -12,11 +12,16 @@ TEMPLATE = lib
 
 DEFINES += SIMULATIONCORE_LIBRARY
 
+
+CONFIG += c++11
+
 SOURCES += \
     scWorld.cpp \
     scObject_d.cpp \
     sckeyboardcontrolledobj.cpp \
-    scAIObject.c
+    scInstr.cpp \
+    scTask.cpp \
+    scAIObject.cpp
 
 HEADERS += simulationcore.h \
     scKeyboardInput.h \
@@ -26,7 +31,10 @@ HEADERS += simulationcore.h \
     scInstr.h \
     scTask.h \
     scInstrTask.h \
-    scAIObject.h
+    scAIObject.h \
+    scUseListener.h \
+    scWorld.h \
+    scUseRegister.h
 
 unix:!symbian {
     maemo5 {
