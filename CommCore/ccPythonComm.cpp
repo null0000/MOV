@@ -4,6 +4,7 @@
 #include <ecIOErrors.h>
 #include <string>
 #include <QDir>
+#include <iostream>
 
 const QString ccPythonComm::SCRIPT_NAME = "pcServerMain.py";
 const QString ccPythonComm::PYTHON_NAME = "python";
@@ -29,7 +30,7 @@ void ccPythonComm::startupServer(const QString ScriptName) {
     glbGlobals::PushDir();
     glbGlobals::MoveToPythonDir();
 
-    QStringList dirs = QDir::current().entryList();
+    QStringList dirs = QDir::current().entryList();\
     Q_ASSERT(dirs.contains(SCRIPT_NAME));
 
     bool errorConnection = QObject::connect(&server, SIGNAL(error(QProcess::ProcessError)), this, SLOT(ProcessError(QProcess::ProcessError)));

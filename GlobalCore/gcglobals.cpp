@@ -63,3 +63,13 @@ QString glbGlobals::GraphicsDir() {return GRAPHICS_DIR;}
 QString glbGlobals::PythonDir() {return PYTHON_DIR;}
 QString glbGlobals::AppDir() {return APP_DIR;}
 QString glbGlobals::ProgramDir(){return APP_DIR;}
+
+
+void glbGlobals::Bootup() {
+    LogAppDir();
+}
+
+void glbGlobals::UnitBootup() {
+    QDir::setCurrent("..");
+    Bootup();
+}

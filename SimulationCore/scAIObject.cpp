@@ -22,16 +22,11 @@ scInstrPair scAIObject::updateTask(QVector2D totalMovement) const {
 QVector2D scAIObject::getMovement(delta_t time) const {
     QVector2D maxSpeed (time * speedScale.x(), time * speedScale.y());
     QVector2D desiredMovement = fetchCurInstr().movementRemaining();
-    std::cerr << desiredMovement.x() << " " << desiredMovement.y() << "\n";
-    std::cerr << "Max Speed x: " << maxSpeed.x() << " Max speed y: " << maxSpeed.y() << "\n";
     return QVector2D(qMin(maxSpeed.x(), desiredMovement.x()),
                      qMin(maxSpeed.y(), desiredMovement.y()));
 }
 
 QVector2D scAIObject::updatePos(QVector2D movement) const {
-    std::cerr << "curX: " << curLoc.x() << " curY: " << curLoc.y() << " newX: " << movement.x() << " newY: " << movement.y()
-                 << " totalX " << (movement + curLoc).x() << " totalY: " << (movement + curLoc).y() << "\n";
-
     return movement + curLoc;
 }
 

@@ -4,9 +4,9 @@
 #
 #-------------------------------------------------
 
-QT       += testlib
+QT       += testlib widgets
 
-QT       -= gui
+
 
 TARGET = tst_commcoreunittest
 CONFIG   += console

@@ -20,6 +20,5 @@ ccAISpawner::ccAISpawner(scWorld_p world, gcRenderList_p list, scAIObject_d obje
 
 void ccAISpawner::registerUse(const scObject &) {
     gcImage image ("face");
-    std::cerr << "Registered use\n";
     new coObject<gcImage>(obj, image, world, list);
 }

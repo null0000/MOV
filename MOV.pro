@@ -13,7 +13,7 @@ graphics.path = $$OUT_PWD/Graphics
 graphics.files = $$_PRO_FILE_PWD_/Graphics/*
 INSTALLS += graphics
 
-python.path = $$OUT_PWD/PythonCore
+python.path = $$OUT_PWD
 python.files = $$_PRO_FILE_PWD_/PythonCore
 INSTALLS += python
 

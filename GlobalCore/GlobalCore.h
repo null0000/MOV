@@ -37,6 +37,17 @@ public:
     static void RevertDir();
     static void CD(QString target);
 
+    static void Bootup();
+    static void UnitBootup();
+
+};
+
+#include <iostream>
+
+class glbDebug {
+
+public:
+    static void DumpQString(const QString &dumpee) {std::cerr << dumpee.toStdString();}
 };
 
 #endif // GLOBALCORE_H

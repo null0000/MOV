@@ -1,7 +1,7 @@
 #include <QString>
 #include <QtTest>
 
-
+#include <GlobalCore.h>
 #include <commcore.h>
 
 
@@ -24,6 +24,7 @@ CommCoreUNITTest::CommCoreUNITTest()
 
 void CommCoreUNITTest::testCase()
 {
+    glbGlobals::UnitBootup();
     ccPythonComm *comm = new ccPythonComm("copyTest.py");
 
     QString command = "This is a test of the copy system";
