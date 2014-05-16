@@ -5,12 +5,14 @@
 #include <QKeyEvent>
 #include <QWindow>
 #include <iostream>
+#include <set>
 
 
 class scKeyboardState;
 class scKeyboardMap;
 class scInputDevice;
 typedef const QSharedPointer<const scKeyboardState> scKeyboardState_ccp;
+typedef const QSharedPointer<scKeyboardState> scKeyboardState_p;
 typedef QSharedPointer<const scKeyboardState> scKeyboardState_cp;
 typedef const QSharedPointer<const scKeyboardMap> scKeyboardMap_ccp;
 typedef QSharedPointer<const scKeyboardMap> scKeyboardMap_cp;
@@ -48,6 +50,7 @@ public:
     Key(int mappedKey) : mappedKey(mappedKey){}
     Key() : mappedKey(-1){}
 
+    int toInt()const {return mappedKey;}
 
     bool operator < (const Key &Other) const {return mappedKey < Other.mappedKey;}
     bool operator > (const Key &Other) const {return mappedKey > Other.mappedKey;}
@@ -79,26 +82,18 @@ public:
 
     void remap(keyEnum key, Key newKey) {keyMap[key] = newKey;}
 
-    static scKeyboardMap stdMap() {
-        keyMapping_t map;
-        map[upE] = Key(Qt::Key_W);
-        map[downE] = Key(Qt::Key_S);
-        map[leftE] = Key(Qt::Key_A);
-        map[rightE] = Key(Qt::Key_D);
-        map[useE] = Key(Qt::Key_E);
-        return map;
-    }
+    static scKeyboardMap stdMap();
 
 private:
-    Key returnFind(keyEnum k) const
-    {
-        keyMapping_t::const_iterator fr = keyMap.find(k);
-        if (fr != keyMap.end())
-            return keyMap.find(k)->second;
-        return Key(0);
-    }
+    Key returnFind(keyEnum k) const;
     keyMapping_t keyMap;
 
+};
+
+class scKeyListener
+{
+public:
+    virtual void registerEvent() = 0;
 };
 
 
@@ -113,23 +108,27 @@ private:
 class scKeyboardState : public QObject {
 
     Q_OBJECT
-
-    QMap<Key, bool> downKeyMap;
-
 public:
-    bool isDown(Key k) const {return downKeyMap[k];}
-    int keyScale(Key k) const {return downKeyMap[k] ? 1 : 0;} /*redundant, but I don't want to abuse implicit values for bools*/
 
-    scKeyboardState(scInputDevice_p Parent) : QObject(){
-        connect(Parent, SIGNAL(keyPressSignal(QKeyEvent *)), this, SLOT(KeyPressed(QKeyEvent *)));
-        connect(Parent, SIGNAL(keyReleaseSignal(QKeyEvent *)), this, SLOT(KeyReleased(QKeyEvent *)));
-    }
+    bool isDown(Key k) const;
+    int keyScale(Key k) const;
 
-    scKeyboardState() : QObject() {}
+    scKeyboardState(scInputDevice_p Parent);
+
+    scKeyboardState();
+
+    void registerListener(int key, scKeyListener *obj);
 
 public slots:
-    void KeyPressed(QKeyEvent *qke) {downKeyMap[qke->key()] = true;}
-    void KeyReleased(QKeyEvent *qke) {downKeyMap[qke->key()] = false;}
+    void KeyPressed(QKeyEvent *qke);
+    void KeyReleased(QKeyEvent *qke);
+
+private:
+    void notifyListeners(int key);
+    typedef std::set<scKeyListener *> listenerSet;
+    typedef std::map<int,  listenerSet> listenerSetMap;
+    QMap<Key, bool> downKeyMap;
+    listenerSetMap listenerMap;
 };
 
 

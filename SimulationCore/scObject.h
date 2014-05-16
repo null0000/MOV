@@ -39,7 +39,7 @@ class scKeyboardObject_d : public scObject_d
 public:
     scObject *instantiate() const;
 
-    scKeyboardObject_d(scKeyboardMap_ccp kmap, scKeyboardState_ccp kstate,
+    scKeyboardObject_d(scKeyboardMap_ccp kmap, scKeyboardState_p kstate,
                        QVector2D startLocation = QVector2D(0, 0),
                        QVector2D speedScale = QVector2D(.25, .25),
                        scUseListener listener = scUseListener()) :
@@ -49,7 +49,7 @@ private:
     QVector2D startLocation;
     QVector2D speedScale;
     scKeyboardMap_ccp kmap;
-    scKeyboardState_ccp kstate;
+    scKeyboardState_p kstate;
     scUseListener listener;
 
     scObject *InstantiateKeyboardObj() const;

@@ -21,7 +21,8 @@ SOURCES += \
     sckeyboardcontrolledobj.cpp \
     scInstr.cpp \
     scTask.cpp \
-    scAIObject.cpp
+    scAIObject.cpp \
+    scKeyboardInput.cpp
 
 HEADERS += simulationcore.h \
     scKeyboardInput.h \

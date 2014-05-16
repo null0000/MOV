@@ -12,25 +12,25 @@ class scUseListener;
 
 class scKeyboardControlledObj : public scObject {
 public:
-    scKeyboardControlledObj(scKeyboardState_ccp keyboardObj, scKeyboardMap_ccp km) : pos(0, 0), deltaScale(1, 1), useLatch(false), ks(keyboardObj), kMap(km){}
-    scKeyboardControlledObj(scKeyboardState_ccp keyboardObj, scKeyboardMap_ccp km, QVector2D scaleFactor) :
-        pos(0, 0), deltaScale(scaleFactor), useLatch(false), ks(keyboardObj), kMap(km){}
-    scKeyboardControlledObj(scKeyboardState_ccp keyboardObj, scKeyboardMap_ccp  km, QVector2D scaleFactor, QVector2D startPos, scUseListener listener) :
-        pos(startPos), deltaScale(scaleFactor), useLatch(false), ks(keyboardObj), kMap(km), listener(listener){}
-
-
+    scKeyboardControlledObj(scKeyboardState_p keyboardObj, scKeyboardMap_ccp km);
+    scKeyboardControlledObj(scKeyboardState_p keyboardObj, scKeyboardMap_ccp km, QVector2D scaleFactor);
+    scKeyboardControlledObj(scKeyboardState_p keyboardObj, scKeyboardMap_ccp  km, QVector2D scaleFactor, QVector2D startPos, scUseListener listener);
 
     void Simulate(delta_t timeDelta);
     QVector2D position() const {return pos;}
     bool isUsing() const;
 private:
+    class keyboardListener;
+
+    friend class keyboardListener;
+
+    void registerKeyboardListener();
+
     QVector2D pos;
     QVector2D deltaScale;
 
-    bool useLatch;
-
-    const QSharedPointer<const scKeyboardState> ks;
-    const QSharedPointer<const scKeyboardMap> kMap;
+    scKeyboardState_p ks;
+    scKeyboardMap_ccp kMap;
 
     scUseListener listener;
 
