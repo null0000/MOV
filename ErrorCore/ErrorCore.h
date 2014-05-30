@@ -12,7 +12,6 @@ class ecErrorDialog;
 class ecError : public std::exception
 {
 public:
-
     virtual QString message() const = 0;
     ecError(){}
     virtual ~ecError() throw() {}
@@ -35,6 +34,17 @@ private:
 
     static QSet<ecErrorDialog *> errorSet;
     static const QString ErrorLogName;
+};
+
+class ecSwitchError : public ecError {
+public:
+
+    ecSwitchError(int typeNum) : typeNum(typeNum) {}
+    QString message() const {return "Found invalid type in switch statement: " + typeNum;}
+
+private:
+    int typeNum;
+
 };
 
 #endif // ERRORCORE_H

@@ -3,39 +3,39 @@
 
 #include <QVector2D>
 #include <QSharedPointer>
-#include "simulationcore.h"
-#include "scUseListener.h"
+
+#include "scKeyboardInput.h"
 
 class scKeyboardState;
 class scKeyboardMap;
-class scUseListener;
+class scObjDesc;
+class scMovementDesc;
+class scWorldDesc;
 
-class scKeyboardControlledObj : public scObject {
+class scKeyboardControlledObj {
 public:
     scKeyboardControlledObj(scKeyboardState_p keyboardObj, scKeyboardMap_ccp km);
     scKeyboardControlledObj(scKeyboardState_p keyboardObj, scKeyboardMap_ccp km, QVector2D scaleFactor);
-    scKeyboardControlledObj(scKeyboardState_p keyboardObj, scKeyboardMap_ccp  km, QVector2D scaleFactor, QVector2D startPos, scUseListener listener);
 
-    void Simulate(delta_t timeDelta);
-    QVector2D position() const {return pos;}
+
+    scMovementDesc getMovement(const scObjDesc &objDesc) const;
     bool isUsing() const;
+    void updateStrategy(const scObjDesc &objDesc, const scWorldDesc &worldState) const;
+
 private:
     class keyboardListener;
 
     friend class keyboardListener;
 
     void registerKeyboardListener();
-
-    QVector2D pos;
     QVector2D deltaScale;
 
     scKeyboardState_p ks;
     scKeyboardMap_ccp kMap;
 
-    scUseListener listener;
 
-    float udScale() const {return (ks->keyScale(kMap->Down()) - ks->keyScale(kMap->Up())) * deltaScale.y(); }
-    float lrScale() const {return (ks->keyScale(kMap->Right()) - ks->keyScale(kMap->Left())) * deltaScale.x();}
+    float udScale() const {return (ks->keyScale(kMap->Down()) - ks->keyScale(kMap->Up())); }
+    float lrScale() const {return (ks->keyScale(kMap->Right()) - ks->keyScale(kMap->Left()));}
 };
 
 #endif // SCKEYBOARDCONTROLLEDOBJ_H

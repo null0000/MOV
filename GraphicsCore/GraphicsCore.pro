@@ -11,6 +11,7 @@ TEMPLATE = lib
 
 DEFINES += GRAPHICSCORE_LIBRARY
 
+QMAKE_CXXFLAGS += -std=gnu++11
 SOURCES += \
     gcImage.cpp \
     gcDrawingImpl.cpp

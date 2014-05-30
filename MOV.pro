@@ -9,6 +9,7 @@ windows{
 INCLUDEPATH += $$_PRO_FILE_PWD_/Box2D/Box2D
 CONFIG += c++11
 
+QMAKE_CXXFLAGS += -std=gnu++11
 graphics.path = $$OUT_PWD/Graphics
 graphics.files = $$_PRO_FILE_PWD_/Graphics/*
 INSTALLS += graphics

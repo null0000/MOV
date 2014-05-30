@@ -16,18 +16,6 @@ private Q_SLOTS:
     void testCase1();
 };
 
-
-class testTask
-{
-    int xDir;
-    int yDir;
-    int useTime;
-
-
-
-
-};
-
 SimulationCoreUNITTest::SimulationCoreUNITTest()
 {
 }

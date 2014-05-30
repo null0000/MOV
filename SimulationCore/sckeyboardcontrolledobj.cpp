@@ -1,5 +1,6 @@
 #include "simulationcore.h"
-#include "scUseListener.h"
+#include "scWorldDesc.h"
+#include "scMovementDesc.h"
 
 class scKeyboardControlledObj::keyboardListener : public scKeyListener {
 public:
@@ -10,25 +11,26 @@ private:
     scKeyboardControlledObj &owner;
 };
 
-void scKeyboardControlledObj::Simulate(delta_t timeDelta) {
-    QVector2D inputScale (lrScale(), udScale());
-    QVector2D timeScaledPosDelta = inputScale * timeDelta;
-    pos += timeScaledPosDelta;
-}
-
 bool scKeyboardControlledObj::isUsing() const {
     return ks->isDown(kMap->Use());
 }
 
-void scKeyboardControlledObj::keyboardListener::registerEvent() {owner.listener.registerUse(owner);}
-
-scKeyboardControlledObj::scKeyboardControlledObj(scKeyboardState_p keyboardObj, scKeyboardMap_ccp km) : pos(0, 0), deltaScale(1, 1), ks(keyboardObj), kMap(km){registerKeyboardListener();}
+scKeyboardControlledObj::scKeyboardControlledObj(scKeyboardState_p keyboardObj, scKeyboardMap_ccp km) :
+    deltaScale(1, 1), ks(keyboardObj), kMap(km){registerKeyboardListener();}
 scKeyboardControlledObj::scKeyboardControlledObj(scKeyboardState_p keyboardObj, scKeyboardMap_ccp km, QVector2D scaleFactor) :
-    pos(0, 0), deltaScale(scaleFactor), ks(keyboardObj), kMap(km){registerKeyboardListener();}
-scKeyboardControlledObj::scKeyboardControlledObj(scKeyboardState_p keyboardObj, scKeyboardMap_ccp  km, QVector2D scaleFactor, QVector2D startPos, scUseListener listener) :
-    pos(startPos), deltaScale(scaleFactor), ks(keyboardObj), kMap(km), listener(listener){registerKeyboardListener();}
+    deltaScale(scaleFactor), ks(keyboardObj), kMap(km){registerKeyboardListener();}
 
 
 void scKeyboardControlledObj::registerKeyboardListener() {
     ks->registerListener(kMap->Use().toInt(), new keyboardListener(*this));
 }
+
+void scKeyboardControlledObj::keyboardListener::registerEvent(){}
+
+
+
+scMovementDesc scKeyboardControlledObj::getMovement(const scObjDesc &) const {
+        QVector2D inputScale (lrScale(), udScale());
+        return scMovementDesc (inputScale * deltaScale, deltaScale.length()); //cache delta scale values?
+}
+void scKeyboardControlledObj::updateStrategy(const scObjDesc &, const scWorldDesc &) const{}

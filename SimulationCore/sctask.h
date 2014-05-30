@@ -3,27 +3,47 @@
 
 #include <QPair>
 #include <QVector>
-#include "scInstr.h"
+#include <QVector2D>
+class scWorldDesc;
+class scObjDesc;
+class scMovementDesc;
 
-typedef QPair<const scTask *, scInstrDesc> scInstrPair;
 
-class scTask
-{
+
+class scTask {
+
+    static scTask NullTaskS;
+
+    inline float maxMagnitude(const QVector2D &curLoc) const;
 public:
-    virtual ~scTask(){}
-    virtual scInstrPair nextInstr() const = 0;
-    virtual bool isNullTask() const {return false;}
+    scTask(const scObjDesc &objDesc);
+    scTask();
+
+    void updateStrategy(const scObjDesc &loc, const scWorldDesc &desc);
+    scMovementDesc getMovement(const scObjDesc &curLoc) const;
+    bool isUsing() const;
+
+    bool isNullTask() const;
+
+private:
+    bool shouldUse;
+    QVector2D targetLoc;
 };
 
-class scNullTask : public scTask
-{
+class scPlan {
 public:
-    static const scNullTask NullTaskS;
-
-    scInstrPair nextInstr() const;
-    bool isNullTask() const {return true;}
+    //should return NULL if no next Task
+    virtual scTask generateNextTask(const scObjDesc &thisObj,
+                                    const scWorldDesc &visibleWorldDesc) = 0;
 };
 
+class scTaskIterator {
+
+public:
+    scMovementDesc calcMovement(const QVector2D curLoctaion)const;
+    bool isUsing() const;
+
+};
 
 typedef const QVector<const scTask *> scTaskList;
 

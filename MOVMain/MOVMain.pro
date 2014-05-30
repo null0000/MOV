@@ -11,13 +11,11 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = MOVMain
 TEMPLATE = app
 
-
+QMAKE_CXXFLAGS += -std=gnu++11
 SOURCES += main.cpp\
-        mainwindow.cpp \
-    gamelogic.cpp
+        mainwindow.cpp
 
-HEADERS  += mainwindow.h \
-    gamelogic.h
+HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
 

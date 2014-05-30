@@ -1,6 +1,8 @@
 #ifndef ECIOERRORS_H
 #define ECIOERRORS_H
 
+#include "ErrorCore.h"
+
 class ecCdError : public ecError{
 private:
     QString dir;

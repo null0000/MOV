@@ -17,5 +17,19 @@ int main(int argc, char *argv[])
     glbGlobals::LogAppDir();
     (new MainWindow())->initialize();
     qApp->setQuitOnLastWindowClosed(true);
-    return a.exec();
+    try
+    {
+        return a.exec();
+    }
+    catch (const ecError &err) {
+        ecErrorDialog ed (NULL, "Fatal Error: "+ err.message());
+        ed.show();
+    }
+
+    catch (...) {
+        ecErrorDialog ed (NULL, "Fatal error of unknown type. Aborting...");
+        ed.show();
+    }
+    return 1;
+
 }

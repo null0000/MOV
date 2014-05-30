@@ -9,14 +9,13 @@ QT       += opengl
 TARGET = CompositionCore
 TEMPLATE = lib
 
+QMAKE_CXXFLAGS += -std=gnu++11
 DEFINES += COMPOSITIONCORE_LIBRARY
 
-SOURCES += compositioncore.cpp \
-    ccAISpawner.cpp
+SOURCES += compositioncore.cpp
 
 HEADERS += \
-    CompositionCore.h \
-    ccAISpawner.h
+    CompositionCore.h
 
 unix:!symbian {
     maemo5 {
