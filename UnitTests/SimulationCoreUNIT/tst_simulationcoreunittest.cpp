@@ -6,6 +6,7 @@
 #include <sstream>
 
 #include <scTaskIterator.h>
+#include <scTaskList.h>
 #include <scWorld.h>
 #include <scTask.h>
 #include <scWorldDesc.h>
@@ -29,6 +30,7 @@ private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
     void testCase1();
+    void testCase2();
 };
 
 SimulationCoreUNITTest::SimulationCoreUNITTest()
@@ -46,9 +48,6 @@ void SimulationCoreUNITTest::cleanupTestCase()
 
 
 class singleTask : public scPlan {
-
-
-
 public:
     scTask generateNextTask(const scObjDesc &,
                             const scWorldDesc &) {
@@ -98,20 +97,24 @@ float GetLargestOrTen(const scSubWorld<scTaskIterator> &world, const taskList_t 
 
 }
 
+static std::minstd_rand rnum (22132);
+QVector2D genRandomVec(unsigned int maxX, unsigned int maxY) {
+    float x = (((int)rnum())%(maxX * 2)) - maxX;
+    float y = (((int)rnum())%(maxY * 2)) - maxY;
+    return QVector2D(x, y);
+}
+
 void SimulationCoreUNITTest::testCase1()
 {
-    const int NUM_TASKS = 10000;
-    const int MAX_X = 50000;
-    const int MAX_Y = 50000;
+    static const int NUM_TASKS = 1000;
+
+    static const int MAX_X = 5000;
+    static const int MAX_Y = 5000;
 
     scSubWorld<scTaskIterator> world;
     taskList_t singleTaskVec(NUM_TASKS, singleTask());
-    std::minstd_rand rnum (22132);
     for (int i = 0; i < NUM_TASKS; i++) {
-        float x = (((int)rnum())%(MAX_X * 2)) - MAX_X;
-        float y = (((int)rnum())%(MAX_Y * 2)) - MAX_Y;
-
-        singleTaskVec[i] = (singleTask(QVector2D(x, y)));
+        singleTaskVec[i] = (singleTask(genRandomVec(MAX_X, MAX_Y)));
     }
 
     for (taskList_t::const_iterator cItr = singleTaskVec.begin();
@@ -131,6 +134,56 @@ void SimulationCoreUNITTest::testCase1()
         float ticks = curTask.numTicksToLocation(loc);
         Q_ASSERT(ticks < 1);
     }
+}
+
+void SimulationCoreUNITTest::testCase2() {
+    const int NUM_TASKS = 1000;
+    const int MAX_NUM_JOBS = 25;
+
+    const int MAX_START_X = 50000;
+    const int MAX_START_Y = 50000;
+
+    const int MAX_DELTA_X = 200;
+    const int MAX_DELTA_Y = 200;
+
+    typedef std::vector<QVector2D> vecList_t;
+    typedef std::vector<vecList_t> multiVecList_t;;
+
+    multiVecList_t mVecList;
+
+    for (int i = 0; i < NUM_TASKS; i++) {
+        vecList_t newTaskList;
+
+        newTaskList.push_back(genRandomVec(MAX_START_X, MAX_START_Y));
+        int lastIdx = 0;
+        int numJobs = rnum()%MAX_NUM_JOBS;
+        for (int j = 0; j < numJobs - 1; j++) {
+            QVector2D deltaVec = genRandomVec(MAX_DELTA_X, MAX_DELTA_Y);
+            QVector2D finalVec = deltaVec + newTaskList[lastIdx];
+            newTaskList.push_back(finalVec);
+        }
+
+        mVecList.push_back(newTaskList);
+    }
+
+    typedef std::vector<scTask> taskList_t;
+    typedef std::vector<taskList_t> multiTaskList_t;
+    multiTaskList_t mTasklist;
+
+
+    for (size_t i = 0; i < mVecList.size(); i++) {
+        taskList_t tList (mVecList[i].size(), scTask());
+        for (size_t j = 0; j < mVecList[j].size(); j++)
+            tList[j] = scTask(mVecList[i][j]);
+        mTasklist.push_back(tList);
+    }
+
+    std::vector<scTaskList> taskListList;
+
+    for (size_t i = 0; i < mTasklist.size(); i++) {
+        taskListList.push_back(scTaskList(mTasklist[i].begin(), mTasklist[i].end()));
+    }
+
 }
 
 QTEST_MAIN(SimulationCoreUNITTest)

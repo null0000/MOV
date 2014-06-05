@@ -47,6 +47,4 @@ public:
     virtual ~scPlan(){}
 };
 
-typedef const QVector<const scTask > scTaskList;
-
 #endif // SCTASK_H

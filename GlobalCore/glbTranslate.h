@@ -3,6 +3,7 @@
 
 
 #include "globalcore_ie.h"
+#include <string>
 
 class QVector2D;
 
