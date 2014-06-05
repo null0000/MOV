@@ -84,38 +84,44 @@ private:
 
 };
 
+typedef std::vector<singleTask> taskList_t;
+float GetLargestOrTen(const scSubWorld<scTaskIterator> &world, const taskList_t &taskList) {
+    float curMax = 0;
+    for (unsigned int i = 0; i < taskList.size(); i++) {
+        const singleTask &tsk = taskList[i];
+        float ticks = tsk.numTicksToLocation(world.lookup(i));
+        if (ticks > 10)
+            return 10;
+        curMax = std::max(curMax, ticks);
+    }
+    return curMax;
+
+}
+
 void SimulationCoreUNITTest::testCase1()
 {
+    const int NUM_TASKS = 10000;
+    const int MAX_X = 50000;
+    const int MAX_Y = 50000;
+
     scSubWorld<scTaskIterator> world;
-    typedef std::vector<singleTask> taskList_t;
-    taskList_t singleTaskVec(1000, singleTask());
+    taskList_t singleTaskVec(NUM_TASKS, singleTask());
     std::minstd_rand rnum (22132);
-    for (int i = 0; i < 1000; i++) {
-        float x = ((int)rnum())%5000;
-        float y = ((int)rnum())%5000;
+    for (int i = 0; i < NUM_TASKS; i++) {
+        float x = (((int)rnum())%(MAX_X * 2)) - MAX_X;
+        float y = (((int)rnum())%(MAX_Y * 2)) - MAX_Y;
 
         singleTaskVec[i] = (singleTask(QVector2D(x, y)));
     }
-
-
 
     for (taskList_t::const_iterator cItr = singleTaskVec.begin();
          cItr != singleTaskVec.end(); cItr++) {
         world.addObject(scTaskIterator(*cItr));
     }
-
-    float maxTime = 0;
-
-    for (taskList_t::const_iterator cItr = singleTaskVec.begin();
-         cItr != singleTaskVec.end(); cItr++) {
-        maxTime = std::max(maxTime, cItr->numTicksToLocation(QVector2D(0, 0)));
-    }
-
-    float curTime = 0;
-    while (curTime != maxTime)
+    float delta = 10;
+    while (delta != 0)
     {
-        float delta = std::min((float)10, maxTime - curTime);
-        curTime += delta;
+        delta = GetLargestOrTen(world, singleTaskVec);
         world.simulate(delta);
     }
 
