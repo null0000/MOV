@@ -4,6 +4,8 @@
 #include <QVector2D>
 #include <QSharedPointer>
 
+#include "simulationcore_ie.h"
+
 #include "scKeyboardInput.h"
 
 class scKeyboardState;
@@ -12,11 +14,10 @@ class scObjDesc;
 class scMovementDesc;
 class scWorldDesc;
 
-class scKeyboardControlledObj {
+class SIM_IE scKeyboardControlledObj {
 public:
     scKeyboardControlledObj(scKeyboardState_p keyboardObj, scKeyboardMap_ccp km);
     scKeyboardControlledObj(scKeyboardState_p keyboardObj, scKeyboardMap_ccp km, QVector2D scaleFactor);
-
 
     scMovementDesc getMovement(const scObjDesc &objDesc) const;
     bool isUsing() const;

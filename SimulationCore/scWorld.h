@@ -11,17 +11,21 @@ class scSimulatable;
 #include <QVector>
 #include <QSharedPointer>
 #include "sckeyboardcontrolledobj.h"
+#include "scTaskIterator.h"
 #include <deque>
 #include "scObjDesc.h"
 #include "scTask.h"
+#include "simulationcore_ie.h"
+#include "scMovementDesc.h"
+#include <ErrorCore.h>
 
 class scKeyboardControlledObj;
 class scTask;
 
 
-class scBaseWorld {
+class SIM_IE scBaseWorld {
 public:
-    typedef unsigned int t_tag;
+    typedef size_t t_tag;
     QVector2D lookup(t_tag) const;
 };
 
@@ -51,9 +55,9 @@ private:
  *on vectors (due to caching) and it allows for me to
  *remove ALL THE VIRTUAL FUNCTIONS.
  */
-class scWorld {
+class SIM_IE scWorld {
     scSubWorld<scKeyboardControlledObj> keyboardWorld;
-    scSubWorld<scTask> taskWorld;
+    scSubWorld<scTaskIterator> taskWorld;
 
     /*
      *This is used to track the different types.
@@ -65,7 +69,7 @@ class scWorld {
      *to update a function if you do that.
     */
     typedef enum {KeyboardTag, TaskTag} TypeTag;
-    const unsigned int TypeTagCountS = 2; //UPDATE THIS WITH NEW TYPETAG INFO. SHOULD EQUAL ENUM ENTRY COUNT
+    static const unsigned int TypeTagCountS = 2; //UPDATE THIS WITH NEW TYPETAG INFO. SHOULD EQUAL ENUM ENTRY COUNT
 
 public:
 
@@ -85,5 +89,27 @@ typename scSubWorld<planType>::t_tag scSubWorld<planType>::addObject(const planT
     return objList.size() - 1;
 }
 
+class badTagError : public ecError {
+public:
+    QString message() const {return "Bad tag used to lookup object";}
+};
+
+template <typename planType>
+QVector2D scSubWorld<planType>::lookup(t_tag tag) const {
+    if (objList.size() > tag)
+        return objList[tag].first.location();
+
+    throw badTagError();
+}
+
+template<typename planType>
+void scSubWorld<planType>::simulate(delta_t timeDelta) {
+    for (typename objlist_t::iterator itr = objList.begin(); itr != objList.end(); itr++) {
+        scMovementDesc moveDesc = itr->second.getMovement(itr->first);
+        moveDesc = moveDesc.addMaxDelta(timeDelta);
+        itr->first.moveAmount(moveDesc.maxMovement());
+        itr->second.updateStrategy(itr->first, scWorldDesc());
+    }
+}
 
 #endif // SCWORLD_H

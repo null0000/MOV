@@ -6,8 +6,9 @@
 #include <QSet>
 class ecErrorDialog;
 
+#include "errorcore_ie.h"
 
-class dialogKiller : public QObject {
+class ERR_IE dialogKiller : public QObject {
 private:
     Q_OBJECT
 

@@ -9,7 +9,10 @@ windows{
 INCLUDEPATH += $$_PRO_FILE_PWD_/Box2D/Box2D
 CONFIG += c++11
 
-QMAKE_CXXFLAGS += -std=gnu++11
+
+QMAKE_CXXFLAGS_DEBUG += -g3
+
+unix: QMAKE_CXXFLAGS += -std=gnu++11
 graphics.path = $$OUT_PWD/Graphics
 graphics.files = $$_PRO_FILE_PWD_/Graphics/*
 INSTALLS += graphics
@@ -20,14 +23,13 @@ INSTALLS += python
 
 SUBDIRS += \
     ErrorCore \
+    GlobalCore \
     SimulationCore \
     GraphicsCore \
-    MOVMain \
-    UnitTests \
+    CompositionCore \
     CommCore \
-    GlobalCore \
-    IOCore \
-    CompositionCore
+    MOVMain \
+    UnitTests
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/GlobalCore/release/ -lGlobalCore
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/GlobalCore/debug/ -lGlobalCore

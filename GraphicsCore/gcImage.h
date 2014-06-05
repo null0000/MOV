@@ -1,6 +1,7 @@
 #ifndef GCIMAGE_H
 #define GCIMAGE_H
 
+#include "graphicscore_ie.h"
 #include "gcRenderable.h"
 
 class QString;
@@ -10,7 +11,7 @@ class gcDrawingImpl;
 class gcImageRenderable;
 
 
-class gcImage : gcRenderable{
+class GFX_IE gcImage : gcRenderable{
 public:
     gcImage(QString InputFile);
     gcImage();

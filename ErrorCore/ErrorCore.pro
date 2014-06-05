@@ -15,13 +15,17 @@ DEFINES += ERRORCORE_LIBRARY
 
 SOURCES += \
     ecErrorRegister.cpp \
-    ecErrorDialog.cpp
+    ecErrorDialog.cpp \
+    ecIOErrors.cpp
 
 HEADERS += \
     ErrorCore.h \
     ecErrorDialog.h \
     dialogKiller.h \
-    ecIOErrors.h
+    ecIOErrors.h \
+    errorcore_ie.h
+
+
 
 unix:!symbian {
     maemo5 {
@@ -34,6 +38,3 @@ unix:!symbian {
 
 FORMS += \
     errordialog.ui
-
-INCLUDEPATH += $$PWD/../GlobalCore
-DEPENDPATH += $$PWD/../GlobalCore

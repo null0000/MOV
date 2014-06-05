@@ -5,7 +5,7 @@
 #include <QDir>
 #include "GraphicsCore.h"
 
-#include "../ErrorCore/ErrorCore.h"
+#include <ErrorCore.h>
 
 
 const QString gcImage::IMAGE_FILE_TYPE = ".gif";

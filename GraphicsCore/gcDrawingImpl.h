@@ -1,7 +1,9 @@
 #ifndef GCDRAWINGIMPL_H
 #define GCDRAWINGIMPL_H
 
-class gcDrawingImpl{
+#include "graphicscore_ie.h"
+
+class GFX_IE gcDrawingImpl{
 public:
     void Draw(gcImage i);
     void Draw(gcImage i, QRectF qrect);

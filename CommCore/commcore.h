@@ -4,7 +4,9 @@
 #include <QProcess>
 #include <ErrorCore.h>
 #include <QTextStream>
-class ccPythonComm : public QObject
+#include "commcore_ie.h"
+
+class COM_IE ccPythonComm : public QObject
 
 {
     Q_OBJECT

@@ -1,6 +1,7 @@
 #ifndef GRAPHICSCORE_H
 #define GRAPHICSCORE_H
 
+#include "graphicscore_ie.h"
 
 #include <qtglobal>
 #include <stack>
@@ -8,7 +9,6 @@
 #include <QTransform>
 #include <QPainter>
 #include "gcImage.h"
-#include "gcImageDescription.h"
 #include "gcRenderable.h"
 #include "gcDrawingImpl.h"
 
@@ -20,7 +20,7 @@ class fcFile;
 class QGraphicsItem;
 class QGraphicsPixmapItem;
 
-class gcRenderList{
+class GFX_IE gcRenderList{
 public:
     virtual void pushRenderable(gcRenderable *) = 0;
     virtual ~gcRenderList(){}

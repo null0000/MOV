@@ -2,8 +2,9 @@
 #define SCOBJDESC_H
 
 #include <QVector2D>
+#include "simulationcore_ie.h"
 
-class scObjDesc {
+class SIM_IE scObjDesc {
 
 public:
     const QVector2D &location() const;

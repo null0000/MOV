@@ -9,13 +9,14 @@ QT       += opengl
 TARGET = CompositionCore
 TEMPLATE = lib
 
-QMAKE_CXXFLAGS += -std=gnu++11
+unix: QMAKE_CXXFLAGS += -std=gnu++11
 DEFINES += COMPOSITIONCORE_LIBRARY
 
 SOURCES += compositioncore.cpp
 
 HEADERS += \
-    CompositionCore.h
+    CompositionCore.h \
+    compositioncore_ie.h
 
 unix:!symbian {
     maemo5 {
@@ -39,3 +40,10 @@ else:unix: LIBS += -L$$OUT_PWD/../GraphicsCore/ -lGraphicsCore
 
 INCLUDEPATH += $$PWD/../GraphicsCore
 DEPENDPATH += $$PWD/../GraphicsCore
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../ErrorCore/release/ -lErrorCore
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../ErrorCore/debug/ -lErrorCore
+else:unix: LIBS += -L$$OUT_PWD/../ErrorCore/ -lErrorCore
+
+INCLUDEPATH += $$PWD/../ErrorCore
+DEPENDPATH += $$PWD/../ErrorCore

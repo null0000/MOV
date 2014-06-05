@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = MOVMain
 TEMPLATE = app
 
-QMAKE_CXXFLAGS += -std=gnu++11
+unix: QMAKE_CXXFLAGS += -std=gnu++11
 SOURCES += main.cpp\
         mainwindow.cpp
 

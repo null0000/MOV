@@ -1,0 +1,11 @@
+#ifndef COMPOSITIONCORE_IE_H
+#define COMPOSITIONCORE_IE_H
+
+
+#if defined(COMPOSITIONCORE_LIBRARY)
+#  define CMP_IE Q_DECL_EXPORT
+#else
+#  define CMP_IE Q_DECL_IMPORT
+#endif
+
+#endif // COMPOSITIONCORE_IE_H

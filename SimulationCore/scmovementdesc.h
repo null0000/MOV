@@ -3,12 +3,15 @@
 
 #include <QVector2D>
 
-class scMovementDesc
+#include "simulationcore_ie.h"
+
+class SIM_IE scMovementDesc
 {
 public:
     scMovementDesc(const QVector2D &dir, float maxMag);
 
-    void applyScale(float timeDelta);
+    scMovementDesc addMaxDelta(float newMaxDelta) const;
+
     QVector2D maxMovement() const;
 private:
     float maxMagnitude;

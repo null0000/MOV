@@ -11,18 +11,19 @@ TEMPLATE = lib
 
 DEFINES += GRAPHICSCORE_LIBRARY
 
-QMAKE_CXXFLAGS += -std=gnu++11
+unix: QMAKE_CXXFLAGS += -std=gnu++11
+
 SOURCES += \
     gcImage.cpp \
     gcDrawingImpl.cpp
 
 HEADERS += \
     GraphicsCore.h \
-    gcImageDescription.h \
     gcImage.h \
     gcRenderTransform.h \
     gcRenderable.h \
-    gcDrawingImpl.h
+    gcDrawingImpl.h \
+    graphicscore_ie.h
 
 unix:!symbian {
     maemo5 {
@@ -41,3 +42,10 @@ else:unix: LIBS += -L$$OUT_PWD/../GlobalCore/ -lGlobalCore
 
 INCLUDEPATH += $$PWD/../GlobalCore
 DEPENDPATH += $$PWD/../GlobalCore
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../ErrorCore/release/ -lErrorCore
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../ErrorCore/debug/ -lErrorCore
+else:unix: LIBS += -L$$OUT_PWD/../ErrorCore/ -lErrorCore
+
+INCLUDEPATH += $$PWD/../ErrorCore
+DEPENDPATH += $$PWD/../ErrorCore

@@ -19,7 +19,8 @@ DEFINES += COMMCORE_LIBRARY
 SOURCES += \
     ccPythonComm.cpp
 
-HEADERS += commcore.h
+HEADERS += commcore.h \
+    commcore_ie.h
 
 unix:!symbian {
     maemo5 {

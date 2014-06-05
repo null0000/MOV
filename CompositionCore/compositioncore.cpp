@@ -1,7 +1,7 @@
 #include "CompositionCore.h"
 #include <simulationcore.h>
 
-void coBootUp(scWorld_p world, gcRenderList_p list, scInputDevice_p inputDevice) {
+void coBootUp(scWorld_p /*world*/, gcRenderList_p /*list*/, scInputDevice_p inputDevice) {
 
     scKeyboardMap_ccp km = scKeyboardMap_ccp(new scKeyboardMap(scKeyboardMap::stdMap()));
     scKeyboardState_p ks (new scKeyboardState(inputDevice));

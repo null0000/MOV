@@ -5,6 +5,7 @@
 #include "ecErrorDialog.h"
 #include <stdlib.h>
 
+
 class testErrorRegister : public QObject
 {
     Q_OBJECT
@@ -65,7 +66,7 @@ void testErrorRegister::RegisterTests()
         int index = rand()%count;
         ecErrorDialog *cur = dialog[index];
         remove_at<ecErrorDialog *>(dialog, index);
-        QTest::mouseClick(cur->getPushButton(), Qt::LeftButton);
+        QTest::mouseClick(cur->__getPushButton(), Qt::LeftButton);
         count--;
         QCOMPARE(count, ecErrorRegister::outstandingErrorCount());
     }

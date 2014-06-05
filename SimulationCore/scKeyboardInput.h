@@ -7,14 +7,15 @@
 #include <iostream>
 #include <set>
 
+#include "simulationcore_ie.h"
 
 class scKeyboardState;
 class scKeyboardMap;
 class scInputDevice;
-typedef const QSharedPointer<const scKeyboardState> scKeyboardState_ccp;
-typedef const QSharedPointer<scKeyboardState> scKeyboardState_p;
+typedef QSharedPointer<const scKeyboardState> scKeyboardState_ccp;
+typedef QSharedPointer<scKeyboardState> scKeyboardState_p;
 typedef QSharedPointer<const scKeyboardState> scKeyboardState_cp;
-typedef const QSharedPointer<const scKeyboardMap> scKeyboardMap_ccp;
+typedef QSharedPointer<const scKeyboardMap> scKeyboardMap_ccp;
 typedef QSharedPointer<const scKeyboardMap> scKeyboardMap_cp;
 typedef const scInputDevice *scInputDevice_p;
 
@@ -26,7 +27,7 @@ typedef const scInputDevice *scInputDevice_p;
  *this class, Implement it and connect your signals to it,
  *then pass that instantiation to SC.
  */
-class scInputDevice : public QObject
+class SIM_IE scInputDevice : public QObject
 {
     Q_OBJECT
 
@@ -42,7 +43,7 @@ signals:
  *  This is a key. It allows for a more firm
  *  representation of qt keys than just ints.
  */
-class Key {
+class SIM_IE Key {
 
     int mappedKey;
 
@@ -65,7 +66,7 @@ public:
  *  using the keyEnum
  *
  */
-class scKeyboardMap
+class SIM_IE scKeyboardMap
 {
 public:
     typedef enum {upE, downE, leftE, rightE, useE} keyEnum;
@@ -90,7 +91,7 @@ private:
 
 };
 
-class scKeyListener
+class SIM_IE scKeyListener
 {
 public:
     virtual void registerEvent() = 0;
@@ -105,7 +106,7 @@ public:
  *  purposes when dealing with velocities (i.e.
  *  write mySpeed * ks.keyScale(keyDir);
  */
-class scKeyboardState : public QObject {
+class SIM_IE scKeyboardState : public QObject {
 
     Q_OBJECT
 public:

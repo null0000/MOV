@@ -5,11 +5,11 @@
 #include <QStack>
 #include <QWidget>
 
-#include <glbGeometry.h>
+#include "globalcore_ie.h"
 
+#include "glbDebug.h" //make sure that everything can access deubg shit
 
-
-class glbGlobals
+class GLB_IE glbGlobals
 {
 
     static QObject *topObjectVar;
@@ -31,7 +31,7 @@ public:
     static QString PythonDir();
     static QString AppDir();
     static void MoveToProgramDir() {CD(ProgramDir());}
-    static void MoveToPythonDir(){CD(ProgramDir());}
+    static void MoveToPythonDir(){CD(PythonDir());}
     static void MoveToGraphicsDir(){CD(GraphicsDir());}
     static void PushDir();
     static void RevertDir();
@@ -44,7 +44,7 @@ public:
 
 #include <iostream>
 
-class glbDebug {
+class GLB_IE glbDebug {
 
 public:
     static void DumpQString(const QString &dumpee) {std::cerr << dumpee.toStdString();}

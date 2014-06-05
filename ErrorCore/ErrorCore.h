@@ -7,9 +7,11 @@
 #include <map>
 #include <vector>
 
+#include "errorcore_ie.h"
+
 class ecErrorDialog;
 
-class ecError : public std::exception
+class ERR_IE ecError : public std::exception
 {
 public:
     virtual QString message() const = 0;
@@ -18,7 +20,7 @@ public:
 };
 
 
-class ecErrorRegister {
+class ERR_IE ecErrorRegister {
 public:
     static ecErrorDialog *showError(ecError *e);
 
@@ -36,7 +38,7 @@ private:
     static const QString ErrorLogName;
 };
 
-class ecSwitchError : public ecError {
+class ERR_IE ecSwitchError : public ecError {
 public:
 
     ecSwitchError(int typeNum) : typeNum(typeNum) {}

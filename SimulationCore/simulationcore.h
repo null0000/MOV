@@ -5,7 +5,6 @@
 #include <utility>
 #include <QWindow>
 #include <qvector2d.h>
-#include <simulationcore.h>
 #include "scWorld.h"
 #include "scObject.h"
 #include "scKeyboardInput.h"

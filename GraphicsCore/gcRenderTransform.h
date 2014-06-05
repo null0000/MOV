@@ -1,12 +1,14 @@
 #ifndef GCRENDERTRANSFORM_H
 #define GCRENDERTRANSFORM_H
 
+#include "graphicscore_ie.h"
+
 #include <QVector2D>
 #include "gcRenderable.h"
 #include "gcDrawingImpl.h"
 #include <QTransform>
 template <typename offsetFunctor, typename renderObjType>
-class gcRenderOffset : public gcRenderable{
+class GFX_IE gcRenderOffset : public gcRenderable{
     const renderObjType renderObj;
     const offsetFunctor offsetFunc;
 public:

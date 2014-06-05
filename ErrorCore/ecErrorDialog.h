@@ -4,13 +4,13 @@
 #include <QWidget>
 #include <QDialog>
 
-class testErrorRegister; //UNIT TESTING
+#include "errorcore_ie.h"
 
 namespace Ui {
 class ErrorDialog;
 }
 
-class ecErrorDialog : public QDialog
+class ERR_IE ecErrorDialog : public QDialog
 {
     Q_OBJECT
 
@@ -18,6 +18,9 @@ class ecErrorDialog : public QDialog
 public:
     explicit ecErrorDialog(QWidget *parent = 0);
     ecErrorDialog(QWidget *parent, QString Message);
+
+
+    QPushButton *__getPushButton();
 
     ~ecErrorDialog();
 
@@ -33,8 +36,6 @@ private:
 
     //UNIT TESTING GARBAGE
 
-    friend testErrorRegister;
-    QPushButton *getPushButton();
 };
 
 #endif // ERRORDIALOG_H

@@ -14,7 +14,8 @@ DEFINES += IOCORE_LIBRARY
 SOURCES +=
 
 HEADERS += \
-    IOCore.h
+    IOCore.h \
+    iocore_ie.h
 
 unix:!symbian {
     maemo5 {

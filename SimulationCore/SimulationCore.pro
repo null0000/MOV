@@ -5,7 +5,6 @@
 #-------------------------------------------------
 
 QT       += gui
-QT       += opengl
 
 TARGET = SimulationCore
 TEMPLATE = lib
@@ -15,7 +14,7 @@ DEFINES += SIMULATIONCORE_LIBRARY
 
 CONFIG += c++11
 
-QMAKE_CXXFLAGS += -std=gnu++11
+unix: QMAKE_CXXFLAGS += -std=gnu++11
 
 SOURCES += \
     scWorld.cpp \
@@ -23,7 +22,8 @@ SOURCES += \
     scKeyboardInput.cpp \
     scTask.cpp \
     scMovementDesc.cpp \
-    scObjDesc.cpp
+    scObjDesc.cpp \
+    scTaskIterator.cpp
 
 HEADERS += simulationcore.h \
     scKeyboardInput.h \
@@ -33,7 +33,9 @@ HEADERS += simulationcore.h \
     scWorld.h \
     scObjDesc.h \
     scMovementDesc.h \
-    scWorldDesc.h
+    scWorldDesc.h \
+    scTaskIterator.h \
+    simulationcore_ie.h
 
 unix:!symbian {
     maemo5 {

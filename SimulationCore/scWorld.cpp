@@ -7,30 +7,9 @@
 #include "scWorldDesc.h"
 
 
-template<typename planType>
-void scSubWorld<planType>::simulate(delta_t timeDelta) {
-    for (typename objlist_t::iterator itr = objList.begin(); itr != objList.end(); itr++) {
-        scMovementDesc moveDesc = itr->second.getMovement(itr->first);
-        moveDesc.applyScale(timeDelta);
-        itr->first.moveAmount(moveDesc.maxMovement());
-        itr->second.updateStrategy(itr->first, scWorldDesc());
-    }
-}
+
 delta_t timeDeltaFromMilli(int milliseconds) {return ((float)(milliseconds))/TIME_CONVERSION_DIVISOR;}
 
-
-class badTagError : public ecError {
-public:
-    QString message() const {return "Bad tag used to lookup object";}
-};
-
-template <typename planType>
-QVector2D scSubWorld<planType>::lookup(t_tag tag) const {
-    if (objList.size() > tag)
-        objList[tag].first.location();
-
-    throw badTagError();
-}
 
 
 class ecBadSimulatable : public ecError {
@@ -101,6 +80,6 @@ scWorld::t_tag scWorld::addObject(const scKeyboardControlledObj &obj) {
 }
 
 template<>
-scWorld::t_tag scWorld::addObject(const scTask &obj) {
+scWorld::t_tag scWorld::addObject(const scTaskIterator &obj) {
     return t_tag(TaskTag, taskWorld.addObject(obj));
 }

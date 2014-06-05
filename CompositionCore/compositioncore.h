@@ -1,6 +1,7 @@
 #ifndef COMPOSITIONCORE_H
 #define COMPOSITIONCORE_H
 
+#include "compositioncore_ie.h"
 
 #include <simulationcore.h>
 #include <GraphicsCore.h>
@@ -38,6 +39,6 @@ private:
 };
 
 
-void coBootUp(scWorld_p world, gcRenderList_p list, scInputDevice_p inputDevice);
+CMP_IE void coBootUp(scWorld_p world, gcRenderList_p list, scInputDevice_p inputDevice);
 
 #endif // COMPOSITIONCORE_H

@@ -15,10 +15,14 @@ TEMPLATE = lib
 
 DEFINES += GLOBALCORE_LIBRARY
 
-SOURCES += gcglobals.cpp
+SOURCES += gcglobals.cpp \
+    glbTranslate.cpp \
+    glbDebug.cpp
 
 HEADERS += GlobalCore.h \
-    glbGeometry.h
+    glbTranslate.h \
+    glbDebug.h \
+    globalcore_ie.h
 
 unix:!symbian {
     maemo5 {

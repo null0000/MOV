@@ -1,7 +1,9 @@
 #ifndef SCWORLDDESC_H
 #define SCWORLDDESC_H
 
-class scWorldDesc {
+#include "simulationcore_ie.h"
+
+class SIM_IE scWorldDesc {
 
 };
 

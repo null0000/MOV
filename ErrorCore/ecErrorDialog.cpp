@@ -32,7 +32,7 @@ void ecErrorDialog::on_CloseButton_clicked()
 }
 
 
-QPushButton *ecErrorDialog::getPushButton()
+QPushButton *ecErrorDialog::__getPushButton()
 {
     return ui->CloseButton;
 }
