@@ -48,3 +48,6 @@ bool scTask::isUsing() const{return shouldUse;}
 bool scTask::needsUpdate(const scObjDesc &curLoc) const {
     return (curLoc.location() == targetLoc) || isNull;
 }
+
+scTask::scTask(const QVector2D &targetLoc, bool useTask) : shouldUse(useTask), isNull(false),
+    targetLoc(targetLoc){}

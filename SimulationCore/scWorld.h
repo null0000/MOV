@@ -38,6 +38,9 @@ public:
     void simulate(delta_t timeDelta);
     t_tag maxTag() const;
 
+    template<typename insert_iterator>
+    insert_iterator gatherUsingList(insert_iterator iItr) const;
+
 private:
     typedef std::pair<scObjDesc, planType> fullobj_t;
     typedef std::vector<fullobj_t> objlist_t;
@@ -115,6 +118,18 @@ void scSubWorld<planType>::simulate(delta_t timeDelta) {
 template<typename planType>
 typename scSubWorld<planType>::t_tag scSubWorld<planType>::maxTag() const {
     return objList.size();
+}
+
+template<typename planType>
+template<typename insert_iterator>
+insert_iterator scSubWorld<planType>::gatherUsingList(insert_iterator iItr) const {
+    for (typename objlist_t::const_iterator cItr = objList.begin(); cItr != objList.end(); cItr++) {
+        if (cItr->second.isUsing()) {
+            *iItr = cItr->first.location();
+            iItr++;
+        }
+    }
+    return iItr;
 }
 
 #endif // SCWORLD_H

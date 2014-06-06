@@ -30,6 +30,7 @@ public:
 private Q_SLOTS:
     void testCase1();
     void testCase2();
+    void testCase3();
 };
 
 SimulationCoreUNITTest::SimulationCoreUNITTest()
@@ -58,6 +59,8 @@ public:
 
     singleTask(const QVector2D &location) :
         oneTask(location), location(location){}
+    singleTask(const QVector2D &location, const scTask &task) :
+        oneTask(task), location(location){}
 
     singleTask() :
         oneTask(), location(0, 0){}
@@ -96,6 +99,57 @@ QVector2D genRandomVec(unsigned int maxX, unsigned int maxY) {
     return QVector2D(x, y);
 }
 
+scObjDesc createObjDesc(size_t idx, const scSubWorld<scTaskIterator> &taskWorld) {
+    QVector2D loc (taskWorld.lookup(idx));
+    return scObjDesc(loc, QVector2D(1, 1));
+}
+
+void updateList(std::vector<scTaskIterator> &itrVec, const scSubWorld<scTaskIterator> &taskWorld) {
+    QVERIFY(itrVec.size() == taskWorld.maxTag());
+    for (size_t i = 0; i < itrVec.size(); i++) {
+        scObjDesc od (createObjDesc(i, taskWorld));
+        itrVec[i].updateStrategy(od, scWorldDesc());
+    }
+}
+
+float maxUpdateOrTen(std::vector<scTaskIterator> &itrVec, const scSubWorld<scTaskIterator> &taskWorld) {
+    float curMax = 0;
+    Q_ASSERT(itrVec.size() == taskWorld.maxTag());
+    for (size_t i = 0; i < itrVec.size(); i++) {
+        scObjDesc od (createObjDesc(i, taskWorld));
+        scMovementDesc md (itrVec[i].getMovement(od));
+        float length = md.maxMovement().length();
+        if (length > 10)
+            return 10;
+        curMax = std::max(curMax, length);
+    }
+    return curMax;
+}
+
+template <typename insert_iterator>
+insert_iterator insertRaggedTasks(insert_iterator insertLoc, int numTasks, int numJobs,
+                                  const QVector2D &startDelta, const QVector2D secondaryDelta)
+{
+    typedef std::vector<QVector2D> vecList_t;
+    for (int i = 0; i < numTasks; i++) {
+        vecList_t newTaskList;
+
+        newTaskList.push_back(genRandomVec(startDelta.x(), startDelta.y()));
+        int lastIdx = 0;
+        int thisJobCount = rnum() % numJobs;
+
+        for (int j = 0; j < thisJobCount - 1; j++) {
+            QVector2D deltaVec = genRandomVec(secondaryDelta.x(), secondaryDelta.y());
+            QVector2D finalVec = deltaVec + newTaskList[lastIdx];
+            newTaskList.push_back(finalVec);
+        }
+
+        *insertLoc = newTaskList;
+        insertLoc++;
+    }
+    return insertLoc;
+}
+
 void SimulationCoreUNITTest::testCase1()
 {
     static const int NUM_TASKS = 1000;
@@ -128,58 +182,6 @@ void SimulationCoreUNITTest::testCase1()
         QVERIFY(ticks == 0);
     }
 }
-
-template <typename insert_iterator>
-insert_iterator insertRaggedTasks(insert_iterator insertLoc, int numTasks, int numJobs,
-                                  const QVector2D &startDelta, const QVector2D secondaryDelta)
-{
-    typedef std::vector<QVector2D> vecList_t;
-    for (int i = 0; i < numTasks; i++) {
-        vecList_t newTaskList;
-
-        newTaskList.push_back(genRandomVec(startDelta.x(), startDelta.y()));
-        int lastIdx = 0;
-        int thisJobCount = rnum() % numJobs;
-
-        for (int j = 0; j < thisJobCount - 1; j++) {
-            QVector2D deltaVec = genRandomVec(secondaryDelta.x(), secondaryDelta.y());
-            QVector2D finalVec = deltaVec + newTaskList[lastIdx];
-            newTaskList.push_back(finalVec);
-        }
-
-        *insertLoc = newTaskList;
-        insertLoc++;
-    }
-    return insertLoc;
-}
-
-scObjDesc createObjDesc(size_t idx, const scSubWorld<scTaskIterator> &taskWorld) {
-    QVector2D loc (taskWorld.lookup(idx));
-    return scObjDesc(loc, QVector2D(1, 1));
-}
-
-void updateList(std::vector<scTaskIterator> &itrVec, const scSubWorld<scTaskIterator> &taskWorld) {
-    QVERIFY(itrVec.size() == taskWorld.maxTag());
-    for (size_t i = 0; i < itrVec.size(); i++) {
-        scObjDesc od (createObjDesc(i, taskWorld));
-        itrVec[i].updateStrategy(od, scWorldDesc());
-    }
-}
-
-float maxUpdateOrTen(std::vector<scTaskIterator> &itrVec, const scSubWorld<scTaskIterator> &taskWorld) {
-    float curMax = 0;
-    Q_ASSERT(itrVec.size() == taskWorld.maxTag());
-    for (size_t i = 0; i < itrVec.size(); i++) {
-        scObjDesc od (createObjDesc(i, taskWorld));
-        scMovementDesc md (itrVec[i].getMovement(od));
-        float length = md.maxMovement().length();
-        if (length > 10)
-            return 10;
-        curMax = std::max(curMax, length);
-    }
-    return curMax;
-}
-
 
 void SimulationCoreUNITTest::testCase2() {
     const int NUM_TASKS = 1000;
@@ -239,6 +241,47 @@ void SimulationCoreUNITTest::testCase2() {
     QVERIFY(curUpdate == 0);
     QVERIFY(maxUpdateOrTen(itrVec, world) == 0);
 }
+
+void SimulationCoreUNITTest::testCase3() {
+
+    typedef std::vector<scTask> taskList_t;
+
+    static const int TASK_COUNT = 500000;
+    static const QVector2D TARGET_LOC(5000, 5000);
+
+    static const float usePercent = .75;
+
+    taskList_t list (TASK_COUNT);
+
+    for (taskList_t::iterator iItr = list.begin(); iItr != list.end(); iItr++)
+        *iItr = scTask(TARGET_LOC, ((rnum()%100)/100.0) < usePercent);
+
+
+    std::vector<singleTask> taskVector (TASK_COUNT);
+    std::for_each(list.begin(), list.end(),
+                  [&](const scTask &Task){taskVector.push_back(singleTask(TARGET_LOC, Task));});
+
+    scSubWorld<scTaskIterator> world;
+    std::for_each(taskVector.begin(),
+                  taskVector.end(),[&](const singleTask &taskPlan){world.addObject(scTaskIterator(taskPlan));});
+
+    world.simulate(TARGET_LOC.length() - 1);
+
+    std::deque<QVector2D> objDeque;
+    std::insert_iterator<std::deque<QVector2D> > ii (objDeque, objDeque.begin());
+
+    world.gatherUsingList(ii);
+
+    size_t count = 0;
+    std::for_each(list.begin(), list.end(), [&](const scTask &task){if (task.isUsing()) count++;});
+
+    QCOMPARE(objDeque.size(), count);
+
+    world.simulate(1);
+    QCOMPARE(GetLargestOrTen(world, taskVector), (float)0);
+
+}
+
 
 QTEST_MAIN(SimulationCoreUNITTest)
 

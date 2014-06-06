@@ -19,6 +19,7 @@ class SIM_IE scTask {
 public:
     scTask(const scObjDesc &objDesc);
     scTask(const QVector2D &targetLoc);
+    scTask(const QVector2D &targetLoc, bool useTask);
     scTask();
 
     scMovementDesc getMovement(const scObjDesc &curLoc) const;
