@@ -12,8 +12,11 @@ public:
     bool isUsing() const;
     void updateStrategy(const scObjDesc &, const scWorldDesc &);
 
+    float remainingDist(const QVector2D &location) const;
+
     scTaskIterator(const scPlan &Other);
     scTaskIterator(const scTaskIterator &Other);
+    scTaskIterator();
     ~scTaskIterator();
     scTaskIterator &operator=(const scTaskIterator &Other);
 private:

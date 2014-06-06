@@ -16,3 +16,6 @@ std::string scTaskList::dump() const {
 
     return sstream.str();
 }
+
+
+scTaskList::scTaskList(){}

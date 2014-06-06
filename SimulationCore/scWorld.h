@@ -36,6 +36,7 @@ public:
     t_tag addObject(const planType &insertedPlan);
     QVector2D lookup(t_tag tag) const;
     void simulate(delta_t timeDelta);
+    t_tag maxTag() const;
 
 private:
     typedef std::pair<scObjDesc, planType> fullobj_t;
@@ -110,6 +111,10 @@ void scSubWorld<planType>::simulate(delta_t timeDelta) {
         itr->first.moveAmount(moveDesc.maxMovement());
         itr->second.updateStrategy(itr->first, scWorldDesc());
     }
+}
+template<typename planType>
+typename scSubWorld<planType>::t_tag scSubWorld<planType>::maxTag() const {
+    return objList.size();
 }
 
 #endif // SCWORLD_H

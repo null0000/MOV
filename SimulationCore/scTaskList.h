@@ -25,6 +25,7 @@ public:
     scTaskList(IteratorType begin, IteratorType end) :
         impl(begin, end){}
 
+    scTaskList();
 
     std::string dump() const;
 

@@ -5,7 +5,12 @@
 
 scTask scListPlan::generateNextTask(const scObjDesc &/*thisObj*/,
                         const scWorldDesc &/*visibleWorldDesc*/) {
-    cur++;
+    if (cur != end)
+        cur++;
+
+    if (cur == end)
+        return scTask();
+
     return *cur;
 }
 
@@ -21,3 +26,5 @@ scListPlan::scListPlan(const scTaskList &list) :
 scListPlan::scListPlan(scTaskList::const_iterator begin,
            scTaskList::const_iterator end) :
     cur(begin), end(end){}
+
+scListPlan::scListPlan(){}

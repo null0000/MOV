@@ -10,7 +10,8 @@ scTaskIterator::scTaskIterator(const scPlan &Other) :
 scTaskIterator::scTaskIterator(const scTaskIterator &Other) :
     curPlan(Other.curPlan->copy()), curTask(Other.curTask){}
 scTaskIterator::~scTaskIterator() {
-    delete curPlan;
+    if (curPlan)
+        delete curPlan;
 }
 
 scTaskIterator &scTaskIterator::operator=(const scTaskIterator &Other) {
@@ -18,7 +19,8 @@ scTaskIterator &scTaskIterator::operator=(const scTaskIterator &Other) {
         return *this;
     Q_ASSERT(&Other && this);
 
-    delete curPlan;
+    if (curPlan) //could be null
+        delete curPlan;
 
     curPlan = Other.curPlan->copy();
     curTask = Other.curTask;
@@ -41,3 +43,7 @@ void scTaskIterator::updateStrategy(const scObjDesc &thisObj, const scWorldDesc 
     if (curTask.needsUpdate(thisObj))
         curTask = curPlan->generateNextTask(thisObj, thisWorldDesc);
 }
+
+
+scTaskIterator::scTaskIterator() : curPlan(NULL){}
+
