@@ -31,6 +31,6 @@ void scKeyboardControlledObj::keyboardListener::registerEvent(){}
 
 scMovementDesc scKeyboardControlledObj::getMovement(const scObjDesc &) const {
         QVector2D inputScale (lrScale(), udScale());
-        return scMovementDesc (inputScale * deltaScale, deltaScale.length()); //cache delta scale values?
+        return scMovementDesc ((inputScale * deltaScale).normalized(), deltaScale.length()); //cache delta scale values?
 }
 void scKeyboardControlledObj::updateStrategy(const scObjDesc &, const scWorldDesc &) const{}

@@ -8,7 +8,7 @@
 #include "gcDrawingImpl.h"
 #include <QTransform>
 template <typename offsetFunctor, typename renderObjType>
-class GFX_IE gcRenderOffset : public gcRenderable{
+class gcRenderOffset : public gcRenderable{
     const renderObjType renderObj;
     const offsetFunctor offsetFunc;
 public:

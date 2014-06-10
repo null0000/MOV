@@ -26,12 +26,9 @@ private:
 
 void gcImage::Load(QString ImageName) {
     glbGlobals::PushDir();
-    QString path1 = QDir::currentPath();
     glbGlobals::MoveToGraphicsDir();
     bool loaded = map.load(ImageName + IMAGE_FILE_TYPE);
 
-    QString path2 = QDir::currentPath();
-    printf((path1 + "second Path: " + path2 + "\n").toStdString().c_str());
 
     if (!loaded)
         throw ecImageLoadError(ImageName + IMAGE_FILE_TYPE);

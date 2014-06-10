@@ -25,7 +25,8 @@ SOURCES += \
     scObjDesc.cpp \
     scTaskIterator.cpp \
     scTaskList.cpp \
-    scListPlan.cpp
+    scListPlan.cpp \
+    scSingleTask.cpp
 
 HEADERS += simulationcore.h \
     scKeyboardInput.h \
@@ -39,7 +40,9 @@ HEADERS += simulationcore.h \
     scTaskIterator.h \
     simulationcore_ie.h \
     scTaskList.h \
-    scListPlan.h
+    scListPlan.h \
+    scSimulationStep.h \
+    scSingleTask.h
 
 unix:!symbian {
     maemo5 {

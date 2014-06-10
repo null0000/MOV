@@ -12,6 +12,7 @@
 #include <scWorldDesc.h>
 #include <scObjDesc.h>
 #include <scListPlan.h>
+#include <scSingleTask.h>
 
 #include <glbTranslate.h>
 
@@ -37,49 +38,12 @@ SimulationCoreUNITTest::SimulationCoreUNITTest()
 {
 }
 
-class singleTask : public scPlan {
-public:
-    scTask generateNextTask(const scObjDesc &,
-                            const scWorldDesc &) {
-        return scTask();
-    }
 
-    float numTicksToLocation(const QVector2D &startLoc) const {
-        return (startLoc - location).length();
-    }
-
-    scTask firstTask() const {return oneTask;}
-
-    std::string dump() {
-        std::string taskStr = oneTask.dump();
-        return std::string("Task: ") + taskStr +
-               std::string(" with a target location of: ") +
-               vec2str(location);
-    }
-
-    singleTask(const QVector2D &location) :
-        oneTask(location), location(location){}
-    singleTask(const QVector2D &location, const scTask &task) :
-        oneTask(task), location(location){}
-
-    singleTask() :
-        oneTask(), location(0, 0){}
-
-    scPlan *copy() const {
-        return new singleTask(location);
-    }
-
-private:
-    scTask oneTask;
-    QVector2D location;
-
-};
-
-typedef std::vector<singleTask> taskList_t;
+typedef std::vector<scSingleTask> taskList_t;
 float GetLargestOrTen(const scSubWorld<scTaskIterator> &world, const taskList_t &taskList) {
     float curMax = 0;
     for (unsigned int i = 0; i < taskList.size(); i++) {
-        const singleTask &tsk = taskList[i];
+        const scSingleTask &tsk = taskList[i];
         float ticks = tsk.numTicksToLocation(world.lookup(i));
         if (ticks > 10)
             return 10;
@@ -161,7 +125,7 @@ void SimulationCoreUNITTest::testCase1()
     taskList_t singleTaskVec(NUM_TASKS);
 
     for (int i = 0; i < NUM_TASKS; i++) {
-        singleTaskVec[i] = (singleTask(genRandomVec(MAX_X, MAX_Y)));
+        singleTaskVec[i] = (scSingleTask(genRandomVec(MAX_X, MAX_Y)));
     }
 
     for (taskList_t::const_iterator cItr = singleTaskVec.begin();
@@ -177,7 +141,7 @@ void SimulationCoreUNITTest::testCase1()
 
     for (size_t i = 0; i < singleTaskVec.size(); i++) {
         QVector2D loc = world.lookup(i);
-        const singleTask &curTask = singleTaskVec[i];
+        const scSingleTask &curTask = singleTaskVec[i];
         float ticks = curTask.numTicksToLocation(loc);
         QVERIFY(ticks == 0);
     }
@@ -257,13 +221,13 @@ void SimulationCoreUNITTest::testCase3() {
         *iItr = scTask(TARGET_LOC, ((rnum()%100)/100.0) < usePercent);
 
 
-    std::vector<singleTask> taskVector (TASK_COUNT);
+    std::vector<scSingleTask> taskVector (TASK_COUNT);
     std::for_each(list.begin(), list.end(),
-                  [&](const scTask &Task){taskVector.push_back(singleTask(TARGET_LOC, Task));});
+                  [&](const scTask &Task){taskVector.push_back(scSingleTask(TARGET_LOC, Task));});
 
     scSubWorld<scTaskIterator> world;
     std::for_each(taskVector.begin(),
-                  taskVector.end(),[&](const singleTask &taskPlan){world.addObject(scTaskIterator(taskPlan));});
+                  taskVector.end(),[&](const scSingleTask &taskPlan){world.addObject(scTaskIterator(taskPlan));});
 
     world.simulate(TARGET_LOC.length() - 1);
 

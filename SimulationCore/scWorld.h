@@ -18,7 +18,7 @@ class scSimulatable;
 #include "simulationcore_ie.h"
 #include "scMovementDesc.h"
 #include <ErrorCore.h>
-
+#include "scSimulationStep.h"
 class scKeyboardControlledObj;
 class scTask;
 
@@ -36,15 +36,18 @@ public:
     t_tag addObject(const planType &insertedPlan);
     QVector2D lookup(t_tag tag) const;
     void simulate(delta_t timeDelta);
+
     t_tag maxTag() const;
 
+
+    //inserts QVector2D type.
     template<typename insert_iterator>
     insert_iterator gatherUsingList(insert_iterator iItr) const;
 
 private:
     typedef std::pair<scObjDesc, planType> fullobj_t;
     typedef std::vector<fullobj_t> objlist_t;
-     objlist_t objList;
+    objlist_t objList;
 };
 
 /**
@@ -79,10 +82,22 @@ public:
 
     typedef std::pair<TypeTag, scBaseWorld::t_tag> t_tag;
 
-    template<typename planType>
-    t_tag addObject(const planType &type);
+
+    template<typename insert_iterator>
+    insert_iterator gatherUsingList(insert_iterator iItr) const;
+
+    t_tag addObject(const scKeyboardControlledObj &obj);
+    t_tag addObject(const scTaskIterator &obj);
+
+
     QVector2D lookupObject(t_tag tag) const;
     void simulate(delta_t timeDelta);
+
+    void registerSimulationStep(scSimulationStep_p newStep);
+
+private:
+    typedef std::vector<scSimulationStep_p> stepList_t;
+    stepList_t simulationSteps;
 };
 
 typedef const QSharedPointer<scWorld> scWorld_p;
@@ -129,6 +144,14 @@ insert_iterator scSubWorld<planType>::gatherUsingList(insert_iterator iItr) cons
             iItr++;
         }
     }
+    return iItr;
+}
+
+
+template<typename insert_iterator>
+insert_iterator scWorld::gatherUsingList(insert_iterator iItr) const {
+    iItr = keyboardWorld.gatherUsingList(iItr);
+    iItr = taskWorld.gatherUsingList(iItr);
     return iItr;
 }
 

@@ -12,11 +12,16 @@ TEMPLATE = lib
 unix: QMAKE_CXXFLAGS += -std=gnu++11
 DEFINES += COMPOSITIONCORE_LIBRARY
 
-SOURCES += compositioncore.cpp
+SOURCES += compositioncore.cpp \
+    coAiSpawner.cpp
+
+
+CONFIG += c++11
 
 HEADERS += \
     CompositionCore.h \
-    compositioncore_ie.h
+    compositioncore_ie.h \
+    coAiSpawner.h
 
 unix:!symbian {
     maemo5 {

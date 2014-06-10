@@ -71,15 +71,21 @@ void scWorld::simulate(delta_t timeDelta) {
     SIMULATE_SUB_WORLD(taskWorld, timeDelta);
 
     CHECK_TYPETAG;
+
+
+    std::for_each(simulationSteps.begin(), simulationSteps.end(),
+                  [&](scSimulationStep_p Step) {Step->runStep(*this, timeDelta);});
 }
 
 
-template <>
+void scWorld::registerSimulationStep(scSimulationStep_p newStep) {
+    simulationSteps.push_back(newStep);
+}
+
 scWorld::t_tag scWorld::addObject(const scKeyboardControlledObj &obj) {
-    return scWorld::t_tag(KeyboardTag, keyboardWorld.addObject(obj));
+    return t_tag(KeyboardTag, keyboardWorld.addObject(obj));
 }
 
-template<>
 scWorld::t_tag scWorld::addObject(const scTaskIterator &obj) {
     return t_tag(TaskTag, taskWorld.addObject(obj));
 }
