@@ -4,6 +4,9 @@
 #include <GlobalCore.h>
 #include <QDir>
 #include "GraphicsCore.h"
+#include "gcImage.h"
+#include "gcDrawingImpl.h"
+
 
 #include <ErrorCore.h>
 

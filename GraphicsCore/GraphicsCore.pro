@@ -23,7 +23,8 @@ HEADERS += \
     gcRenderTransform.h \
     gcRenderable.h \
     gcDrawingImpl.h \
-    graphicscore_ie.h
+    graphicscore_ie.h \
+    gcRenderList.h
 
 unix:!symbian {
     maemo5 {

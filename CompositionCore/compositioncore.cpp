@@ -1,6 +1,11 @@
 #include "CompositionCore.h"
 #include "coAiSpawner.h"
+#include "coObject.h"
+
+
+#include <gcImage.h>
 #include <simulationcore.h>
+#include <stack>
 
 void coBootUp(scWorld_p world, gcRenderList_p list, scInputDevice_p inputDevice) {
 

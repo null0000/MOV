@@ -1,6 +1,8 @@
 
 #include "coAiSpawner.h"
 #include "CompositionCore.h"
+#include "coObject.h"
+
 
 #include <scTaskIterator.h>
 #include <scSingleTask.h>

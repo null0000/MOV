@@ -3,7 +3,9 @@
 #include <QPainter>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsLineItem>
-#include "GraphicsCore.h"
+#include "gcDrawingImpl.h"
+#include "gcImage.h"
+
 
 void gcDrawingImpl::Draw(gcImage i)
 {

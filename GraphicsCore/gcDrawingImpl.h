@@ -2,6 +2,13 @@
 #define GCDRAWINGIMPL_H
 
 #include "graphicscore_ie.h"
+#include <stack>
+
+class gcImage;
+class QLineF;
+class QRectF;
+class QTransform;
+class QPainter;
 
 class GFX_IE gcDrawingImpl{
 public:

@@ -5,7 +5,7 @@
 
 class gcDrawingImpl;
 
-class GFX_IE gcRenderable{
+class gcRenderable{
 public:
     virtual void draw(gcDrawingImpl &impl) const = 0;
     virtual ~gcRenderable(){}

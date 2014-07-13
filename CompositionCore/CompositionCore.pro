@@ -21,7 +21,9 @@ CONFIG += c++11
 HEADERS += \
     CompositionCore.h \
     compositioncore_ie.h \
-    coAiSpawner.h
+    coAiSpawner.h \
+    coScene.h \
+    coObject.h
 
 unix:!symbian {
     maemo5 {

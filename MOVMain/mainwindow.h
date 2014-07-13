@@ -7,7 +7,8 @@
 #include <QtGui/QOpenGLFunctions>
 #include <QOpenGLPaintDevice>
 
-#include "../GraphicsCore/GraphicsCore.h"
+#include <gcRenderList.h>
+#include <gcRenderable.h>
 #include <simulationcore.h>
 
 namespace Ui {

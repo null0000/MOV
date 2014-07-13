@@ -10,6 +10,7 @@
 #include <deque>
 
 #include<GraphicsCore.h>
+#include <gcRenderList.h>
 #include <GlobalCore.h>
 #include <CompositionCore.h>
 #include <QElapsedTimer>
