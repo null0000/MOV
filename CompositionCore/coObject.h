@@ -6,8 +6,14 @@
 #include <gcRenderList.h>
 #include <gcRenderTransform.h>
 
+class coObjectBase {
+public:
+    virtual scWorld::t_tag GetWorldPointer() const = 0;
+};
+
+
 template<typename renderableType>
-class coObject {
+class coObject : public coObjectBase{
 private:
     class renderTarget {
     private:
@@ -27,6 +33,8 @@ public:
     {
         Renderer->pushRenderable(&imageAnim);
     }
+
+    scWorld::t_tag GetWorldPointer() const {return simObjPtr;}
 
 private:
     scWorld::t_tag simObjPtr;

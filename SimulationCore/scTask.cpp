@@ -9,6 +9,14 @@
 
 bool scTask::isNullTask() const {return isNull;}
 
+
+/**
+ * @brief scTask::getMovement
+ * @param curLoc
+ * @return scMovementDesc
+ *
+ *returns the movement based on the remaining movement.
+ */
 scMovementDesc scTask::getMovement(const scObjDesc &curLoc) const {
     if (isNull)
         return scMovementDesc(QVector2D(0, 0), 0);

@@ -32,6 +32,7 @@ private Q_SLOTS:
     void testCase1();
     void testCase2();
     void testCase3();
+    void testAdjacency();
 };
 
 SimulationCoreUNITTest::SimulationCoreUNITTest()
@@ -40,6 +41,17 @@ SimulationCoreUNITTest::SimulationCoreUNITTest()
 
 
 typedef std::vector<scSingleTask> taskList_t;
+
+/**
+ * @brief GetLargestOrTen Returns the largest update needed, or ten if that works.
+ * @param world
+ * @param taskList
+ * @return
+ *
+ *returns the largest update needed to complete all tasks in the task list, or
+ *10 if that number is over 10. 10 is chosen as a magic number - probably should
+ *be parameterized, but oh well.
+ */
 float GetLargestOrTen(const scSubWorld<scTaskIterator> &world, const taskList_t &taskList) {
     float curMax = 0;
     for (unsigned int i = 0; i < taskList.size(); i++) {
@@ -68,6 +80,14 @@ scObjDesc createObjDesc(size_t idx, const scSubWorld<scTaskIterator> &taskWorld)
     return scObjDesc(loc, QVector2D(1, 1));
 }
 
+/**
+ * @brief updateList Updates itrVec to match what's shown in scSubWorld
+ * @param itrVec
+ * @param taskWorld
+ *
+ *This updates itrVec to match what's in the input subworld. This is used because
+ *it's difficult to track needed updates otherwise.
+ */
 void updateList(std::vector<scTaskIterator> &itrVec, const scSubWorld<scTaskIterator> &taskWorld) {
     QVERIFY(itrVec.size() == taskWorld.maxTag());
     for (size_t i = 0; i < itrVec.size(); i++) {
@@ -76,6 +96,19 @@ void updateList(std::vector<scTaskIterator> &itrVec, const scSubWorld<scTaskIter
     }
 }
 
+
+/**
+ * @brief maxUpdateOrTen
+ *        Returns the maxiumum update needed, or 10 if it's over 10
+ * @param itrVec
+ * @param taskWorld
+ * @return a float
+ *
+ *Returns the maxiumum update needed to complete all tasks in itrVec, according
+ *to the subworld. Alternatively, it returns 10 if the number is above 10.
+ *
+ *10 is a magic number, but unit test, so oh well.
+ */
 float maxUpdateOrTen(std::vector<scTaskIterator> &itrVec, const scSubWorld<scTaskIterator> &taskWorld) {
     float curMax = 0;
     Q_ASSERT(itrVec.size() == taskWorld.maxTag());
@@ -198,6 +231,8 @@ void SimulationCoreUNITTest::testCase2() {
     float curUpdate = maxUpdateOrTen(itrVec, world);
     while (curUpdate > 0) {
         world.simulate(curUpdate);
+
+        //this is a hack to make sure that itrVec stays updated to match world.
         updateList(itrVec, world);
         curUpdate = maxUpdateOrTen(itrVec, world);
     }
@@ -210,7 +245,7 @@ void SimulationCoreUNITTest::testCase3() {
 
     typedef std::vector<scTask> taskList_t;
 
-    static const int TASK_COUNT = 500000;
+    static const int TASK_COUNT = 50000;
     static const QVector2D TARGET_LOC(5000, 5000);
 
     static const float usePercent = .75;
@@ -245,6 +280,71 @@ void SimulationCoreUNITTest::testCase3() {
     QCOMPARE(GetLargestOrTen(world, taskVector), (float)0);
 
 }
+
+
+void SimulationCoreUNITTest::testAdjacency(){
+    static const size_t ADDITIONAL_TAGS = 100;
+    static const size_t VALID_DIST = 100;
+
+    static const size_t INVALID_DIST_MAX = 200;
+
+    QVector2D startVec = genRandomVec(500, 500);
+    std::vector<scSingleTask> validTasks;
+    std::vector<scSingleTask> invalidTasks;
+
+    QVector2D maxDist (startVec);
+
+    for (size_t idx = 0; idx < ADDITIONAL_TAGS; idx++) {
+        QVector2D modVec = genRandomVec(INVALID_DIST_MAX, INVALID_DIST_MAX);
+        std::vector<scSingleTask> *tagList = NULL;
+        if (modVec.length() < VALID_DIST)
+            tagList = &validTasks;
+        else
+            tagList = &invalidTasks;
+        if (maxDist.length() < (modVec + startVec).length())
+            maxDist = modVec + startVec;
+
+        scSingleTask task (modVec + startVec);
+
+        tagList->push_back(task);
+    }
+
+    typedef scWorld t_worldType;
+    typedef t_worldType::t_tag t_tagType;
+
+    t_worldType world;
+
+    typedef std::vector<scSingleTask>::iterator task_iterator;
+    typedef std::vector<t_tagType> t_tagVec;
+    t_tagVec validTags;
+    for (task_iterator tItr = validTasks.begin(); tItr != validTasks.end(); tItr++) {
+        validTags.push_back(world.addObject(scTaskIterator(*tItr)));
+    }
+
+    t_tagVec invalidTags;
+    for (task_iterator tItr = invalidTasks.begin(); tItr != invalidTasks.end(); tItr++) {
+        invalidTags.push_back(world.addObject(scTaskIterator(*tItr)));
+    }
+
+    world.simulate(maxDist.length() + 1);
+
+    std::deque<t_tagType> tagList;
+    std::insert_iterator<std::deque<t_tagType> > tagIItr(tagList, tagList.begin());
+    world.getAdjacentObjects(startVec, VALID_DIST, tagIItr);
+
+    std::stringstream sstr;
+
+    sstr << "Invalid number of adjacent objects: " << validTags.size() << " != " << tagList.size();
+
+    QVERIFY2(validTags.size() == tagList.size(), sstr.str().c_str());
+
+    for (std::deque<t_tagType>::iterator itr = tagList.begin(); itr != tagList.end(); itr++) {
+        auto retTag = std::find(validTags.begin(), validTags.end(), *itr);
+        QVERIFY2(retTag != validTags.end(), "Couldn't find a valid tag in the adjacent tags list");
+    }
+
+}
+
 
 
 QTEST_MAIN(SimulationCoreUNITTest)

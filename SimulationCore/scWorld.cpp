@@ -89,3 +89,4 @@ scWorld::t_tag scWorld::addObject(const scKeyboardControlledObj &obj) {
 scWorld::t_tag scWorld::addObject(const scTaskIterator &obj) {
     return t_tag(TaskTag, taskWorld.addObject(obj));
 }
+

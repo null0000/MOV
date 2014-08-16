@@ -23,7 +23,8 @@ HEADERS += \
     compositioncore_ie.h \
     coAiSpawner.h \
     coScene.h \
-    coObject.h
+    coObject.h \
+    coWorld.h
 
 unix:!symbian {
     maemo5 {

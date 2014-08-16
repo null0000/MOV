@@ -10,6 +10,8 @@ class scSimulatable;
 
 #include <QVector>
 #include <QSharedPointer>
+#include <vector>
+
 #include "sckeyboardcontrolledobj.h"
 #include "scTaskIterator.h"
 #include <deque>
@@ -29,7 +31,9 @@ public:
     QVector2D lookup(t_tag) const;
 };
 
-
+/**
+ *
+ */
 template <typename planType>
 class scSubWorld : public scBaseWorld{
 public:
@@ -38,7 +42,6 @@ public:
     void simulate(delta_t timeDelta);
 
     t_tag maxTag() const;
-
 
     //inserts QVector2D type.
     template<typename insert_iterator>
@@ -63,9 +66,7 @@ private:
  *remove ALL THE VIRTUAL FUNCTIONS.
  */
 class SIM_IE scWorld {
-    scSubWorld<scKeyboardControlledObj> keyboardWorld;
-    scSubWorld<scTaskIterator> taskWorld;
-
+public:
     /*
      *This is used to track the different types.
      *
@@ -75,12 +76,50 @@ class SIM_IE scWorld {
      *will tell you when you fuck up and forget
      *to update a function if you do that.
     */
-    typedef enum {KeyboardTag, TaskTag} TypeTag;
+    //! differentiates between the different objects the scWorld class supports
+    typedef enum {
+        KeyboardTag, /*!< Keyboard controlled objects tag*/
+        TaskTag      /*!< Task controlled objects tag*/
+    } TypeTag;
     static const unsigned int TypeTagCountS = 2; //UPDATE THIS WITH NEW TYPETAG INFO. SHOULD EQUAL ENUM ENTRY COUNT
 
-public:
 
-    typedef std::pair<TypeTag, scBaseWorld::t_tag> t_tag;
+    typedef std::pair<TypeTag, scBaseWorld::t_tag> t_tag; //! used as a pointer for objects
+    typedef std::vector<t_tag> t_tagList; //! list of object pointers
+private:
+
+
+    scSubWorld<scKeyboardControlledObj> keyboardWorld;
+    scSubWorld<scTaskIterator> taskWorld;
+
+
+    template<typename insert_iterator>
+    class AdjacencyAccumulator {
+    public:
+        AdjacencyAccumulator operator()(scWorld::t_tag tag) const {
+            QVector2D objLoc(world->lookupObject(tag));
+            AdjacencyAccumulator newAA(*this);
+            if (objLoc.distanceToPoint(point) < maxDist) {
+               *(newAA.itr) = tag;
+                newAA.itr++;
+            }
+            return newAA;
+        }
+
+        AdjacencyAccumulator(const scWorld &world, QVector2D Point,
+                             size_t dist, insert_iterator itr) :
+            world(&world), point(Point), maxDist(dist), itr(itr){}
+
+        insert_iterator getItr() const {return itr;}
+
+    private:
+        const scWorld *world;
+        QVector2D point;
+        size_t maxDist;
+        insert_iterator itr;
+    };
+
+public:
 
 
     template<typename insert_iterator>
@@ -90,12 +129,50 @@ public:
     t_tag addObject(const scTaskIterator &obj);
 
 
+
+    template<typename insert_iterator>
+    insert_iterator getAdjacentObjects(QVector2D Point, size_t maxDist,
+                                       insert_iterator iItr) const {
+        AdjacencyAccumulator<insert_iterator> aa (*this, Point, maxDist, iItr);
+        aa = forEachTag(aa);
+        return aa.getItr();
+    }
+
+
     QVector2D lookupObject(t_tag tag) const;
     void simulate(delta_t timeDelta);
+
+
+    /**
+     * function: forEachTag
+     *  Template argument: Callback
+     *  Template contract: Functor which implements the function:
+     *      Callback operator()(scWorld::t_tag tag) const;
+     *
+     *      In return, the functor will be called with each
+     *      t_tag that is valid for this scWorld object.
+     */
+    template <typename Callback>
+    Callback forEachTag(Callback func) const {
+        func = forEachIndividualTag(func, KeyboardTag, keyboardWorld);
+        func = forEachIndividualTag(func, TaskTag, taskWorld);
+        Q_STATIC_ASSERT(TypeTagCountS == 2);
+        return func;
+    }
 
     void registerSimulationStep(scSimulationStep_p newStep);
 
 private:
+    template <typename Callback, typename SubWorldType>
+    Callback forEachIndividualTag(Callback input, TypeTag type, SubWorldType subworld) const {
+        t_tag itrTag (type, 0);
+        for (size_t idx = 0; idx < subworld.maxTag(); idx++) {
+            itrTag.second = idx;
+            input = input(itrTag);
+        }
+        return input;
+    }
+
     typedef std::vector<scSimulationStep_p> stepList_t;
     stepList_t simulationSteps;
 };

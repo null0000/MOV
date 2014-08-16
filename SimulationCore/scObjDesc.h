@@ -4,6 +4,14 @@
 #include <QVector2D>
 #include "simulationcore_ie.h"
 
+
+/**
+ * @brief The scObjDesc class
+ *
+ * This represents a description of an object
+ *in the scWorld vector. It's used to track
+ *location, speed, and so on.
+ */
 class SIM_IE scObjDesc {
 
 public:
