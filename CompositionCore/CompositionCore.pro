@@ -13,7 +13,8 @@ unix: QMAKE_CXXFLAGS += -std=gnu++11
 DEFINES += COMPOSITIONCORE_LIBRARY
 
 SOURCES += compositioncore.cpp \
-    coAiSpawner.cpp
+    coAiSpawner.cpp \
+    coWorld.cpp
 
 
 CONFIG += c++11
@@ -24,7 +25,10 @@ HEADERS += \
     coAiSpawner.h \
     coScene.h \
     coObject.h \
-    coWorld.h
+    coWorld.h \
+    coWorld_tplt.h \
+    coCameraStrategy.h \
+    coDefaultCamera.h
 
 unix:!symbian {
     maemo5 {

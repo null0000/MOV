@@ -7,12 +7,13 @@
 #include "gcRenderable.h"
 #include "gcDrawingImpl.h"
 #include <QTransform>
+
 template <typename offsetFunctor, typename renderObjType>
 class gcRenderOffset : public gcRenderable{
     const renderObjType renderObj;
     const offsetFunctor offsetFunc;
 public:
-    gcRenderOffset(renderObjType renderable, offsetFunctor functor) :
+    gcRenderOffset(const renderObjType &renderable, const offsetFunctor &functor) :
         renderObj(renderable), offsetFunc(functor){}
 
     void draw(gcDrawingImpl &impl) const

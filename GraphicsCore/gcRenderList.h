@@ -1,7 +1,7 @@
 #ifndef GCRENDERLIST_H
 #define GCRENDERLIST_H
 
-#include "graphicscore_ie.h"
+#include <QSharedPointer>
 
 class gcRenderable;
 
@@ -11,6 +11,6 @@ public:
     virtual ~gcRenderList(){}
 };
 
-typedef gcRenderList * gcRenderList_p;
+typedef QSharedPointer<gcRenderList> gcRenderList_p;
 
 #endif // GCRENDERLIST_H

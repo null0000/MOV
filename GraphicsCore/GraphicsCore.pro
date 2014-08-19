@@ -24,7 +24,10 @@ HEADERS += \
     gcRenderable.h \
     gcDrawingImpl.h \
     graphicscore_ie.h \
-    gcRenderList.h
+    gcRenderList.h \
+    gcCamera.h \
+    gcSharedOffset.h \
+    gcSharedOffset_tplt.h
 
 unix:!symbian {
     maemo5 {

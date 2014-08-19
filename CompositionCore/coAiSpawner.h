@@ -7,7 +7,7 @@
 
 
 class gcRenderList;
-typedef gcRenderList * gcRenderList_p;
+typedef QSharedPointer<gcRenderList> gcRenderList_p;
 
 
 class coAiSpawner : public scSimulationStep {

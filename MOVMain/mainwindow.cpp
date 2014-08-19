@@ -44,7 +44,6 @@ void MainWindow::render(QPainter &painter){
 
 void MainWindow::initialize(){
 
-    coBootUp(world, &renderList, scInputDevice_p(&inputDevice));
     animating = true;
     setWidth(1600);
     setHeight(900);
