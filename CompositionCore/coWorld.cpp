@@ -1,56 +1,27 @@
 
 
 
-#include <coWorld.h>
-#include <scWorld.h>
+#include "coWorld.h"
 
 
-class NullOffset : public coCameraStrategy {
-    QVector2D offset() const {return QVector2D(0,0);}
-    virtual coCameraStrategy *duplicate() const {
-        return new NullOffset();
-    }
-};
-
-coWorld::CameraImpl::CameraImpl() :
-    strategy(new NullOffset()){}
-
-
-coWorld::coWorld(gcRenderList_p list) :
-    cameraImpl(new CameraImpl()),
-    camera(gcSharedOffset<CameraImpl>(cameraImpl)), renderList(list) {
-    Q_ASSERT(renderList);
+void coWorld::registerSimulationStep(scSimulationStep_p newStep) {
+    world->registerSimulationStep(newStep);
 }
 
-void coWorld::simulate(delta_t timeDelta) {
-    world.simulate(timeDelta);
+void coWorld::simulate(delta_t time) {
+    camera.update(time);
+    world->simulate(time);
 }
 
 
-coWorld::CameraImpl &coWorld::CameraImpl::operator =(const CameraImpl &Other) {
-    Q_ASSERT(strategy);
-    if ((*this == Other))
-        return *this;
-    delete strategy;
-    strategy = Other.strategy->duplicate();
-    return *this;
+void coWorld::draw (gcDrawingImpl &impl) {
+    camera.draw(impl);
 }
 
-coWorld::CameraImpl::~CameraImpl() {
-    delete strategy;
+void coWorld::cameraBounds(QRect bounds) {
+    camera.bounds(bounds);
 }
 
-coWorld::CameraImpl::CameraImpl(const CameraImpl &Other) :
-    strategy(Other.strategy->duplicate()) {
-    Q_ASSERT(strategy);
+void coWorld::setTarget(t_simtag target) {
+    camera.setTarget(world, target);
 }
-
-
-bool coWorld::CameraImpl::operator ==(const CameraImpl &Other) const {
-    if (this == &Other)
-        return true;
-    Q_ASSERT(this && &Other);
-
-    return strategy == Other.strategy;
-}
-

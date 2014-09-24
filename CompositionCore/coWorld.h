@@ -1,64 +1,59 @@
 #ifndef COWORLD_H
 #define COWORLD_H
 
-#include <QVector2D>
+#include <QRect>
 
-#include <compositioncore_ie.h>
-
+#include <scLocationFunctor.h>
 #include <scSimulationStep.h>
 #include <scWorld.h>
 
+#include "coCameraManager.h"
+#include "compositioncore_ie.h"
 
-#include <gcRenderList.h>
-#include <gcCamera.h>
-#include <gcSharedOffset.h>
-#include <coCameraStrategy.h>
-
-
-
+class gcDrawingImpl;
+class scKeyboardControlledObj;
+class scTaskIterator;
 
 
-class CMP_IE coWorld {
-    class CMP_IE CameraImpl {
-    public:
 
-        template <typename NewStrategyType>
-        void swapStrategy(const NewStrategyType &newStrategy);
-        QVector2D operator()() const;
-
-
-        ~CameraImpl();
-
-        CameraImpl();
-        bool operator ==(const CameraImpl &Other) const;
-        CameraImpl &operator =(const CameraImpl &Other);
-        CameraImpl(const CameraImpl &Other);
-    private:
-        coCameraStrategy *strategy;
-    };
-
+class CMP_IE coWorld
+{
 public:
-    typedef scWorld::t_tag t_tag;
+    typedef scWorld::t_tag t_simtag;
 
-    coWorld(gcRenderList_p renderTarget);
+    void registerSimulationStep(scSimulationStep_p newStep);
 
-    template <typename GcType, typename scType>
-    t_tag addRenderedObject(GcType renderable, scType simulation);
+    template <typename gcRenderableType, typename scSimulatableType>
+    t_simtag addObject(gcRenderableType g, const scSimulatableType &s);
 
-    template <typename GcType>
-    void addRenderable(GcType obj);
+    void setTarget(t_simtag target);
 
-    void setCameraObj(t_tag targetObject);
-    void simulate(delta_t timeDelta);
+    void simulate(delta_t time);
+    void draw (gcDrawingImpl &impl);
+
+    void cameraBounds(QRect bounds);
+
+    coWorld(QRect cameraBounds) : world(new scWorld()), camera(world){camera.bounds(cameraBounds);}
 
 private:
-    scWorld world;
-    typedef QSharedPointer<CameraImpl> CameraImpl_p;
-    CameraImpl_p cameraImpl;
-    gcCamera<gcSharedOffset<CameraImpl> > camera;
-    gcRenderList_p renderList;
+    scWorld_p world;
+    coCameraManager camera;
 };
 
-#include "coWorld_tplt.h"
+
+template <typename gcRenderableType, typename scSimulatableType>
+coWorld::t_simtag coWorld::addObject(gcRenderableType g, const scSimulatableType &s) {
+    t_simtag tag (world->addObject(s));
+
+    typedef gcRenderOffset<gcRenderableType, scLocationFunctor> rOff;
+    typedef rOff *rOff_p;
+    rOff_p ro = new rOff (g, scLocationFunctor(tag, world));
+
+    camera.pushRenderable(ro);
+    return tag;
+}
+
+typedef  QSharedPointer<coWorld> coWorld_p;
+typedef  QSharedPointer<const coWorld> coWorld_cp;
 
 #endif // COWORLD_H

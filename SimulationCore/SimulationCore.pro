@@ -26,7 +26,8 @@ SOURCES += \
     scTaskIterator.cpp \
     scTaskList.cpp \
     scListPlan.cpp \
-    scSingleTask.cpp
+    scSingleTask.cpp \
+    scLocationFunctor.cpp
 
 HEADERS += simulationcore.h \
     scKeyboardInput.h \
@@ -42,7 +43,8 @@ HEADERS += simulationcore.h \
     scTaskList.h \
     scListPlan.h \
     scSimulationStep.h \
-    scSingleTask.h
+    scSingleTask.h \
+    scLocationFunctor.h
 
 unix:!symbian {
     maemo5 {

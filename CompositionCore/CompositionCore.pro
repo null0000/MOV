@@ -14,6 +14,7 @@ DEFINES += COMPOSITIONCORE_LIBRARY
 
 SOURCES += compositioncore.cpp \
     coAiSpawner.cpp \
+    coCameraManager.cpp \
     coWorld.cpp
 
 
@@ -23,12 +24,8 @@ HEADERS += \
     CompositionCore.h \
     compositioncore_ie.h \
     coAiSpawner.h \
-    coScene.h \
-    coObject.h \
-    coWorld.h \
-    coWorld_tplt.h \
-    coCameraStrategy.h \
-    coDefaultCamera.h
+    coCameraManager.h \
+    coWorld.h
 
 unix:!symbian {
     maemo5 {

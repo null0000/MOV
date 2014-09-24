@@ -7,7 +7,7 @@ class gcRenderable;
 
 class gcRenderList {
 public:
-    virtual void pushRenderable(gcRenderable *) = 0;
+    virtual void pushRenderable(const gcRenderable *) = 0;
     virtual ~gcRenderList(){}
 };
 

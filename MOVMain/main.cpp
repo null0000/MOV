@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
     qApp->setQuitOnLastWindowClosed(true);
     try
     {
+
         return a.exec();
     }
     catch (const ecError &err) {

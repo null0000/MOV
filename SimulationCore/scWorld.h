@@ -177,7 +177,7 @@ private:
     stepList_t simulationSteps;
 };
 
-typedef const QSharedPointer<scWorld> scWorld_p;
+typedef QSharedPointer<scWorld> scWorld_p;
 
 template<typename planType>
 typename scSubWorld<planType>::t_tag scSubWorld<planType>::addObject(const planType &newObj) {

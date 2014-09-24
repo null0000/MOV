@@ -21,11 +21,9 @@ MainWindow::MainWindow(QWindow *parent)
     : QWindow(parent)
     , updatePending(false)
     , animating(false)
-    , renderList()
     , context(0)
     , device(0)
     , inputDevice(this)
-    , world(new scWorld())
 {
     setSurfaceType(QWindow::OpenGLSurface);
 
@@ -34,12 +32,13 @@ MainWindow::MainWindow(QWindow *parent)
     //.... despite the fact that that's generally bad programming practices. Oh well.
     Q_ASSERT(!App);
     App = this;
+
 }
 
 void MainWindow::render(QPainter &painter){
     gcDrawingImpl drawDevice(painter);
     device->setSize(size());
-    renderList.render(drawDevice);
+    world->draw(drawDevice);
 }
 
 void MainWindow::initialize(){
@@ -49,6 +48,7 @@ void MainWindow::initialize(){
     setHeight(900);
     setPosition(0, 0);
     setVisibility(Windowed);
+    world = coBootUp(QRect(0, 0, width() * .75, height() * .75), &inputDevice);
 }
 
 void MainWindow::render()
@@ -132,9 +132,4 @@ void MainWindow::renderNow()
     context->swapBuffers(this);
     if (animating)
         renderLater();
-}
-
-void MainWindow::attachRenderable(gcRenderable *renderable)
-{
-    renderList.pushRenderable(renderable);
 }

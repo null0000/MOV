@@ -1,7 +1,6 @@
 
 #include "coAiSpawner.h"
 #include "CompositionCore.h"
-#include "coObject.h"
 
 
 #include <scTaskIterator.h>
@@ -19,7 +18,6 @@ void coAiSpawner::runStep(scWorld &world, delta_t /*time*/) {
     if (objVec.size() == 1) {
         scTaskIterator tItr (scSingleTask(QVector2D(50, 50)));
         gcImage image(imageName);
-        new coObject<gcImage> (tItr, image, worldPtr, renderList);
     }
 
     Q_ASSERT(objVec.size() <= 1);

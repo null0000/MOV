@@ -3,12 +3,9 @@
 
 #include "compositioncore_ie.h"
 
-#include <simulationcore.h>
-#include <QVector2D>
-#include <QScopedPointer>
-#include <gcRenderTransform.h>
-#include <gcRenderList.h>
+#include <scKeyboardInput.h>
+#include <coWorld.h>
 
-CMP_IE void coBootUp(scWorld_p world, gcRenderList_p list, scInputDevice_p inputDevice);
+CMP_IE coWorld_p coBootUp(QRect ScreenBounds, scInputDevice_p inputDevice);
 
 #endif // COMPOSITIONCORE_H

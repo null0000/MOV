@@ -3,6 +3,7 @@
 
 #include "graphicscore_ie.h"
 #include <stack>
+#include <QTransform>
 
 class gcImage;
 class QLineF;
@@ -25,7 +26,6 @@ public:
 private:
     QPainter &painter;
     std::stack<QTransform> matStack;
-    QTransform topMat;
 };
 
 #endif // GCDRAWINGIMPL_H
