@@ -6,6 +6,6 @@
 #include <scKeyboardInput.h>
 #include <coWorld.h>
 
-CMP_IE coWorld_p coBootUp(QRect ScreenBounds, scInputDevice_p inputDevice);
+CMP_IE coWorld_p coBootUp(scInputDevice_p inputDevice, QRect CameraBounds, QRect windowDim);
 
 #endif // COMPOSITIONCORE_H

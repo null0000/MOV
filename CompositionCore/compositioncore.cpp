@@ -8,9 +8,9 @@
 #include <simulationcore.h>
 #include <stack>
 
-coWorld_p coBootUp(QRect CameraBounds, scInputDevice_p inputDevice) {
+coWorld_p coBootUp(scInputDevice_p inputDevice, QRect CameraBounds, QRect windowDim) {
 
-    coWorld_p world (new coWorld(CameraBounds));
+    coWorld_p world (new coWorld(CameraBounds,windowDim));
 
 
     scKeyboardMap_ccp km = scKeyboardMap_ccp(new scKeyboardMovementMap(scKeyboardMovementMap::stdMovementMap()));

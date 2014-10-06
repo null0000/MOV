@@ -43,13 +43,15 @@ void MainWindow::render(QPainter &painter){
 }
 
 void MainWindow::initialize(){
+    static const QRect INIT_WINDOW_BOUNDS (0, 0, 1600, 900);
+
 
     animating = true;
-    setWidth(1600);
-    setHeight(900);
+    setWidth(INIT_WINDOW_BOUNDS.width());
+    setHeight(INIT_WINDOW_BOUNDS.height());
     setPosition(0, 0);
     setVisibility(Windowed);
-    world = coBootUp(QRect(0, 0, width() * .75, height() * .75), &inputDevice);
+    world = coBootUp(&inputDevice, QRect(0, 0, width() * .75, height() * .75), INIT_WINDOW_BOUNDS);
 }
 
 void MainWindow::render()

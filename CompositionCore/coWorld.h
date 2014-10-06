@@ -43,7 +43,8 @@ public:
     void removeDebugText(t_dbgStrTag rmTag);
     void clearDebugText();
 
-    coWorld(QRect cameraBounds) : world(new scWorld()), camera(world){camera.bounds(cameraBounds);}
+    coWorld(QRect cameraBounds, QRect viewingWindow) :
+        world(new scWorld()), camera(world, cameraBounds, viewingWindow) {}
 
     //forwarded from scWorld
     QVector2D lookupLoc(t_simtag tag) const;

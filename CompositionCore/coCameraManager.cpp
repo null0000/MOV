@@ -4,12 +4,12 @@
 #include "scWorld.h"
 #include "gcRenderList.h"
 
-coCameraManager::coCameraManager(scWorld_p world) :
-    camera(coCameraBox<scLocationFunctor>(scLocationFunctor(world)))
+coCameraManager::coCameraManager(scWorld_p world, QRect CameraBounds, QRect WorldBounds) :
+    camera(coCameraBox<scLocationFunctor>(scLocationFunctor(world), CameraBounds, WorldBounds))
 {}
 
-coCameraManager::coCameraManager(scWorld_p world, scWorld::t_tag Target) :
-    camera(coCameraBox<scLocationFunctor>(scLocationFunctor(Target, world))){}
+coCameraManager::coCameraManager(scWorld_p world, scWorld::t_tag Target, QRect CameraBounds, QRect WorldBounds) :
+    camera(coCameraBox<scLocationFunctor>(scLocationFunctor(Target, world), CameraBounds, WorldBounds)){}
 
 void coCameraManager::setTarget(scWorld_p world, scWorld::t_tag targetTag) {
     getConfigurableLocation().setObject(world, targetTag);
@@ -30,7 +30,7 @@ void coCameraManager::pushRenderable(const gcRenderable *newRenderable) {
 
 
 void coCameraManager::bounds(QRect bounds) {
-    camera.offsetFunctor().bounds(bounds);
+    camera.offsetFunctor().viewingWindowBounds(bounds);
 }
 
 
