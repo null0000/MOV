@@ -1,18 +1,16 @@
 #include "scKeyboardInput.h"
 
 void scKeyboardState::notifyListeners(int key) {
-    listenerSetMap::iterator itr = listenerMap.find(key);
-    if (itr == listenerMap.end())
-        return;
-
-    listenerSet &lSet = itr->second;
-    for (listenerSet::iterator setItr = lSet.begin(); setItr != lSet.end(); setItr++)
-        (*setItr)->registerEvent();
+    auto listeners = listenerMap.equal_range(key);
+    for (auto setItr = listeners.first; setItr != listeners.second; setItr++)
+        setItr->second.second->registerEvent(); //iterator, then pair, then pair, then scKeyListener_p... sorry.
 }
 
-void scKeyboardState::registerListener(int key, scKeyListener *obj) {
+scKeyboardState::t_tag scKeyboardState::registerListener(int key, scKeyListener_p obj) {
     Q_ASSERT(obj);
-    listenerMap[key].insert(obj);
+    t_tag tag = curTag++;
+    listenerMap.insert(listenerSetMap::value_type(key, t_listenerPair(tag, obj)));
+    return tag;
 }
 
 scKeyboardState::scKeyboardState(scInputDevice_p Parent) : QObject(){
@@ -28,21 +26,18 @@ void scKeyboardState::KeyPressed(QKeyEvent *qke) {downKeyMap[qke->key()] = true;
 void scKeyboardState::KeyReleased(QKeyEvent *qke) {downKeyMap[qke->key()] = false;}
 
 
-Key scKeyboardMap::returnFind(keyEnum k) const
-{
-    keyMapping_t::const_iterator fr = keyMap.find(k);
-    if (fr != keyMap.end())
-        return keyMap.find(k)->second;
-    return Key(0);
+struct scKeyboardState::t_removeTag{
+    bool operator()(listenerSetMap::value_type vType){return vType.second.first == tag;}
+    size_t tag;
+};
+
+template<typename container, typename forward_itr, typename predicate>
+void erase_if(container &c, forward_itr begin, forward_itr end, predicate p) {
+    for (auto i = begin; i != end; i++)
+        if (p(*i))
+            c.erase(i);
 }
 
-scKeyboardMap scKeyboardMap::stdMap() {
-    keyMapping_t map;
-    map[upE] = Key(Qt::Key_W);
-    map[downE] = Key(Qt::Key_S);
-    map[leftE] = Key(Qt::Key_A);
-    map[rightE] = Key(Qt::Key_D);
-    map[useE] = Key(Qt::Key_E);
-    return map;
+void scKeyboardState::removeListener(t_tag tag) {
+    erase_if(listenerMap, listenerMap.begin(), listenerMap.end(), (t_removeTag){tag});
 }
-

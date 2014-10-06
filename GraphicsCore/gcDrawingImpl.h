@@ -17,9 +17,14 @@ public:
     void Draw(gcImage i, QRectF qrect);
     void Draw(QLineF l);
     void Draw(QString s);
+    void Draw(QString s, QPoint loc);
+
+    QFont curFont() const;
 
     void PushTransform(QTransform mat);
     void PopTransform();
+
+    void SetColor(QColor qc);
 
     gcDrawingImpl(QPainter &painter);
 

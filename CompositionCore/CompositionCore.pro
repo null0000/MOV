@@ -15,7 +15,8 @@ DEFINES += COMPOSITIONCORE_LIBRARY
 SOURCES += compositioncore.cpp \
     coAiSpawner.cpp \
     coCameraManager.cpp \
-    coWorld.cpp
+    coWorld.cpp \
+    coDebugHandler.cpp
 
 
 CONFIG += c++11
@@ -25,7 +26,9 @@ HEADERS += \
     compositioncore_ie.h \
     coAiSpawner.h \
     coCameraManager.h \
-    coWorld.h
+    coWorld.h \
+    coDebugHandler.h \
+    coWorldFullTag.h
 
 unix:!symbian {
     maemo5 {
@@ -56,3 +59,10 @@ else:unix: LIBS += -L$$OUT_PWD/../ErrorCore/ -lErrorCore
 
 INCLUDEPATH += $$PWD/../ErrorCore
 DEPENDPATH += $$PWD/../ErrorCore
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../GlobalCore/release/ -lGlobalCore
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../GlobalCore/debug/ -lGlobalCore
+else:unix: LIBS += -L$$OUT_PWD/../GlobalCore/ -lGlobalCore
+
+INCLUDEPATH += $$PWD/../GlobalCore
+DEPENDPATH += $$PWD/../GlobalCore

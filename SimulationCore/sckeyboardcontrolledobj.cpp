@@ -22,7 +22,7 @@ scKeyboardControlledObj::scKeyboardControlledObj(scKeyboardState_p keyboardObj, 
 
 
 void scKeyboardControlledObj::registerKeyboardListener() {
-    ks->registerListener(kMap->Use().toInt(), new keyboardListener(*this));
+    ks->registerListener(kMap->Use().toInt(), scKeyListener_p(new keyboardListener(*this)));
 }
 
 void scKeyboardControlledObj::keyboardListener::registerEvent(){}

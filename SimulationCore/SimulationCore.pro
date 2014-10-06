@@ -27,7 +27,8 @@ SOURCES += \
     scTaskList.cpp \
     scListPlan.cpp \
     scSingleTask.cpp \
-    scLocationFunctor.cpp
+    scLocationFunctor.cpp \
+    scTagMsgCallback.cpp
 
 HEADERS += simulationcore.h \
     scKeyboardInput.h \
@@ -44,7 +45,9 @@ HEADERS += simulationcore.h \
     scListPlan.h \
     scSimulationStep.h \
     scSingleTask.h \
-    scLocationFunctor.h
+    scLocationFunctor.h \
+    scTagMsgCallback.h \
+    scFullTag.h
 
 unix:!symbian {
     maemo5 {

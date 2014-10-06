@@ -43,3 +43,17 @@ gcDrawingImpl::gcDrawingImpl(QPainter &painter) :
 void gcDrawingImpl::Draw(QString s){
     painter.drawText(QPoint(0, 0), s);
 }
+
+void gcDrawingImpl::Draw(QString s, QPoint loc) {
+    painter.drawText(loc, s);
+}
+
+void gcDrawingImpl::SetColor(QColor qc) {
+    painter.setBrush(qc);
+    painter.setPen(qc);
+}
+
+
+QFont gcDrawingImpl::curFont() const{
+    return painter.font();
+}

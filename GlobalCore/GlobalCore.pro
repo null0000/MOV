@@ -22,7 +22,8 @@ SOURCES += gcglobals.cpp \
 HEADERS += GlobalCore.h \
     glbTranslate.h \
     glbDebug.h \
-    globalcore_ie.h
+    globalcore_ie.h \
+    glbStringCallback.h
 
 unix:!symbian {
     maemo5 {

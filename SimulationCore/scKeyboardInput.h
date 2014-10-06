@@ -5,18 +5,20 @@
 #include <QKeyEvent>
 #include <QWindow>
 #include <iostream>
-#include <set>
+#include <map>
 
 #include "simulationcore_ie.h"
 
 class scKeyboardState;
-class scKeyboardMap;
+template <typename keyType> class scKeyboardMap;
+typedef enum {upE, downE, leftE, rightE, useE} MovementEnum;
+typedef scKeyboardMap<MovementEnum> scKeyboardMovementMap;
 class scInputDevice;
 typedef QSharedPointer<const scKeyboardState> scKeyboardState_ccp;
 typedef QSharedPointer<scKeyboardState> scKeyboardState_p;
 typedef QSharedPointer<const scKeyboardState> scKeyboardState_cp;
-typedef QSharedPointer<const scKeyboardMap> scKeyboardMap_ccp;
-typedef QSharedPointer<const scKeyboardMap> scKeyboardMap_cp;
+typedef QSharedPointer<const scKeyboardMovementMap> scKeyboardMap_ccp;
+typedef QSharedPointer<const scKeyboardMovementMap> scKeyboardMap_cp;
 typedef const scInputDevice *scInputDevice_p;
 
 /**
@@ -52,11 +54,14 @@ public:
     Key() : mappedKey(-1){}
 
     int toInt()const {return mappedKey;}
+    operator int(){return toInt();}
 
     bool operator < (const Key &Other) const {return mappedKey < Other.mappedKey;}
     bool operator > (const Key &Other) const {return mappedKey > Other.mappedKey;}
     bool operator == (const Key &Other) const {return mappedKey == Other.mappedKey;}
 };
+
+
 
 
 /**
@@ -66,11 +71,14 @@ public:
  *  using the keyEnum
  *
  */
+template<typename keyEnum>
 class SIM_IE scKeyboardMap
 {
 public:
-    typedef enum {upE, downE, leftE, rightE, useE} keyEnum;
-    typedef std::map<keyEnum, Key> keyMapping_t;
+    typedef std::pair<keyEnum, Key> key_pair;
+    typedef std::map<keyEnum, Key> key_map;
+    typedef typename key_map::iterator key_pair_iterator;
+    typedef typename key_map::const_iterator const_key_pair_iterator;
 
     Key Up() const {return returnFind(upE);}
     Key Down() const {return returnFind(downE);}
@@ -79,24 +87,44 @@ public:
     Key Use() const {return returnFind(useE);}
 
 
-    scKeyboardMap(keyMapping_t map) :keyMap(map){}
+    scKeyboardMap(key_map map) :keyMap(map){}
+
+    template<typename PairingItr>
+    scKeyboardMap(PairingItr begin, PairingItr end) : keyMap(begin, end){}
+
+    template<typename PairingItr>
+    void Insert(PairingItr begin, PairingItr end){
+        keyMap.insert(begin, end);
+    }
+
+    void Insert(key_pair newVal) {keyMap.insert(newVal);}
 
     void remap(keyEnum key, Key newKey) {keyMap[key] = newKey;}
 
-    static scKeyboardMap stdMap();
+    static scKeyboardMovementMap stdMovementMap();
+
+    key_pair_iterator begin();
+    const_key_pair_iterator begin() const;
+
+    key_pair_iterator end();
+    const_key_pair_iterator end() const;
 
 private:
     Key returnFind(keyEnum k) const;
-    keyMapping_t keyMap;
+    key_map keyMap;
 
 };
+
+
 
 class SIM_IE scKeyListener
 {
 public:
     virtual void registerEvent() = 0;
+    virtual ~scKeyListener(){}
 };
 
+typedef QSharedPointer<scKeyListener> scKeyListener_p;
 
 /**
  * @brief The KeyboardState class
@@ -110,6 +138,9 @@ class SIM_IE scKeyboardState : public QObject {
 
     Q_OBJECT
 public:
+    typedef size_t t_tag;
+
+    const static t_tag NULL_TAG = -1;
 
     bool isDown(Key k) const;
     int keyScale(Key k) const;
@@ -118,20 +149,60 @@ public:
 
     scKeyboardState();
 
-    void registerListener(int key, scKeyListener *obj);
+    t_tag registerListener(int key, scKeyListener_p obj);
+    void removeListener(t_tag tag);
+
+    static t_tag nullTag() {return NULL_TAG;}
 
 public slots:
     void KeyPressed(QKeyEvent *qke);
     void KeyReleased(QKeyEvent *qke);
 
 private:
+    struct t_removeTag;//used as a functor
     void notifyListeners(int key);
-    typedef std::set<scKeyListener *> listenerSet;
-    typedef std::map<int,  listenerSet> listenerSetMap;
+    typedef std::pair<t_tag, scKeyListener_p> t_listenerPair;
+    typedef std::multimap<int,  t_listenerPair> listenerSetMap;
     QMap<Key, bool> downKeyMap;
     listenerSetMap listenerMap;
+    t_tag curTag;
 };
 
+
+
+template <typename enumType>
+Key scKeyboardMap<enumType>::returnFind(enumType k) const
+{
+    typename key_map::const_iterator fr (keyMap.find(k));
+    if (fr != keyMap.end())
+        return keyMap.find(k)->second;
+    return Key(0);
+}
+
+template <typename enumType>
+scKeyboardMovementMap scKeyboardMap<enumType>::stdMovementMap() {
+    key_map map;
+    map[upE] = Key(Qt::Key_W);
+    map[downE] = Key(Qt::Key_S);
+    map[leftE] = Key(Qt::Key_A);
+    map[rightE] = Key(Qt::Key_D);
+    map[useE] = Key(Qt::Key_E);
+    return map;
+}
+
+template <typename enumType>
+typename scKeyboardMap<enumType>::key_pair_iterator scKeyboardMap<enumType>::begin() {return keyMap.begin();}
+
+template <typename enumType>
+typename scKeyboardMap<enumType>::const_key_pair_iterator scKeyboardMap<enumType>::begin() const {return keyMap.begin();}
+
+
+template <typename enumType>
+typename scKeyboardMap<enumType>::key_pair_iterator scKeyboardMap<enumType>::end() {return keyMap.end();}
+
+
+template <typename enumType>
+typename scKeyboardMap<enumType>::const_key_pair_iterator scKeyboardMap<enumType>::end() const {return keyMap.end();}
 
 
 #endif // SCKEYBOARDINPUT_H

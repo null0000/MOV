@@ -9,6 +9,7 @@
 
 #include "coCameraManager.h"
 #include "compositioncore_ie.h"
+#include <gcTextList.h>
 
 class gcDrawingImpl;
 class scKeyboardControlledObj;
@@ -20,6 +21,10 @@ class CMP_IE coWorld
 {
 public:
     typedef scWorld::t_tag t_simtag;
+    typedef gcTextList::t_tag t_dbgStrTag;
+
+    static const t_simtag &NULL_SIM_TAG;
+    static const t_dbgStrTag &NULL_DBGSTR_TAG;
 
     void registerSimulationStep(scSimulationStep_p newStep);
 
@@ -33,11 +38,23 @@ public:
 
     void cameraBounds(QRect bounds);
 
+    t_dbgStrTag addDebugText(glbStringCallback_p Callback);
+    void removeDebugText(t_dbgStrTag rmTag);
+    void clearDebugText();
+
     coWorld(QRect cameraBounds) : world(new scWorld()), camera(world){camera.bounds(cameraBounds);}
 
+    //forwarded from scWorld
+    QVector2D lookupLoc(t_simtag tag) const;
+
+    scWorld_cp getWorld() const;
 private:
     scWorld_p world;
     coCameraManager camera;
+
+#ifdef QT_DEBUG
+    gcTextList debugText;
+#endif
 };
 
 

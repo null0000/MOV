@@ -15,7 +15,8 @@ unix: QMAKE_CXXFLAGS += -std=gnu++11
 
 SOURCES += \
     gcImage.cpp \
-    gcDrawingImpl.cpp
+    gcDrawingImpl.cpp \
+    gcTextList.cpp
 
 HEADERS += \
     GraphicsCore.h \
@@ -27,7 +28,8 @@ HEADERS += \
     gcRenderList.h \
     gcCamera.h \
     gcSharedOffset.h \
-    gcSharedOffset_tplt.h
+    gcSharedOffset_tplt.h \
+    gcTextList.h
 
 unix:!symbian {
     maemo5 {

@@ -86,6 +86,8 @@ public:
 
     typedef std::pair<TypeTag, scBaseWorld::t_tag> t_tag; //! used as a pointer for objects
     typedef std::vector<t_tag> t_tagList; //! list of object pointers
+
+    static const t_tag NULL_TAG;
 private:
 
 
@@ -178,6 +180,7 @@ private:
 };
 
 typedef QSharedPointer<scWorld> scWorld_p;
+typedef QSharedPointer<const scWorld> scWorld_cp;
 
 template<typename planType>
 typename scSubWorld<planType>::t_tag scSubWorld<planType>::addObject(const planType &newObj) {

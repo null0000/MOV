@@ -22,7 +22,7 @@ public:
     void draw(gcDrawingImpl &impl) const {
         QVector2D translation (offset());
         QTransform transform;
-        transform.translate(-translation.x(), -translation.y());
+        transform.translate(translation.x(), translation.y());
         impl.PushTransform(transform);
 
         for (auto itr = renderableList.begin(); itr != renderableList.end(); itr++)

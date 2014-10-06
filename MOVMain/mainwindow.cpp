@@ -36,6 +36,7 @@ MainWindow::MainWindow(QWindow *parent)
 }
 
 void MainWindow::render(QPainter &painter){
+    painter.drawText(QPoint(50,50), QString("QString::fromStdString(stream.str())"));
     gcDrawingImpl drawDevice(painter);
     device->setSize(size());
     world->draw(drawDevice);

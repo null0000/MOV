@@ -9,7 +9,6 @@
 #include "scKeyboardInput.h"
 
 class scKeyboardState;
-class scKeyboardMap;
 class scObjDesc;
 class scMovementDesc;
 class scWorldDesc;

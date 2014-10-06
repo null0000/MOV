@@ -6,7 +6,7 @@
 #include "scMovementDesc.h"
 #include "scWorldDesc.h"
 
-
+const scWorld::t_tag scWorld::NULL_TAG = t_tag((TypeTag) -1, -1);
 
 delta_t timeDeltaFromMilli(int milliseconds) {return ((float)(milliseconds))/TIME_CONVERSION_DIVISOR;}
 
@@ -89,4 +89,3 @@ scWorld::t_tag scWorld::addObject(const scKeyboardControlledObj &obj) {
 scWorld::t_tag scWorld::addObject(const scTaskIterator &obj) {
     return t_tag(TaskTag, taskWorld.addObject(obj));
 }
-
