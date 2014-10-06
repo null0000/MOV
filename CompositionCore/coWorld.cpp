@@ -68,3 +68,7 @@ QVector2D coWorld::lookupLoc(t_simtag tag) const{
         return QVector2D(0, 0);
     return world->lookupObject(tag);
 }
+
+QVector2D coWorld::cameraOffset() const {
+    return camera.curOffset();
+}

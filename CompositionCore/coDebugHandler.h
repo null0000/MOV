@@ -11,12 +11,13 @@ class CMP_IE coDebugHandler {
 public:
     void registerPlayer(coWorldFullTag playerTag);
 
-    typedef enum {PlayerInfoE} DebugKeyboardOptionsEnum;
-    typedef scKeyboardMap<DebugKeyboardOptionsEnum> key_map;
+    typedef enum {PlayerInfoE, CameraInfoE, LastInfoE} DbgInfoEnum;
+    typedef scKeyboardMap<DbgInfoEnum> key_map;
     typedef coWorld::t_dbgStrTag t_tag;
 
     void showPlayerInfo();
     void hidePlayerInfo();
+
 
     void setKeyboardState(scKeyboardState_p ks);
 
@@ -34,7 +35,7 @@ private:
     class listener;
     friend class listener;
 
-    void registerEvent(DebugKeyboardOptionsEnum e);
+    void registerEvent(DbgInfoEnum e);
 
     void removeTags();
     void removeWorldTags();
@@ -45,13 +46,18 @@ private:
 
     static key_map defaultMap();
 
+    void showGeneroInfo(DbgInfoEnum infoType);
+    void hideGeneroInfo(DbgInfoEnum infoType);
+    glbStringCallback *CreateStrCB(DbgInfoEnum type) const;
+
     bool showingPlayerInfo() const;
+    bool showingInfoType(DbgInfoEnum iType) const;
 
     coWorld_p world;
     coWorldFullTag playerTag;
 
     typedef coWorld::t_dbgStrTag str_tag;
-    typedef std::pair<DebugKeyboardOptionsEnum, str_tag> str_tag_pair;
+    typedef std::pair<DbgInfoEnum, str_tag> str_tag_pair;
     typedef std::vector<str_tag_pair> str_tag_pairs;
     str_tag_pairs dbgTxtList;
 

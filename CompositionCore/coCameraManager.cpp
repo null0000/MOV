@@ -19,8 +19,7 @@ void coCameraManager::setTarget(scWorld::t_tag targetTag) {
     getConfigurableLocation().setObject(targetTag);
 }
 
-void coCameraManager::draw(gcDrawingImpl &impl) const
-{
+void coCameraManager::draw(gcDrawingImpl &impl) const {
     camera.draw(impl);
 }
 
@@ -38,4 +37,8 @@ void coCameraManager::bounds(QRect bounds) {
 
 void coCameraManager::update(delta_t ) {
     camera.offsetFunctor().update();
+}
+
+QVector2D coCameraManager::curOffset () const {
+    return camera.offsetFunctor()();
 }

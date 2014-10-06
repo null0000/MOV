@@ -5,6 +5,22 @@
 #include <scTagMsgCallback.h>
 #include <QKeyEvent>
 
+#include <sstream>
+
+class cameraInfoPrinter : public glbStringCallback
+{
+public:
+    cameraInfoPrinter(coWorld_p world) : world(world){}
+    std::string msg() const {
+        QVector2D off(world->cameraOffset());
+        std::stringstream str;
+        str << "Camera: (" << off.x() << ", " << off.y() << ")";
+        return str.str();
+    }
+private:
+    coWorld_p world;
+};
+
 coDebugHandler::~coDebugHandler() {
     removeTags();
 }
@@ -50,21 +66,22 @@ coDebugHandler &coDebugHandler::operator =(const coDebugHandler &Other) {
     playerTag = Other.playerTag;
     setKeyboardMapping(Other.mapping);
     setKeyboardState(Other.ks);
-
-    if (!showingPlayerInfo())
-        showPlayerInfo();
+    for (size_t i = 0; i < (size_t) LastInfoE; i++){
+        if (!showingInfoType((DbgInfoEnum)i))
+            showGeneroInfo((DbgInfoEnum)i);
+    }
     return *this;
 }
 
 class coDebugHandler::listener : public scKeyListener
 {
 public:
-    listener(coDebugHandler &parent, DebugKeyboardOptionsEnum e) :
+    listener(coDebugHandler &parent, DbgInfoEnum e) :
         parent(parent), e(e){}
     void registerEvent() {parent.registerEvent(e);}
 private:
     coDebugHandler &parent;
-    DebugKeyboardOptionsEnum e;
+    DbgInfoEnum e;
 };
 
 void coDebugHandler::addKeyStateListeners() {
@@ -80,30 +97,6 @@ void coDebugHandler::registerPlayer(coWorldFullTag newTag) {
     playerTag = newTag;
 }
 
-void coDebugHandler::showPlayerInfo() {
-    if (playerTag == coWorld::NULL_SIM_TAG)
-        return;
-
-    str_tag playerListener;
-    playerListener = world->addDebugText(glbStringCallback_p(new scTagMsgCallback("Player", playerTag)));
-    dbgTxtList.push_back(str_tag_pair(PlayerInfoE, playerListener));
-
-}
-
-void coDebugHandler:: hidePlayerInfo() {
-    typedef std::vector<str_tag_pairs::iterator> pair_iterator_list;
-    pair_iterator_list remList;
-    for (auto pairItr = dbgTxtList.begin(); pairItr != dbgTxtList.end(); pairItr++){
-        if (pairItr->first == PlayerInfoE) {
-            remList.push_back(pairItr);
-        }
-    }
-    for (auto i : remList) {
-        world->removeDebugText(i->second);
-        dbgTxtList.erase(i);
-    }
-}
-
 void coDebugHandler::setKeyboardState(scKeyboardState_p newKS) {
     removeKsTags();
     ks = newKS;
@@ -116,29 +109,63 @@ void coDebugHandler::setKeyboardMapping(key_map newMapping) {
 }
 
 
-void coDebugHandler::registerEvent(DebugKeyboardOptionsEnum e) {
-    switch(e) {
+glbStringCallback *coDebugHandler::CreateStrCB(DbgInfoEnum type) const {
+    switch(type) {
         case PlayerInfoE:
-            if (!showingPlayerInfo())
-                showPlayerInfo();
-            else
-                hidePlayerInfo();
-            break;
+            if (playerTag != coWorld::NULL_SIM_TAG)
+                return new scTagMsgCallback("Player", playerTag);
+            return new glbNullStrCallback();
+        case CameraInfoE:
+            return new cameraInfoPrinter(world);
+        case LastInfoE:
+            break; //error case
     }
+    Q_ASSERT(false); //none shall pass.... in debug, anyway.
+    return new glbNullStrCallback();
+}
+
+void coDebugHandler::registerEvent(DbgInfoEnum e) {
+    if (showingInfoType(e))
+        hideGeneroInfo(e);
+    else
+        showGeneroInfo(e);
 }
 
 coDebugHandler::key_map coDebugHandler::defaultMap() {
     typedef key_map::key_pair key_pair;
     std::vector<key_pair> map;
     map.push_back(key_pair(PlayerInfoE, Qt::Key_F11));
+    map.push_back(key_pair(CameraInfoE, Qt::Key_F12));
+    Q_ASSERT(map.size() == (size_t)LastInfoE);
     return key_map(map.begin(), map.end());
 }
 
 
-bool coDebugHandler::showingPlayerInfo() const {
+bool coDebugHandler::showingInfoType(DbgInfoEnum iType) const {
     for (str_tag_pair pair : dbgTxtList) {
-        if (pair.first == PlayerInfoE)
+        if (pair.first == iType)
             return true;
     }
     return false;
+}
+
+
+
+void coDebugHandler::showGeneroInfo(DbgInfoEnum infoType) {
+    str_tag t (world->addDebugText(glbStringCallback_p(CreateStrCB(infoType))));
+    dbgTxtList.push_back(str_tag_pair(infoType, t));
+
+}
+
+void coDebugHandler::hideGeneroInfo(DbgInfoEnum infoType) {
+    typedef std::vector<str_tag_pairs::iterator> iterator_list;
+    iterator_list iList;
+    for (auto i = dbgTxtList.begin(); i != dbgTxtList.end(); i++)
+        if (i->first == infoType)
+            iList.push_back(i);
+    Q_ASSERT(iList.size() == 1);
+    for (auto i : iList) {
+        world->removeDebugText(i->second);
+        dbgTxtList.erase(i);
+    }
 }

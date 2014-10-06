@@ -74,6 +74,7 @@ public:
     void setTarget(scWorld::t_tag targetTag);
     void setTarget(scWorld_p world, scWorld::t_tag targetTag);
     void bounds(QRect bounds);
+    QVector2D curOffset () const;
 
     void update(delta_t delta);
 

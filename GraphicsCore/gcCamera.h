@@ -39,6 +39,7 @@ public:
     }
 
     OffsetFunctor &offsetFunctor() {return offset;}
+    const OffsetFunctor &offsetFunctor() const {return offset;}
 
 private:
     OffsetFunctor offset;

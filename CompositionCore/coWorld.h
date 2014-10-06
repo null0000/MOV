@@ -37,6 +37,7 @@ public:
     void draw (gcDrawingImpl &impl);
 
     void cameraBounds(QRect bounds);
+    QVector2D cameraOffset() const;
 
     t_dbgStrTag addDebugText(glbStringCallback_p Callback);
     void removeDebugText(t_dbgStrTag rmTag);

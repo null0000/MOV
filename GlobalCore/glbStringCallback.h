@@ -4,13 +4,16 @@
 #include <string>
 #include <QSharedPointer>
 
-class glbStringCallback
-{
+class glbStringCallback {
 public:
     virtual ~glbStringCallback(){}
     virtual std::string msg() const = 0;
 };
 
+class glbNullStrCallback : public glbStringCallback {
+public:
+    std::string msg() const {return "";}
+};
 
 typedef QSharedPointer<glbStringCallback> glbStringCallback_p;
 
