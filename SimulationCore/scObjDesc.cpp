@@ -1,5 +1,13 @@
 #include <QVector2D>
+
+#include <iostream>
+
+
 #include "scObjDesc.h"
+
+
+const scObjDesc scObjDesc::NULL_DESC;
+static const scObjDesc::resource_type INIT_RESOURCES = 500;
 
 const QVector2D &scObjDesc::location() const {return thisLocation;}
 
@@ -16,9 +24,9 @@ void scObjDesc::moveAmount(const QVector2D &movementAmount) {
 }
 
 scObjDesc::scObjDesc(const QVector2D &StartPos, const QVector2D &SpeedScale) :
-    thisLocation(StartPos), speedScale(SpeedScale){}
+    resources(INIT_RESOURCES), thisLocation(StartPos), speedScale(SpeedScale){}
 
-scObjDesc::scObjDesc() : thisLocation(0, 0), speedScale(1, 1){}
+scObjDesc::scObjDesc() : resources(INIT_RESOURCES), thisLocation(0, 0), speedScale(1, 1){}
 
 
 const scObjDesc::resource_type &scObjDesc::curResources() const {
@@ -31,5 +39,11 @@ void scObjDesc::addResources(resource_type newResources) {
 }
 
 void scObjDesc::removeResources(resource_type removedResources) {
-    resources += removedResources;
+    resources -= removedResources;
+}
+
+std::ostream & operator<< (std::ostream &out, const scObjDesc &t) {
+    out << "(" << t.thisLocation.x() << ", " << t.thisLocation.y() << ")";
+    out << " Resources: " << t.resources;
+    return out;
 }

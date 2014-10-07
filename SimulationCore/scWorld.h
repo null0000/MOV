@@ -37,9 +37,15 @@ public:
 template <typename planType>
 class scSubWorld : public scBaseWorld{
 public:
+    typedef scObjDesc obj_type;
+    typedef obj_type::resource_type resource_type;
+
     t_tag addObject(const planType &insertedPlan);
     QVector2D lookup(t_tag tag) const;
+    const scObjDesc &objInfo(t_tag tag) const;
     void simulate(delta_t timeDelta);
+
+    void removeResources(t_tag obj, resource_type amount);
 
     t_tag maxTag() const;
 
@@ -86,13 +92,17 @@ public:
 
     typedef std::pair<TypeTag, scBaseWorld::t_tag> t_tag; //! used as a pointer for objects
     typedef std::vector<t_tag> t_tagList; //! list of object pointers
+    typedef scObjDesc obj_type;
+    typedef obj_type::resource_type resource_type;
+    typedef scSubWorld<scKeyboardControlledObj> keyboard_world;
+    typedef scSubWorld<scTaskIterator> task_world;
 
     static const t_tag NULL_TAG;
 private:
 
 
-    scSubWorld<scKeyboardControlledObj> keyboardWorld;
-    scSubWorld<scTaskIterator> taskWorld;
+    keyboard_world keyboardWorld;
+    task_world taskWorld;
 
 
     template<typename insert_iterator>
@@ -138,9 +148,11 @@ public:
         return aa.getItr();
     }
 
-
+    const scObjDesc &objInfo(t_tag tag) const;
     QVector2D lookupObject(t_tag tag) const;
     void simulate(delta_t timeDelta);
+    void removeResources(t_tag obj, resource_type amount);
+    void addResources(t_tag obj, resource_type amount);
 
 
     /**
@@ -208,9 +220,24 @@ void scSubWorld<planType>::simulate(delta_t timeDelta) {
         itr->second.updateStrategy(itr->first, scWorldDesc());
     }
 }
+
+template <typename planType>
+void scSubWorld<planType>::removeResources(t_tag obj, resource_type amount) {
+    objList[obj].first.removeResources(amount);
+}
+
 template<typename planType>
 typename scSubWorld<planType>::t_tag scSubWorld<planType>::maxTag() const {
     return objList.size();
+}
+
+
+template<typename planType>
+const scObjDesc &scSubWorld<planType>::objInfo(t_tag tag) const {
+    if (tag < objList.size())
+        return objList[tag].first;
+    Q_ASSERT(false);
+    return scObjDesc::NULL_DESC;
 }
 
 template<typename planType>
@@ -218,19 +245,45 @@ template<typename insert_iterator>
 insert_iterator scSubWorld<planType>::gatherUsingList(insert_iterator iItr) const {
     for (typename objlist_t::const_iterator cItr = objList.begin(); cItr != objList.end(); cItr++) {
         if (cItr->second.isUsing()) {
-            *iItr = cItr->first.location();
+            *iItr = std::distance(objList.begin(), cItr);
             iItr++;
         }
     }
     return iItr;
 }
 
+template <scWorld::TypeTag TagPrefix>
+struct scTagCollator {
+    template <typename TagType>
+    scWorld::t_tag operator()(TagType tag) {return scWorld::t_tag(TagPrefix, tag);}
+};
 
 template<typename insert_iterator>
 insert_iterator scWorld::gatherUsingList(insert_iterator iItr) const {
-    iItr = keyboardWorld.gatherUsingList(iItr);
-    iItr = taskWorld.gatherUsingList(iItr);
-    return iItr;
+    typedef keyboard_world::t_tag keyboard_tag;
+    typedef std::vector<keyboard_tag> keyboard_tag_list;
+
+    typedef task_world::t_tag task_tag;
+    typedef std::vector<task_tag> task_tag_list;
+
+    typedef std::vector<t_tag> tag_list;
+
+    keyboard_tag_list klist;
+    std::insert_iterator<keyboard_tag_list> ktItr (klist, klist.begin());
+    keyboardWorld.gatherUsingList(ktItr);
+
+    task_tag_list tlist;
+    std::insert_iterator<task_tag_list> ttItr (tlist, tlist.begin());
+    taskWorld.gatherUsingList(ttItr);
+
+    tag_list rlist (klist.size() + tlist.size());
+    std::insert_iterator<tag_list> rlistIItr (rlist, rlist.begin());
+    rlistIItr = std::transform(klist.begin(), klist.end(), rlistIItr, scTagCollator<KeyboardTag>());
+    std::transform(tlist.begin(), tlist.end(), rlistIItr, scTagCollator<TaskTag>());
+    for (auto tag : rlist) {
+        *iItr = tag;
+        iItr++;
+    }
 }
 
 #endif // SCWORLD_H

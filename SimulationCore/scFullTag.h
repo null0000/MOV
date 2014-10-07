@@ -7,6 +7,7 @@ class SIM_IE scFullTag {
 
 public:
     QVector2D objectLoc() const {return world->lookupObject(tag);}
+    const scObjDesc &objInfo() const {return world->objInfo(tag);}
     scFullTag(scWorld_cp world, scWorld::t_tag tag) : tag(tag), world(world){}
 
 private:

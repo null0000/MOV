@@ -244,6 +244,8 @@ void SimulationCoreUNITTest::testCase2() {
 void SimulationCoreUNITTest::testCase3() {
 
     typedef std::vector<scTask> taskList_t;
+    typedef scSubWorld<scTaskIterator> world_type;
+    typedef std::deque<world_type::t_tag> tag_list;
 
     static const int TASK_COUNT = 50000;
     static const QVector2D TARGET_LOC(5000, 5000);
@@ -260,14 +262,15 @@ void SimulationCoreUNITTest::testCase3() {
     std::for_each(list.begin(), list.end(),
                   [&](const scTask &Task){taskVector.push_back(scSingleTask(TARGET_LOC, Task));});
 
-    scSubWorld<scTaskIterator> world;
+
+    world_type world;
     std::for_each(taskVector.begin(),
                   taskVector.end(),[&](const scSingleTask &taskPlan){world.addObject(scTaskIterator(taskPlan));});
 
     world.simulate(TARGET_LOC.length() - 1);
 
-    std::deque<QVector2D> objDeque;
-    std::insert_iterator<std::deque<QVector2D> > ii (objDeque, objDeque.begin());
+    tag_list objDeque;
+    std::insert_iterator<tag_list> ii (objDeque, objDeque.begin());
 
     world.gatherUsingList(ii);
 

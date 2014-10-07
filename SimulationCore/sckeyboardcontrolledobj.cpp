@@ -16,7 +16,7 @@ bool scKeyboardControlledObj::isUsing() const {
 }
 
 scKeyboardControlledObj::scKeyboardControlledObj(scKeyboardState_p keyboardObj, scKeyboardMap_ccp km) :
-    deltaScale(1, 1), ks(keyboardObj), kMap(km){registerKeyboardListener();}
+    deltaScale(5, 5), ks(keyboardObj), kMap(km){registerKeyboardListener();}
 scKeyboardControlledObj::scKeyboardControlledObj(scKeyboardState_p keyboardObj, scKeyboardMap_ccp km, QVector2D scaleFactor) :
     deltaScale(scaleFactor), ks(keyboardObj), kMap(km){registerKeyboardListener();}
 

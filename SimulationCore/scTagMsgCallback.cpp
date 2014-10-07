@@ -9,6 +9,6 @@ std::string scTagMsgCallback::msg() const {
     std::stringstream sstream;
     if (name != "")
         sstream << name << ": ";
-    sstream << "(" << objTag.objectLoc().x() << ", " << objTag.objectLoc().y() << ")";
+    sstream << objTag.objInfo();
     return sstream.str();
 }

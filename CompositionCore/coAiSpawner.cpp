@@ -9,21 +9,11 @@
 #include <gcImage.h>
 #include <QVector2D>
 
-void coAiSpawner::runStep(scWorld &scWorld, delta_t /*time*/) {
-    typedef std::vector<QVector2D> vecList_t;
-    vecList_t objVec;
-    std::insert_iterator<vecList_t> vecItr (objVec, objVec.begin());
-    scWorld.gatherUsingList(vecItr);
-
-    if (objVec.size() == 1) {
-        scTaskIterator tItr (scSingleTask(QVector2D(50, 50)));
-        gcImage image(imageName);
-        world->addObject(image, tItr);
-    }
-
-    Q_ASSERT(objVec.size() <= 1);
-
-
+void coAiSpawner::spawnAI(QVector2D iVec) {
+    scSingleTask st(iVec);
+    scTaskIterator tItr (st);
+    gcImage image(imageName);
+    world->addObject(image, tItr);
 }
 
 

@@ -4,7 +4,7 @@
 
 #include "coWorld.h"
 
-#include <scSimulationStep.h>
+#include <scSpawner.h>
 
 
 #include <QString>
@@ -13,10 +13,10 @@ class gcRenderList;
 typedef QSharedPointer<gcRenderList> gcRenderList_p;
 
 
-class coAiSpawner : public scSimulationStep {
+class coAiSpawner : public scSpawner {
 public:
     void runStep(scWorld &world, delta_t time);
-
+    void spawnAI(QVector2D);
     coAiSpawner(QString imageName, coWorld_p world);
 
 private:

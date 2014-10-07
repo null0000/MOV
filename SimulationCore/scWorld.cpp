@@ -72,7 +72,6 @@ void scWorld::simulate(delta_t timeDelta) {
 
     CHECK_TYPETAG;
 
-
     std::for_each(simulationSteps.begin(), simulationSteps.end(),
                   [&](scSimulationStep_p Step) {Step->runStep(*this, timeDelta);});
 }
@@ -89,3 +88,26 @@ scWorld::t_tag scWorld::addObject(const scKeyboardControlledObj &obj) {
 scWorld::t_tag scWorld::addObject(const scTaskIterator &obj) {
     return t_tag(TaskTag, taskWorld.addObject(obj));
 }
+
+const scObjDesc &scWorld::objInfo(t_tag tag) const {
+    switch (tag.first) {
+        case KeyboardTag:
+            return keyboardWorld.objInfo(tag.second);
+        case TaskTag:
+            return taskWorld.objInfo(tag.second);
+    }
+    Q_ASSERT(false);
+    return scObjDesc::NULL_DESC;
+}
+
+void scWorld::removeResources(t_tag obj, resource_type amount) {
+    switch(obj.first) {
+    case KeyboardTag:
+        keyboardWorld.removeResources(obj.second, amount);
+        break;
+    case TaskTag:
+        taskWorld.removeResources(obj.second, amount);
+        break;
+    }
+}
+
