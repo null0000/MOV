@@ -17,6 +17,7 @@ void coWorld::simulate(delta_t time) {
 
 
 void coWorld::draw (gcDrawingImpl &impl) {
+    drawUntracked(impl);
     camera.draw(impl);
 #ifdef QT_DEBUG
     debugText.draw(impl);
@@ -71,4 +72,9 @@ QVector2D coWorld::lookupLoc(t_simtag tag) const{
 
 QVector2D coWorld::cameraOffset() const {
     return camera.curOffset();
+}
+
+void coWorld::drawUntracked (gcDrawingImpl &impl) const {
+    for (auto renderable : untrackedList)
+        renderable->draw(impl);
 }

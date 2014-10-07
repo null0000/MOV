@@ -9,18 +9,20 @@
 #include <gcImage.h>
 #include <QVector2D>
 
-void coAiSpawner::runStep(scWorld &world, delta_t /*time*/) {
+void coAiSpawner::runStep(scWorld &scWorld, delta_t /*time*/) {
     typedef std::vector<QVector2D> vecList_t;
     vecList_t objVec;
     std::insert_iterator<vecList_t> vecItr (objVec, objVec.begin());
-    world.gatherUsingList(vecItr);
+    scWorld.gatherUsingList(vecItr);
 
     if (objVec.size() == 1) {
         scTaskIterator tItr (scSingleTask(QVector2D(50, 50)));
         gcImage image(imageName);
+        world->addObject(image, tItr);
     }
 
     Q_ASSERT(objVec.size() <= 1);
+
 
 }
 
@@ -28,6 +30,5 @@ void coAiSpawner::runStep(scWorld &world, delta_t /*time*/) {
 
 
 
-coAiSpawner::coAiSpawner(gcRenderList_p renderList, QString imageName,
-            QSharedPointer<scWorld> worldPtr) :
-    renderList(renderList), imageName(imageName), worldPtr(worldPtr){}
+coAiSpawner::coAiSpawner(QString imageName, coWorld_p worldPtr) :
+    imageName(imageName), world(worldPtr){}

@@ -122,8 +122,6 @@ private:
     };
 
 public:
-
-
     template<typename insert_iterator>
     insert_iterator gatherUsingList(insert_iterator iItr) const;
 

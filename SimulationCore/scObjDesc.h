@@ -15,15 +15,22 @@
 class SIM_IE scObjDesc {
 
 public:
+    typedef int resource_type;
     const QVector2D &location() const;
+    const resource_type &curResources() const;
 
     void moveInDir(const QVector2D &Dir, float magnitude);
     void moveTowardPoint(const QVector2D &Point, float maxDist);
     void moveAmount(const QVector2D &movementAmount);
 
+    void addResources(resource_type resources);
+    void removeResources(resource_type resources);
+
+
     scObjDesc(const QVector2D &StartPos, const QVector2D &SpeedScale);
     scObjDesc();
 private:
+    resource_type resources;
     QVector2D thisLocation;
     QVector2D speedScale;
 };

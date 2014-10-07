@@ -26,9 +26,9 @@ void gcDrawingImpl::PushTransform(QTransform mat)
 }
 void gcDrawingImpl::PopTransform()
 {
+    QTransform topMat(matStack.top());
     matStack.pop();
     Q_ASSERT(matStack.size() > 0);
-    QTransform topMat(matStack.top());
     painter.setTransform(topMat, false);
 }
 

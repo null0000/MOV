@@ -19,11 +19,16 @@ coWorld_p coBootUp(scInputDevice_p inputDevice, QRect CameraBounds, QRect window
     scKeyboardControlledObj kObj(ks, km);
     gcImage image ("face");
 
-    coWorld::t_simtag st = world->addObject(image, kObj);
+    coWorld::t_simtag st = world->trackObject(image, kObj);
     world->setTarget(st);
 
 #ifdef QT_DEBUG
     new coDebugHandler(world,coWorldFullTag(world, st), ks);
 #endif
+    coAiSpawner ai("face", world);
+    scSimulationStep_p step (new coAiSpawner(ai));
+
+    world->registerSimulationStep(step);
+
     return world;
 }
