@@ -40,6 +40,7 @@ void scObjDesc::addResources(resource_type newResources) {
 
 void scObjDesc::removeResources(resource_type removedResources) {
     resources -= removedResources;
+    Q_ASSERT(resources > 0);
 }
 
 std::ostream & operator<< (std::ostream &out, const scObjDesc &t) {

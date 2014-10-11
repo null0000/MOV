@@ -19,8 +19,11 @@ class scSimulatable;
 #include "scTask.h"
 #include "simulationcore_ie.h"
 #include "scMovementDesc.h"
-#include <ErrorCore.h>
 #include "scSimulationStep.h"
+#include "scWorldDesc.h"
+
+#include <ErrorCore.h>
+
 class scKeyboardControlledObj;
 class scTask;
 

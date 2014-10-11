@@ -14,6 +14,7 @@ std::ostream & operator<< (std::ostream &out, const scObjDesc &t);
  * This represents a description of an object
  *in the scWorld vector. It's used to track
  *location, speed, and so on.
+ *
  */
 class SIM_IE scObjDesc {
 public:

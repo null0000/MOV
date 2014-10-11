@@ -12,7 +12,11 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-SOURCES += tst_simulationcoreunittest.cpp
+SOURCES += tst_simulationcoreunittest.cpp \
+    tst_taskTests.cpp \
+    tst_worldTests.cpp \
+    tst_resourceTests.cpp \
+    tst_unitUtil.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../SimulationCore/release/ -lSimulationCore
@@ -40,3 +44,7 @@ DEPENDPATH += $$PWD/../../ErrorCore
 CONFIG += c++11
 
 unix: QMAKE_CXXFLAGS += -std=gnu++11
+
+HEADERS += \
+    tst_simulationCoreUnit.h \
+    tst_unitUtil.h
