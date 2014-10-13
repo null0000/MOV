@@ -1,0 +1,4 @@
+#ifndef GLBDEFINITIONS_H
+#define GLBDEFINITIONS_H
+
+#endif // GLBDEFINITIONS_H
