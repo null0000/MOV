@@ -30,7 +30,8 @@ SOURCES += \
     scLocationFunctor.cpp \
     scTagMsgCallback.cpp \
     scSpendResourceStep.cpp \
-    scChunkManager.cpp
+    scChunkManager.cpp \
+    scResourceDeposit.cpp
 
 HEADERS += simulationcore.h \
     scKeyboardInput.h \
@@ -54,7 +55,10 @@ HEADERS += simulationcore.h \
     scSpendResourceStep.h \
     scSpawner.h \
     scChunkManager.h \
-    scResourceDeposit.h
+    scResourceDeposit.h \
+    scChunk.h \
+    scChunkDescription.h \
+    scChunkAttributes.h
 
 unix:!symbian {
     maemo5 {

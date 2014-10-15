@@ -287,6 +287,7 @@ insert_iterator scWorld::gatherUsingList(insert_iterator iItr) const {
         *iItr = tag;
         iItr++;
     }
+    return iItr;
 }
 
 #endif // SCWORLD_H

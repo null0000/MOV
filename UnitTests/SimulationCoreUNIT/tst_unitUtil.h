@@ -9,6 +9,7 @@
 #include <QVector2D>
 #include <scWorld.h>
 #include <scSingleTask.h>
+#include <glbDefinitions.h>
 
 typedef std::vector<scSingleTask> task_list;
 
@@ -17,7 +18,8 @@ float tst_maxUpdateOrTen(const scSubWorld<scTaskIterator> &taskWorld, std::vecto
 
 void tst_updateList(std::vector<scTaskIterator> &itrVec, const scSubWorld<scTaskIterator> &taskWorld);
 scObjDesc tst_createObjDesc(size_t idx, const scSubWorld<scTaskIterator> &taskWorld);
-QVector2D tst_genRandomVec(long long maxX, long long maxY, long long minX = 0, long long minY = 0);
+QVector2D tst_genRandomVec(number_type maxX, number_type maxY, number_type minX = 0, number_type minY = 0);
+number_type tst_genRandomInt(number_type min, number_type max);
 
 
 template <typename insert_iterator>

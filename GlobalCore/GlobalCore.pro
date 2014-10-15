@@ -23,7 +23,8 @@ HEADERS += GlobalCore.h \
     glbTranslate.h \
     glbDebug.h \
     globalcore_ie.h \
-    glbStringCallback.h
+    glbStringCallback.h \
+    glbDefinitions.h
 
 unix:!symbian {
     maemo5 {

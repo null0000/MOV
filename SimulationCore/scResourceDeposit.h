@@ -12,14 +12,17 @@ public:
     typedef QVector2D point;
     typedef float coord_type;
     typedef float measure_type;
+    typedef std::pair<resource_type, resource_type> gathered_remaining_pair;
 
     scResourceDeposit(){}
     scResourceDeposit(point loc, measure_type radius, delta_t mineTime, resource_type startResources) :
         p(loc), rad(radius), value(startResources), timeToMine(mineTime){}
 
-    resource_type Mine(delta_t /*time*/){return value;}
-    point location() const{return p;}
-    measure_type radius() const{return rad;}
+
+    resource_type remainingValue() const;
+    gathered_remaining_pair mine(delta_t time);
+    point location() const {return p;}
+    measure_type radius() const {return rad;}
 private:
     point p;
     measure_type rad;

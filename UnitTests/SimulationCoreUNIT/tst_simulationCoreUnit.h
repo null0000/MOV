@@ -15,7 +15,7 @@ public:
 private Q_SLOTS:
     //RESOURCES TESTS//
     void testResourceGathering();
-    void testResourceQueries();
+    void testResourceCounting();
     void testResourceChunking();
 
     //TASK TESTS//

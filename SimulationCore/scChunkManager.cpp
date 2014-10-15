@@ -16,12 +16,12 @@ struct scChunkManager::ChunkGenerator {
     typedef size_t size_type;
     typedef std::mt19937_64 random_generator;
     typedef scChunkManager::measure_type measure_type;
-    scChunkManager::Chunk operator()(point loc) {
+    scChunk operator()(point loc) {
         size_type deposits = ab.genDepositCount(rd);
-        Chunk::deposit_list dl = deposits ? Chunk::deposit_list(deposits) : Chunk::deposit_list();
+        scChunk::deposit_list dl = deposits ? scChunk::deposit_list(deposits) : scChunk::deposit_list();
 
         for_each(dl.begin(), dl.end(), oneDeposit{rd, ab});
-        return Chunk(loc, dl.begin(), dl.end());
+        return scChunk(loc, dl.begin(), dl.end());
     }
 
     struct oneDeposit {
@@ -53,11 +53,11 @@ void scChunkManager::genChunks(point p, measure_type radius) {
 
 struct scChunkManager::ChunkPointCompare{
 
-    bool operator()(const Chunk &c1, const Chunk &c2) {
+    bool operator()(const scChunk &c1, const scChunk &c2) {
         return (*this)(c1.location(), c2.location());
     }
-    bool operator()(const Chunk &c, point p) {return (*this)(c.location(), p);}
-    bool operator()(point p, const Chunk &c){return (*this)(p, c.location());}
+    bool operator()(const scChunk &c, point p) {return (*this)(c.location(), p);}
+    bool operator()(point p, const scChunk &c){return (*this)(p, c.location());}
 
 
     bool operator()(const point &p1, const point &p2) {
@@ -73,13 +73,13 @@ struct scChunkManager::ChunkPointCompare{
 };
 
 
-void scChunkManager::unique_insert(sorted_chunk_list &list, chunk_iterator loc, Chunk c) const {
-    if (loc != list.end() && list.size() != 0 && loc->location() != c.location()) {
+void scChunkManager::unique_insert(sorted_chunk_list &list, chunk_iterator loc, scChunk c) const {
+    if (loc != list.end() && list.size() != 0 && loc->location() == c.location()) {
         return;
     }
     list.insert(loc, c);
 }
-void scChunkManager::unique_insert(sorted_chunk_list &list, Chunk c) const {
+void scChunkManager::unique_insert(sorted_chunk_list &list, scChunk c) const {
     chunk_iterator cItr = std::lower_bound(list.begin(), list.end(), c, ChunkPointCompare());
     if (cItr != list.end())
         return;
@@ -88,7 +88,7 @@ void scChunkManager::unique_insert(sorted_chunk_list &list, Chunk c) const {
 }
 
 scChunkManager::chunk_iterator scChunkManager::find(sorted_chunk_list &list, point p) const {
-    return std::lower_bound(list.begin(), list.end(), p, ChunkPointCompare());
+   return std::lower_bound(list.begin(), list.end(), p, ChunkPointCompare());
 }
 
 scChunkManager::const_chunk_iterator scChunkManager::find(const sorted_chunk_list &list, point p) const {

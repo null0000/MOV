@@ -33,6 +33,11 @@ float tst_maxUpdateOrTen(const scSubWorld<scTaskIterator> &world, const task_lis
 
 }
 
+number_type tst_genRandomInt(number_type min, number_type max) {
+    std::uniform_int_distribution<> gen (min, max);
+    return gen(rnum);
+}
+
 QVector2D tst_genRandomVec(long long maxX, long long maxY, long long minX, long long minY) {
     std::uniform_int_distribution<> xgen (minX, maxX);
     std::uniform_int_distribution<> ygen (minY, maxY);
