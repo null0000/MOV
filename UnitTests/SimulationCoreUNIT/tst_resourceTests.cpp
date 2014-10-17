@@ -190,9 +190,9 @@ struct doDelta {
             total += start;
             grp_type grp(i->mine(delta));
             gatheredCount += grp.first;
-            remainingCount += grp.second;
             QVERIFY(grp.first > 0);
             QVERIFY(grp.second >= 0);
+            remainingCount += grp.second;
             QVERIFY(grp.first + grp.second == start);
             QVERIFY(grp.second == i->remainingValue());
             if (grp.second) nonzeroCount++;
