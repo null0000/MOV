@@ -3,7 +3,9 @@ TEMPLATE = subdirs
 SUBDIRS += \
     ErrorCoreUNIT \
     CommCoreUNIT \
-    SimulationCoreUNIT
+    SimulationCoreUNIT \
+    CompositionCoreUNIT \
+    TestLibrary
 
 QT += testlib
 
