@@ -4,8 +4,8 @@
 #include <glbDefinitions.h>
 #include <random>
 
+#include "scDefinitions.h"
 #include "simulationcore_ie.h"
-#include "scWorld.h"
 
 class SIM_IE scChunkAttributes {
 public:

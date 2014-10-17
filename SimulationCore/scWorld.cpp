@@ -32,8 +32,6 @@ QVector2D scWorld::lookupObject(t_tag tag) const {
 
 /*
  *These are some macros used to debug simulate.
- *
- *
  */
 #ifdef QT_DEBUG
 #define DEFINE_TYPETAG unsigned int typeTagCount = 0
@@ -73,7 +71,7 @@ void scWorld::simulate(delta_t timeDelta) {
     CHECK_TYPETAG;
 
     std::for_each(simulationSteps.begin(), simulationSteps.end(),
-                  [&](scSimulationStep_p Step) {Step->runStep(*this, timeDelta);});
+                  [&](scSimulationStep_p Step) {Step->runStep(*this, chunkManager, timeDelta);});
 }
 
 
@@ -111,3 +109,8 @@ void scWorld::removeResources(t_tag obj, resource_type amount) {
     }
 }
 
+
+
+void scWorld::genChunks(point Location, measure_type radius) {
+    chunkManager.genChunks(Location, radius);
+}

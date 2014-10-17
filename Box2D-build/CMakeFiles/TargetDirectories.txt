@@ -1,6 +1,0 @@
-C:/Users/null/MOV/Box2D-build/Box2D/CMakeFiles/Box2D.dir
-C:/Users/null/MOV/Box2D-build/Box2D/CMakeFiles/Box2D_shared.dir
-C:/Users/null/MOV/Box2D-build/HelloWorld/CMakeFiles/HelloWorld.dir
-C:/Users/null/MOV/Box2D-build/Testbed/CMakeFiles/Testbed.dir
-C:/Users/null/MOV/Box2D-build/freeglut/CMakeFiles/freeglut_static.dir
-C:/Users/null/MOV/Box2D-build/glui/CMakeFiles/glui.dir

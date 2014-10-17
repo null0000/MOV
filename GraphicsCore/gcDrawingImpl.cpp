@@ -37,8 +37,10 @@ void gcDrawingImpl::Draw(gcImage i, QRectF qrect)
     painter.drawPixmap(QPointF(0, 0), i.ToPixmap(), qrect);
 }
 
-gcDrawingImpl::gcDrawingImpl(QPainter &painter) :
-    painter(painter) {matStack.push(painter.transform());}
+gcDrawingImpl::gcDrawingImpl(QPainter &painter,QRect windowBounds) :
+    painter(painter), windowBounds(windowBounds) {
+    matStack.push(painter.transform());
+}
 
 void gcDrawingImpl::Draw(QString s){
     painter.drawText(QPoint(0, 0), s);
@@ -56,4 +58,14 @@ void gcDrawingImpl::SetColor(QColor qc) {
 
 QFont gcDrawingImpl::curFont() const{
     return painter.font();
+}
+
+QRect gcDrawingImpl::screenGeometry() const {
+    return windowBounds;
+}
+
+gcDrawingImpl::gcDrawingImpl(QPainter &painter, QRect windowBounds, bool) : //doesn't do anything with no push, just a hack so unit testing can do it's thing
+        painter(painter), windowBounds(windowBounds) {
+
+
 }

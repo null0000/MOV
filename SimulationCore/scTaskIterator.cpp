@@ -1,8 +1,12 @@
 
 
+#include <glbDefinitions.h>
+
 #include "scTaskIterator.h"
 #include "scMovementDesc.h"
 #include "scTask.h"
+#include "scSingleTask.h"
+
 
 scTaskIterator::scTaskIterator(const scPlan &Other) :
     curPlan(Other.copy()), curTask(Other.firstTask()){}
@@ -47,3 +51,8 @@ void scTaskIterator::updateStrategy(const scObjDesc &thisObj, const scWorldDesc 
 
 scTaskIterator::scTaskIterator() : curPlan(NULL){}
 
+
+scTaskIterator::scTaskIterator(point singletask) {
+    curPlan = new scSingleTask(singletask);
+    curTask = scTask();
+}

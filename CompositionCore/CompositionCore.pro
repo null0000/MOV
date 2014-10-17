@@ -28,7 +28,9 @@ HEADERS += \
     coCameraManager.h \
     coWorld.h \
     coDebugHandler.h \
-    coWorldFullTag.h
+    coWorldFullTag.h \
+    coChunkRenderer.h \
+    coTagLocFunctor.h
 
 unix:!symbian {
     maemo5 {

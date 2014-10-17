@@ -2,7 +2,7 @@
 #define SCRESOURCEDEPOSIT_H
 
 #include <QVector2D>
-#include "scWorld.h"
+#include "scDefinitions.h"
 
 #include "simulationcore_ie.h"
 

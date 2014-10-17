@@ -30,7 +30,7 @@ public:
 
     static const resource_type SPAWN_COST = 50;
 
-    void runStep(scWorld &world, delta_t time);
+    void runStep(scWorld &world, scChunkManager &m, delta_t time);
 
     scSpendResourceStep (scSpawner_p spawner);
 

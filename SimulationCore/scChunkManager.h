@@ -2,7 +2,6 @@
 #define SCCHUNKMANAGER_H
 
 #include "simulationcore_ie.h"
-#include "scResourceDeposit.h"
 
 #include "scChunkAttributes.h"
 #include "scChunk.h"
@@ -13,6 +12,11 @@
 #include <cmath>
 #include <algorithm>
 
+
+class scChunk;
+class scChunkAttributes;
+
+class scResourceDeposit;
 
 class SIM_IE scChunkManager {
     typedef std::vector<scChunk> sorted_chunk_list; //you have to sort it yourself

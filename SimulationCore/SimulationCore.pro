@@ -58,7 +58,9 @@ HEADERS += simulationcore.h \
     scResourceDeposit.h \
     scChunk.h \
     scChunkDescription.h \
-    scChunkAttributes.h
+    scChunkAttributes.h \
+    scDefinitions.h \
+    scChunkGenerator.h
 
 unix:!symbian {
     maemo5 {

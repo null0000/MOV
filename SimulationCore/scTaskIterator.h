@@ -4,6 +4,8 @@
 #include "scTask.h"
 #include "simulationcore_ie.h"
 
+#include <glbDefinitions.h>
+
 class scPlan;
 
 class SIM_IE scTaskIterator {
@@ -16,6 +18,7 @@ public:
 
     scTaskIterator(const scPlan &Other);
     scTaskIterator(const scTaskIterator &Other);
+    scTaskIterator(point task);
     scTaskIterator();
     ~scTaskIterator();
     scTaskIterator &operator=(const scTaskIterator &Other);
@@ -24,6 +27,5 @@ private:
     scTask curTask;
 
 };
-
 
 #endif // SCTASKITERATOR_H

@@ -23,6 +23,8 @@ public:
     typedef scWorld::t_tag t_simtag;
     typedef gcTextList::t_tag t_dbgStrTag;
     typedef std::vector<gcRenderable *> renderable_list;
+    typedef scWorld::chunk_description chunk_description;
+    typedef scWorld::const_chunk_description const_chunk_description;
 
     static const t_simtag &NULL_SIM_TAG;
     static const t_dbgStrTag &NULL_DBGSTR_TAG;
@@ -37,6 +39,10 @@ public:
 
     void setTarget(t_simtag target);
 
+    template <typename gcRenderableType>
+    void addObject(gcRenderableType g);
+
+
     void simulate(delta_t time);
     void draw (gcDrawingImpl &impl);
 
@@ -46,6 +52,9 @@ public:
     t_dbgStrTag addDebugText(glbStringCallback_p Callback);
     void removeDebugText(t_dbgStrTag rmTag);
     void clearDebugText();
+
+    template<typename callback>
+    void chunkCallback(point p, measure_type r, callback &cb) const;
 
     coWorld(QRect cameraBounds, QRect viewingWindow) :
         world(new scWorld()), camera(world, cameraBounds, viewingWindow) {}
@@ -95,5 +104,16 @@ coWorld::t_simtag coWorld::addObject(gcRenderableType g, const scSimulatableType
 
 typedef  QSharedPointer<coWorld> coWorld_p;
 typedef  QSharedPointer<const coWorld> coWorld_cp;
+
+template <typename gcRenderableType>
+void coWorld::addObject(gcRenderableType g) {
+    camera.pushRenderable(new gcRenderableType(g));
+}
+
+
+template<typename callback>
+void coWorld::chunkCallback(point p, measure_type r, callback &cb) const {
+    world->chunkCallback(p, r, cb);
+}
 
 #endif // COWORLD_H

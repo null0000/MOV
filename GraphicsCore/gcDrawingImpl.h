@@ -11,25 +11,40 @@ class QRectF;
 class QTransform;
 class QPainter;
 
+//For unit testing purposes
+#ifdef QT_DEBUG
+#define DBG_VIRTUAL virtual
+#else
+#define DBG_VIRTUAL
+#endif
+
 class GFX_IE gcDrawingImpl{
 public:
-    void Draw(gcImage i);
-    void Draw(gcImage i, QRectF qrect);
-    void Draw(QLineF l);
-    void Draw(QString s);
-    void Draw(QString s, QPoint loc);
+    DBG_VIRTUAL void Draw(gcImage i);
+    DBG_VIRTUAL void Draw(gcImage i, QRectF qrect);
+    DBG_VIRTUAL void Draw(QLineF l);
+    DBG_VIRTUAL void Draw(QString s);
+    DBG_VIRTUAL void Draw(QString s, QPoint loc);
 
-    QFont curFont() const;
+    DBG_VIRTUAL QRect screenGeometry() const;
 
-    void PushTransform(QTransform mat);
-    void PopTransform();
+    DBG_VIRTUAL QFont curFont() const;
 
-    void SetColor(QColor qc);
+    DBG_VIRTUAL void PushTransform(QTransform mat);
+    DBG_VIRTUAL void PopTransform();
 
-    gcDrawingImpl(QPainter &painter);
+    DBG_VIRTUAL void SetColor(QColor qc);
+
+    gcDrawingImpl(QPainter &painter, QRect windowBounds);
+
+protected:
+    gcDrawingImpl(QPainter &painter, QRect windowBounds, bool NOPUSH); //doesn't do anything with no push, just a hack so unit testing can do it's thing.
 
 private:
+
+
     QPainter &painter;
+    QRect windowBounds;
     std::stack<QTransform> matStack;
 };
 

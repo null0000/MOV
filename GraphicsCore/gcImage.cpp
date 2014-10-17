@@ -56,7 +56,7 @@ gcImage::gcImage(QString ImageName) :
 
 
 gcImage::gcImage()  :
-    map(){}
+    map((QPlatformPixmap *)nullptr){}
 
 
 void gcImage::draw(gcDrawingImpl &impl) const{

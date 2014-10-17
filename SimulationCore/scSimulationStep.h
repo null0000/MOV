@@ -2,15 +2,16 @@
 #define SCSIMULATIONSTEP_H
 
 #include "simulationcore_ie.h"
+#include "scDefinitions.h"
 #include <memory>
 
-
+class scChunkManager;
 class scWorld;
-typedef float delta_t;
+
 class SIM_IE scSimulationStep {
 public:
     virtual ~scSimulationStep(){}
-    virtual void runStep(scWorld &world, delta_t time) = 0;
+    virtual void runStep(scWorld &world, scChunkManager &manager, delta_t time) = 0;
 
 };
 

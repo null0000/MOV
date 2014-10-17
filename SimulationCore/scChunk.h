@@ -4,9 +4,10 @@
 #include <vector>
 #include <QVector2D>
 
+#include "simulationcore_ie.h"
 #include "scResourceDeposit.h"
 
-#include "simulationcore_ie.h"
+class scResourceDeposit;
 
 class SIM_IE scChunk {
 public:

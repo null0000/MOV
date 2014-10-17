@@ -1,7 +1,7 @@
 #include "scSpendResourceStep.h"
 
 
-void scSpendResourceStep::runStep(scWorld &world, delta_t) {
+void scSpendResourceStep::runStep(scWorld &world, scChunkManager &, delta_t) {
     nullCheck();
 
     tag_list users (sortedUsingList(world));

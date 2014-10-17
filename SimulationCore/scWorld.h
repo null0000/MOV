@@ -21,22 +21,37 @@ class scSimulatable;
 #include "scMovementDesc.h"
 #include "scSimulationStep.h"
 #include "scWorldDesc.h"
+#include "scChunkManager.h"
+#include "scDefinitions.h"
 
+#include <glbDefinitions.h>
 #include <ErrorCore.h>
+
+
+/*******************/
+/****FILE NOTES****/
+/*******************/
+
+/*
+ * This file is organized primarily around making
+ * everything work. As a result, look for the tag marking
+ * scWorld's public interface to figure out what's up.
+ *
+ * Everything else should be considered "incidental" and shouln't
+ * be leveraged by anything outside of the scWorld sphere of influence.
+ */
 
 class scKeyboardControlledObj;
 class scTask;
-
+class scChunkManager;
 
 class SIM_IE scBaseWorld {
 public:
     typedef size_t t_tag;
-    QVector2D lookup(t_tag) const;
+    point lookup(t_tag) const;
 };
 
-/**
- *
- */
+
 template <typename planType>
 class scSubWorld : public scBaseWorld{
 public:
@@ -44,7 +59,7 @@ public:
     typedef obj_type::resource_type resource_type;
 
     t_tag addObject(const planType &insertedPlan);
-    QVector2D lookup(t_tag tag) const;
+    point lookup(t_tag tag) const;
     const scObjDesc &objInfo(t_tag tag) const;
     void simulate(delta_t timeDelta);
 
@@ -52,7 +67,7 @@ public:
 
     t_tag maxTag() const;
 
-    //inserts QVector2D type.
+    //inserts point type.
     template<typename insert_iterator>
     insert_iterator gatherUsingList(insert_iterator iItr) const;
 
@@ -99,6 +114,8 @@ public:
     typedef obj_type::resource_type resource_type;
     typedef scSubWorld<scKeyboardControlledObj> keyboard_world;
     typedef scSubWorld<scTaskIterator> task_world;
+    typedef scChunkManager::chunk_description chunk_description;
+    typedef scChunkManager::const_chunk_description const_chunk_description;
 
     static const t_tag NULL_TAG;
 private:
@@ -107,77 +124,70 @@ private:
     keyboard_world keyboardWorld;
     task_world taskWorld;
 
-
     template<typename insert_iterator>
     class AdjacencyAccumulator {
     public:
         AdjacencyAccumulator operator()(scWorld::t_tag tag) const {
-            QVector2D objLoc(world->lookupObject(tag));
+            point objLoc(world->lookupObject(tag));
             AdjacencyAccumulator newAA(*this);
-            if (objLoc.distanceToPoint(point) < maxDist) {
+            if (objLoc.distanceToPoint(p) < maxDist) {
                *(newAA.itr) = tag;
                 newAA.itr++;
             }
             return newAA;
         }
 
-        AdjacencyAccumulator(const scWorld &world, QVector2D Point,
+        AdjacencyAccumulator(const scWorld &world, point p,
                              size_t dist, insert_iterator itr) :
-            world(&world), point(Point), maxDist(dist), itr(itr){}
+            world(&world), p(p), maxDist(dist), itr(itr){}
 
         insert_iterator getItr() const {return itr;}
 
     private:
         const scWorld *world;
-        QVector2D point;
+        point p;
         size_t maxDist;
         insert_iterator itr;
     };
 
 public:
+    /*******************************/
+    /****MAIN SCWORLD INTERFACE*****/
+    /*******************************/
+
     template<typename insert_iterator>
     insert_iterator gatherUsingList(insert_iterator iItr) const;
 
     t_tag addObject(const scKeyboardControlledObj &obj);
     t_tag addObject(const scTaskIterator &obj);
 
-
-
     template<typename insert_iterator>
-    insert_iterator getAdjacentObjects(QVector2D Point, size_t maxDist,
-                                       insert_iterator iItr) const {
-        AdjacencyAccumulator<insert_iterator> aa (*this, Point, maxDist, iItr);
-        aa = forEachTag(aa);
-        return aa.getItr();
-    }
+    insert_iterator getAdjacentObjects(point Point, size_t maxDist, insert_iterator iItr) const;
 
     const scObjDesc &objInfo(t_tag tag) const;
-    QVector2D lookupObject(t_tag tag) const;
+    point lookupObject(t_tag tag) const;
+
     void simulate(delta_t timeDelta);
+
     void removeResources(t_tag obj, resource_type amount);
     void addResources(t_tag obj, resource_type amount);
 
+    void genChunks(point Location, measure_type radius);
 
-    /**
-     * function: forEachTag
-     *  Template argument: Callback
-     *  Template contract: Functor which implements the function:
-     *      Callback operator()(scWorld::t_tag tag) const;
-     *
-     *      In return, the functor will be called with each
-     *      t_tag that is valid for this scWorld object.
-     */
+    template <typename callback_type>
+    void chunkCallback(point location, measure_type radius, callback_type &cb) const;
+
     template <typename Callback>
-    Callback forEachTag(Callback func) const {
-        func = forEachIndividualTag(func, KeyboardTag, keyboardWorld);
-        func = forEachIndividualTag(func, TaskTag, taskWorld);
-        Q_STATIC_ASSERT(TypeTagCountS == 2);
-        return func;
-    }
+    Callback forEachTag(Callback func) const;
 
     void registerSimulationStep(scSimulationStep_p newStep);
 
+    /************************************/
+    /****END SCWORLD PUBLIC INTERFACE****/
+    /************************************/
+
 private:
+    scChunkManager chunkManager;
     template <typename Callback, typename SubWorldType>
     Callback forEachIndividualTag(Callback input, TypeTag type, SubWorldType subworld) const {
         t_tag itrTag (type, 0);
@@ -207,7 +217,7 @@ public:
 };
 
 template <typename planType>
-QVector2D scSubWorld<planType>::lookup(t_tag tag) const {
+point scSubWorld<planType>::lookup(t_tag tag) const {
     if (objList.size() > tag)
         return objList[tag].first.location();
 
@@ -289,5 +299,47 @@ insert_iterator scWorld::gatherUsingList(insert_iterator iItr) const {
     }
     return iItr;
 }
+
+/**
+ * function: forEachTag
+ *  Template argument: Callback
+ *  Template contract: Functor which implements the function:
+ *      Callback operator()(scWorld::t_tag tag) const;
+ *
+ *      In return, the functor will be called with each
+ *      t_tag that is valid for this scWorld object.
+ */
+template <typename Callback>
+Callback scWorld::forEachTag(Callback func) const {
+    func = forEachIndividualTag(func, KeyboardTag, keyboardWorld);
+    func = forEachIndividualTag(func, TaskTag, taskWorld);
+    Q_STATIC_ASSERT(TypeTagCountS == 2);
+    return func;
+}
+
+
+template <typename callback_type>
+/**
+ * @brief scWorld::chunkCallback
+ * @param location
+ * @param radius
+ * @param cb
+ *
+ * Calls cb with the argument "const scChunkDescription" for all chunks within
+ * "radius" units of "location"
+ */
+void scWorld::chunkCallback(point location, measure_type radius, callback_type &cb) const {
+    chunkManager.chunkCallback(location, radius, cb);
+}
+
+
+template<typename insert_iterator>
+insert_iterator scWorld::getAdjacentObjects(point Point, size_t maxDist,
+                                            insert_iterator iItr) const {
+    AdjacencyAccumulator<insert_iterator> aa (*this, Point, maxDist, iItr);
+    aa = forEachTag(aa);
+    return aa.getItr();
+}
+
 
 #endif // SCWORLD_H

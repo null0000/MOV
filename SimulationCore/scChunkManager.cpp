@@ -3,7 +3,6 @@
 #include <cmath>
 #include "scChunkManager.h"
 
-
 scChunkManager::scChunkManager()  :
     chunkWidth(DEFAULT_CHUNK_WIDTH){}
 scChunkManager::scChunkManager(measure_type Width) :

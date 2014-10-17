@@ -1,6 +1,6 @@
 
 #include "tst_simulationCoreUnit.h"
-#include "tst_unitUtil.h"
+#include <tst_unitUtil.h>
 
 #include <glbDefinitions.h>
 #include <scChunkManager.h>
