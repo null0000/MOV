@@ -35,6 +35,8 @@ public:
 
     DBG_VIRTUAL void SetColor(QColor qc);
 
+    DBG_VIRTUAL QTransform CurTransform();
+
     gcDrawingImpl(QPainter &painter, QRect windowBounds);
 
 protected:

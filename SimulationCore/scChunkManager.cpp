@@ -94,6 +94,16 @@ scChunkManager::const_chunk_iterator scChunkManager::find(const sorted_chunk_lis
     return std::lower_bound(list.begin(), list.end(), p, ChunkPointCompare());
 }
 
+/**
+ * @brief scChunkManager::boundingRect
+ * @param Center
+ * @param width
+ * @return imaginary rectangle containing the set of chunks that matter
+ *
+ * Creates a rectangle whose attributes describe which chunks need to be
+ * paid attention to (i.e. top left is the top left most chunk, bottom right
+ * is the bottom right most chunk)
+ */
 QRect scChunkManager::boundingRect(point Center, measure_type width) const {
     coord_type xTileMin = std::floor((Center.x() - width) / chunkWidth);
     coord_type xTileMax = std::ceil((Center.x() + width) / chunkWidth);

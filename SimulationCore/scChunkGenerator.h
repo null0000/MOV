@@ -15,16 +15,16 @@ template <typename location_f>
 class scChunkGenerator : public scSimulationStep {
 public:
     void runStep(scWorld &, scChunkManager &manager, delta_t) {
-        manager.genChunks(loc(), r);
+        manager.genChunks(loc(), visualRadius);
     }
 
 
     scChunkGenerator(location_f loc, measure_type r):
-        loc(loc), r(r){}
+        loc(loc), visualRadius(r){}
 
 private:
     location_f loc;
-    measure_type r;
+    measure_type visualRadius;
 };
 
 #endif // SCCHUNKGENERATOR_H

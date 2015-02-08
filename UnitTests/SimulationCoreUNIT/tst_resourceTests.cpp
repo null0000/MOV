@@ -122,7 +122,17 @@ void SimulationCoreUNITTest::testResourceCounting() {
     QVERIFY((number_type)loc.count == intBounds.width() * intBounds.height());
 }
 
-
+/**
+ * @brief SimulationCoreUNITTest::testResourceChunking
+ *
+ * This checks to make sure that certain aspects of the chunk managing code works as expected,
+ * i.e. we generate # resources close to the intended mean/median within standard deviation,
+ * the x and y of generated chunks areare about appropriate
+ *
+ * AFAICT after letting this sit for a few months, xDistSd/yDistSd in the callback object
+ * are completely pointless. Leaving them there anyways because they're not hurting anything
+ * I guess.
+ */
 void SimulationCoreUNITTest::testResourceChunking() {
     static const coord_type MAX_X = 2000, MAX_Y = 2000;
     static const coord_type MIN_X = -2000, MIN_Y = -2000;

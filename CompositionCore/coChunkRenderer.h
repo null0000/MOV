@@ -31,10 +31,13 @@ template <typename offset_f>
 void coChunkRenderer<offset_f>::draw(gcDrawingImpl &impl) const {
     auto drawChunk = [&](coWorld::const_chunk_description cd) {
         std::for_each(cd.beginDeposits(), cd.endDeposits(), [&](scResourceDeposit rd) {
-            QTransform t;
-            t.translate(rd.location().x(), rd.location().y());
-            impl.PushTransform(t);
-            impl.Draw(resourceImage);
+            point loc (rd.location());
+            measure_type radius (rd.radius());
+            point topLeft (loc.x() - radius, loc.y() - radius);
+
+            measure_type diameter = radius * 2;
+            rect bounds (topLeft.x(), topLeft.y(), diameter, diameter);
+            impl.Draw(resourceImage, bounds);
         });
     };
     QRect geometry (impl.screenGeometry());

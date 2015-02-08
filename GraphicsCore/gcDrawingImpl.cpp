@@ -17,6 +17,11 @@ void gcDrawingImpl::Draw(QLineF l)
     painter.drawLine(l);
 }
 
+QTransform gcDrawingImpl::CurTransform()
+{
+    return matStack.top();
+}
+
 void gcDrawingImpl::PushTransform(QTransform mat)
 {
     matStack.push(painter.transform());
@@ -67,5 +72,6 @@ QRect gcDrawingImpl::screenGeometry() const {
 gcDrawingImpl::gcDrawingImpl(QPainter &painter, QRect windowBounds, bool) : //doesn't do anything with no push, just a hack so unit testing can do it's thing
         painter(painter), windowBounds(windowBounds) {
 
+    matStack.push(painter.transform());
 
 }

@@ -7,6 +7,13 @@
 #include "scDefinitions.h"
 #include "simulationcore_ie.h"
 
+/**
+ * @brief The scChunkAttributes class
+ *
+ * This holds attributes for each chunk, such as
+ * it's radius, the mean/median number of resource deposits per chunk,
+ * and so on.
+ */
 class SIM_IE scChunkAttributes {
 public:
     typedef size_t size_type;

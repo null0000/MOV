@@ -14,7 +14,8 @@ DEFINES += TESTLIBRARY_LIBRARY
 CONFIG += c++11
 
 SOURCES += \
-    tst_unitUtil.cpp
+    tst_unitUtil.cpp \
+    tstDrawRegistry.cpp
 
 HEADERS +=\
     tst_unitUtil.h \

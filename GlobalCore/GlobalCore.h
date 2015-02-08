@@ -25,6 +25,7 @@ class GLB_IE glbGlobals
     static QStack<QString> dirStack;
 public:
     static void LogAppDir();
+    static void LogAppDirForUnit();
 
     static QString ProgramDir();
     static QString GraphicsDir();

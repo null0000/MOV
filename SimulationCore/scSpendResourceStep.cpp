@@ -10,7 +10,7 @@ void scSpendResourceStep::runStep(scWorld &world, scChunkManager &, delta_t) {
             continue;
         const scObjDesc &d (world.objInfo(user));
         Q_ASSERT(&d != &scObjDesc::NULL_DESC);
-        if (d.curResources() < SPAWN_COST)
+        if (d.curResources() <= SPAWN_COST)
             continue;
         world.removeResources(user, SPAWN_COST);
         spawnAI(d.location());
@@ -25,7 +25,7 @@ scSpendResourceStep::tag_list scSpendResourceStep::sortedUsingList(const scWorld
     tag_list list;
     std::insert_iterator<tag_list> iitr (list, list.begin());
     world.gatherUsingList(iitr);
-    std::sort(list.begin(), list.end());
+//    std::sort(list.begin(), list.end());
     return list;
 }
 

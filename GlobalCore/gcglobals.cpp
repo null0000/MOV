@@ -52,6 +52,13 @@ void glbGlobals::CD(QString target) {
 }
 
 
+void glbGlobals::LogAppDirForUnit()
+{
+    Q_ASSERT(APP_DIR == ""); //don't log multiple times.
+    APP_DIR = QDir::currentPath() + "/../..";
+    CD(APP_DIR);
+
+}
 
 void glbGlobals::LogAppDir() {
     Q_ASSERT(APP_DIR == ""); //don't want to log it multiple times
