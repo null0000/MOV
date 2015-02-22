@@ -27,7 +27,7 @@ public:
     typedef std::normal_distribution<delta_t> time_generator;
     typedef std::uniform_int_distribution<resource_type> resource_generator;
 
-    static const size_type DEFAULT_COUNT_MEAN = 15;
+    static const size_type DEFAULT_COUNT_MEAN = 5;
     static const size_type DEFAULT_COUNT_SD = 2;
 
     static const constexpr measure_type DEFAULT_MAX_RADIUS = 50;

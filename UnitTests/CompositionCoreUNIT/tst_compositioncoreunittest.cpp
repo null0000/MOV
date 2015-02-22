@@ -44,13 +44,13 @@ void CompositionCoreUNITTest::chunkTest()
     coWorld_p world (new coWorld(screenbounds, screenbounds));
     coWorld::t_simtag t = world->addObject(tstNullRenderable(), scTaskIterator(point(0,0)));
 
+
     coTagLocFunctor tagFunc (world, t);
     coChunkRenderer<coTagLocFunctor> cr(world, gcImage("face"), tagFunc);
     world->addObject(cr);
 
     measure_type r = maxLateralRenderDist(screenbounds);
 
-    //create a generator to create chunks at the location given by the tag.
     scSimulationStep *cgen = new scChunkGenerator<coTagLocFunctor>(tagFunc, r);
     scSimulationStep_p sstep (cgen);
 

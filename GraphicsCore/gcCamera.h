@@ -6,6 +6,8 @@
 #include "gcRenderable.h"
 #include "gcRenderTransform.h"
 
+#include "glbDefinitions.h"
+
 template <typename OffsetFunctor>
 class gcCamera : public gcRenderable {
 
@@ -20,7 +22,7 @@ public:
 
 
     void draw(gcDrawingImpl &impl) const {
-        QVector2D translation (offset());
+        point translation (offset());
         QTransform transform;
         transform.translate(translation.x(), translation.y());
         impl.PushTransform(transform);

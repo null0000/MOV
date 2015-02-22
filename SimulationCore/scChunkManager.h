@@ -35,7 +35,7 @@ public:
     typedef scChunkDescription<scChunk::deposit_iterator, chunk_tag> chunk_description;
 
 
-    static const size_type DEFAULT_CHUNK_WIDTH = 50;
+    static const size_type DEFAULT_CHUNK_WIDTH = 100;
 
 
 

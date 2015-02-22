@@ -10,7 +10,7 @@ class SIM_IE scLocationFunctor {
     static scWorld::t_tag INVALID_TAG;
 
 public:
-    QVector2D operator()() const;
+    point operator()() const;
     void setObject(scWorld::t_tag NewTarget);
     void setObject(scWorld_p World, scWorld::t_tag NewTarget);
     scLocationFunctor(scWorld::t_tag Tag, scWorld_p World);

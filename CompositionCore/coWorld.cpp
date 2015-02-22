@@ -24,7 +24,7 @@ void coWorld::draw (gcDrawingImpl &impl) {
 #endif
 }
 
-void coWorld::cameraBounds(QRect bounds) {
+void coWorld::setCameraBounds(QRect bounds) {
     camera.bounds(bounds);
 }
 
@@ -70,7 +70,7 @@ QVector2D coWorld::lookupLoc(t_simtag tag) const{
     return world->lookupObject(tag);
 }
 
-QVector2D coWorld::cameraOffset() const {
+point coWorld::cameraOffset() const {
     return camera.curOffset();
 }
 

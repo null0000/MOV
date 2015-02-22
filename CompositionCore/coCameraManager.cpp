@@ -39,6 +39,6 @@ void coCameraManager::update(delta_t ) {
     camera.offsetFunctor().update();
 }
 
-QVector2D coCameraManager::curOffset () const {
+point coCameraManager::curOffset () const {
     return camera.offsetFunctor()();
 }

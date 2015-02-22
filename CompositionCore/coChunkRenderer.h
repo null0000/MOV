@@ -30,6 +30,10 @@ private:
 template <typename offset_f>
 void coChunkRenderer<offset_f>::draw(gcDrawingImpl &impl) const {
     auto drawChunk = [&](coWorld::const_chunk_description cd) {
+        QTransform t;
+        point transLoc (cd.bounds().topLeft());
+        t.translate(transLoc.x(), transLoc.y());
+        impl.PushTransform(t);
         std::for_each(cd.beginDeposits(), cd.endDeposits(), [&](scResourceDeposit rd) {
             point loc (rd.location());
             measure_type radius (rd.radius());
@@ -39,6 +43,7 @@ void coChunkRenderer<offset_f>::draw(gcDrawingImpl &impl) const {
             rect bounds (topLeft.x(), topLeft.y(), diameter, diameter);
             impl.Draw(resourceImage, bounds);
         });
+        impl.PopTransform();
     };
     QRect geometry (impl.screenGeometry());
     measure_type radius = std::max(geometry.width(), geometry.height())/2.0;

@@ -10,27 +10,45 @@
 #include <ErrorCore.h>
 #include <ecErrorDialog.h>
 #include <GlobalCore.h>
+#include <QWindow>
+
+
+class waitForClose : public QObject
+{
+
+};
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    glbGlobals::LogAppDir();
-    (new MainWindow())->initialize();
-    qApp->setQuitOnLastWindowClosed(true);
+
+    MainWindow *mw = NULL;
+    ecErrorDialog *ed = NULL;
     try
     {
-
+        glbGlobals::LogAppDir();
+        mw = new MainWindow();
+        mw->initialize();
+        qApp->setQuitOnLastWindowClosed(true);
         return a.exec();
     }
     catch (const ecError &err) {
-        ecErrorDialog ed (NULL, "Fatal Error: "+ err.message());
-        ed.show();
+        ed = new ecErrorDialog(NULL, "Fatal Error: "+ err.message());
+        ed->show();
+        if (mw)
+        {
+            mw->close();
+        }
     }
 
     catch (...) {
-        ecErrorDialog ed (NULL, "Fatal error of unknown type. Aborting...");
-        ed.show();
+        ed = new ecErrorDialog(NULL, "Fatal error of unknown type. Aborting...");
+        ed->show();
+
+        if (mw)
+            mw->close();
     }
-    return 1;
+
+    return a.exec();
 
 }

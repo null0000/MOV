@@ -46,8 +46,8 @@ public:
     void simulate(delta_t time);
     void draw (gcDrawingImpl &impl);
 
-    void cameraBounds(QRect bounds);
-    QVector2D cameraOffset() const;
+    void setCameraBounds(QRect bounds);
+    point cameraOffset() const;
 
     t_dbgStrTag addDebugText(glbStringCallback_p Callback);
     void removeDebugText(t_dbgStrTag rmTag);
@@ -77,7 +77,12 @@ private:
 
 
 
-
+/**
+ *This adds an object to be tracked.
+ *
+ * In other words, you add the simulatable to the simulation core world, and you
+ * track it in the graphics core using a render offset and add it to the camera.
+ */
 template <typename gcRenderableType, typename scSimulatableType>
 coWorld::t_simtag coWorld::trackObject(gcRenderableType g, const scSimulatableType &s) {
     t_simtag tag (world->addObject(s));
